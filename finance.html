@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+                        brand: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', orange: '#f59e0b' }
+                    },
+                    fontFamily: { mono: ['monospace'], sans: ['system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>body { background-color: #0f172a; color: #f8fafc; }</style>
+</head>
+<body class="p-6">
+
+    <script>
+        const URL_EMPRESA = "PEGA_AQUI_EL_LINK_CSV_DATA_EMPRESA";
+        const URL_PERSONAL = "PEGA_AQUI_EL_LINK_CSV_DATA_PERSONAL";
+        const URL_CONFIG = "PEGA_AQUI_EL_LINK_CSV_CONFIG";
+    </script>
+
+    <div class="max-w-6xl mx-auto">
+        <header className="flex justify-between items-center mb-10 border-b border-dark-700 pb-6">
+            <div class="flex justify-between items-center w-full border-b border-dark-700 pb-6 mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight flex items-center gap-3">
+                        <i data-lucide="wallet" class="text-brand-blue"></i> FINANCIAL OS
+                    </h1>
+                    <p class="text-slate-400 text-sm mt-1 font-mono" id="fecha-header">CARGANDO...</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-[10px] text-slate-500 font-mono uppercase">TIPO DE CAMBIO</div>
+                    <div class="font-mono font-bold text-brand-green text-xl" id="tc-display">...</div>
+                </div>
+            </div>
+        </header>
+
+        <div id="loading" class="text-center py-20 animate-pulse text-brand-blue font-mono">
+            CONECTANDO CON LA BASE DE DATOS...
+        </div>
+
+        <div id="dashboard" class="hidden">
+            
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-slate-300">
+                <span class="w-1 h-6 bg-brand-blue rounded-full"></span> NEGOCIO (USD)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">PROFIT NETO</div>
+                    <div class="text-3xl font-mono font-bold text-white" id="biz-profit">$0.00</div>
+                    <div class="text-xs text-slate-500 mt-1">Cash Flow Real</div>
+                </div>
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">FACTURACIÓN</div>
+                    <div class="text-3xl font-mono font-bold text-brand-green" id="biz-ingresos">$0.00</div>
+                    <div class="text-xs text-slate-500 mt-1">Ingresos Totales</div>
+                </div>
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">GASTOS OPERATIVOS</div>
+                    <div class="text-3xl font-mono font-bold text-brand-red" id="biz-gastos">$0.00</div>
+                    <div class="text-xs text-slate-500 mt-1">Sin incluir nómina</div>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-slate-300">
+                <span class="w-1 h-6 bg-brand-green rounded-full"></span> PERSONAL (PEN)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700 border-l-4 border-l-brand-blue">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">MI NÓMINA</div>
+                    <div class="text-2xl font-mono font-bold text-brand-blue" id="per-nomina">S/ 0.00</div>
+                    <div class="text-xs text-slate-500 mt-1">Base: $<span id="base-nomina-usd">0</span> USD</div>
+                </div>
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">GASTOS VIDA</div>
+                    <div class="text-2xl font-mono font-bold text-brand-orange" id="per-gastos">S/ 0.00</div>
+                    <div class="text-xs text-slate-500 mt-1">Consumo real</div>
+                </div>
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700" id="card-saldo">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">SALDO / AHORRO</div>
+                    <div class="text-2xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
+                    <div class="text-xs text-slate-500 mt-1" id="txt-saldo">Disponible</div>
+                </div>
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
+                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">DEUDA TARJETA</div>
+                    <div class="text-2xl font-mono font-bold text-brand-red" id="per-deuda">S/ 0.00</div>
+                    <div class="text-xs text-slate-500 mt-1">A pagar prox. mes</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700 col-span-2">
+                    <h3 class="text-xs font-bold text-slate-500 mb-6 tracking-widest uppercase">Distribución de Gastos</h3>
+                    <div class="h-64 relative w-full">
+                        <canvas id="chartPersonal"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700 flex flex-col justify-center items-center text-center">
+                    <div id="health-indicator" class="text-4xl font-mono font-bold mb-2 text-white">---</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest">Estado Financiero</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Inicializar Iconos
+        lucide.createIcons();
+
+        // Lógica Principal
+        async function init() {
+            const dateOptions = { month: 'long', year: 'numeric' };
+            const today = new Date();
+            document.getElementById('fecha-header').innerText = today.toLocaleDateString('es-PE', dateOptions).toUpperCase();
+
+            // Fetch Data en Paralelo
+            Promise.all([
+                fetchCSV(https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=238892353&single=true&output=csv),
+                fetchCSV(https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=755120241&single=true&output=csv),
+                fetchCSV(https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=50339649&single=true&output=csv)
+            ]).then(([configData, empresaData, personalData]) => {
+                procesarDatos(configData, empresaData, personalData);
+            }).catch(err => {
+                console.error(err);
+                alert("Error cargando datos. Verifica que los links CSV sean públicos.");
+            });
+        }
+
+        function fetchCSV(url) {
+            return new Promise((resolve, reject) => {
+                Papa.parse(url, {
+                    download: true,
+                    header: false, // Tus CSV no siempre tienen headers limpios, usaremos índices
+                    complete: (results) => resolve(results.data),
+                    error: (err) => reject(err)
+                });
+            });
+        }
+
+        function procesarDatos(config, empresa, personal) {
+            const today = new Date();
+            const currentMonth = today.getMonth(); // 0-11
+            const currentYear = today.getFullYear();
+
+            // 1. Extraer Configuración (Asumiendo Fila 1 = Headers, Fila 2 = Datos)
+            // B1 (Index 1) es TC, B3 es Nomina USD. Pero PapaParse lee array de arrays.
+            // Config structure based on user file: Row 0 is Header. Row 1: Col 1 is 3.75 (TC). Row 2: Col 1 is 400 (Nomina)
+            // Ajustamos parsing manual para seguridad
+            let tc = 3.75;
+            let nominaUSD = 400;
+
+            try {
+                // Buscamos valores en las primeras filas
+                if(config[0][1]) tc = parseFloat(config[0][1]) || 3.75; 
+                // A veces el CSV exporta distinto, fallback seguro:
+                config.forEach(row => {
+                    if(row[0] && row[0].includes("TIPO DE CAMBIO")) tc = parseFloat(row[1]);
+                    if(row[0] && row[0].includes("NOMINA FIJA")) nominaUSD = parseFloat(row[1]);
+                });
+            } catch(e) { console.log("Usando config default"); }
+
+            document.getElementById('tc-display').innerText = `S/ ${tc.toFixed(2)}`;
+            document.getElementById('base-nomina-usd').innerText = nominaUSD;
+
+            // 2. Procesar Empresa
+            let bizIngresos = 0, bizGastos = 0, bizNominaPagada = 0;
+
+            empresa.forEach((row, index) => {
+                if (index === 0) return; // Skip header
+                // Indices Data_Empresa: 0:Fecha, 1:Tipo, 5:MontoUSD (Calculado)
+                const fecha = new Date(row[0]);
+                if (fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear) {
+                    const tipo = row[1] || "";
+                    const monto = parseFloat(String(row[5]).replace(/,/g, '')) || 0;
+
+                    if (tipo.includes("Ingreso")) bizIngresos += monto;
+                    if (tipo.includes("Gasto")) bizGastos += monto;
+                    if (tipo.includes("Nómina")) bizNominaPagada += monto;
+                }
+            });
+
+            // 3. Procesar Personal
+            let perGastos = 0, perDeuda = 0;
+            let categorias = {};
+
+            personal.forEach((row, index) => {
+                if (index === 0) return; // Skip header
+                // Indices Data_Personal: 0:Fecha, 1:Categoria, 3:MontoPEN, 4:Metodo
+                const fecha = new Date(row[0]);
+                if (fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear) {
+                    const cat = row[1] || "Otros";
+                    const monto = parseFloat(String(row[3]).replace(/,/g, '')) || 0;
+                    const metodo = row[4] || "";
+
+                    perGastos += monto;
+                    categorias[cat] = (categorias[cat] || 0) + monto;
+
+                    if (metodo.toLowerCase().includes("crédito")) perDeuda += monto;
+                }
+            });
+
+            // Cálculos Finales
+            const profit = bizIngresos - bizGastos - bizNominaPagada;
+            const nominaPEN = bizNominaPagada * tc; // Usamos lo que realmente te pagaste
+            const saldo = nominaPEN - perGastos;
+
+            // Renderizar DOM
+            fmt('biz-profit', profit, '$');
+            fmt('biz-ingresos', bizIngresos, '$');
+            fmt('biz-gastos', bizGastos, '$');
+
+            fmt('per-nomina', nominaPEN, 'S/ ');
+            fmt('per-gastos', perGastos, 'S/ ');
+            fmt('per-saldo', saldo, 'S/ ');
+            fmt('per-deuda', perDeuda, 'S/ ');
+
+            // Estilos dinámicos
+            const saldoEl = document.getElementById('per-saldo');
+            const txtSaldo = document.getElementById('txt-saldo');
+            const healthEl = document.getElementById('health-indicator');
+
+            if (saldo < 0) {
+                saldoEl.classList.remove('text-white');
+                saldoEl.classList.add('text-brand-red');
+                txtSaldo.innerText = "DÉFICIT CRÍTICO";
+                healthEl.innerText = "CRÍTICO";
+                healthEl.classList.add('text-brand-red');
+            } else {
+                saldoEl.classList.add('text-brand-green');
+                healthEl.innerText = "SALUDABLE";
+                healthEl.classList.add('text-brand-green');
+            }
+
+            // Gráfico
+            renderChart(categorias);
+
+            // Mostrar
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function fmt(id, val, sign) {
+            document.getElementById(id).innerText = sign + val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function renderChart(dataObj) {
+            const ctx = document.getElementById('chartPersonal').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(dataObj),
+                    datasets: [{
+                        data: Object.values(dataObj),
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#64748b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#94a3b8', font: { family: 'monospace' }, boxWidth: 10 } }
+                    }
+                }
+            });
+        }
+
+        // Run
+        init();
+    </script>
+</body>
+</html>
