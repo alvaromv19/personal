@@ -1,0 +1,34 @@
+function doGet() {
+  return HtmlService.createTemplateFromFile('Index')
+      .evaluate()
+      .setTitle('EVO Financial OS')
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function getData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // 1. Obtener Configuración
+  const configSheet = ss.getSheetByName('CONFIG');
+  const tc = configSheet.getRange('B1').getValue();
+  const nominaFija = configSheet.getRange('B3').getValue(); // Tu sueldo en USD
+
+  // 2. Obtener Datos Empresa (Desde fila 2 para saltar encabezados)
+  const empSheet = ss.getSheetByName('DATA_EMPRESA');
+  const lastRowEmp = empSheet.getLastRow();
+  // Traemos columnas A hasta H (8 columnas)
+  const dataEmp = lastRowEmp > 1 ? empSheet.getRange(2, 1, lastRowEmp - 1, 8).getDisplayValues() : [];
+
+  // 3. Obtener Datos Personal
+  const perSheet = ss.getSheetByName('DATA_PERSONAL');
+  const lastRowPer = perSheet.getLastRow();
+  // Traemos columnas A hasta G (7 columnas)
+  const dataPer = lastRowPer > 1 ? perSheet.getRange(2, 1, lastRowPer - 1, 7).getDisplayValues() : [];
+
+  return {
+    empresa: dataEmp,
+    personal: dataPer,
+    config: { tc: tc, nominaUSD: nominaFija }
+  };
+}
