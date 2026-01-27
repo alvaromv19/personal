@@ -3,32 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanxial Personal</title>
+    <title>EVO FINANCIAL OS | ULTRA</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        dark: { 900: '#0B1120', 800: '#151E32', 700: '#2A3655', 600: '#3B4D70' },
-                        brand: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', orange: '#f59e0b', purple: '#8b5cf6' }
+                        bg: '#030712', // Negro profundo
+                        surface: '#0f172a',
+                        surfaceHighlight: '#1e293b',
+                        primary: '#3b82f6', // Azul eléctrico
+                        accent: '#8b5cf6', // Violeta
+                        success: '#10b981',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
                     },
-                    fontFamily: { mono: ['"JetBrains Mono"', 'monospace'], sans: ['Inter', 'sans-serif'] }
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        }
+                    }
                 }
             }
         }
     </script>
+
     <style>
-        body { background-color: #0B1120; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .glass-panel { background: rgba(21, 30, 50, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem; -webkit-print-color-adjust: exact; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body { 
+            background-color: #030712; 
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%), 
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+            color: #e2e8f0; 
+            font-family: 'Inter', sans-serif; 
+        }
+
+        /* Scrollbar Cyberpunk */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Efectos Glass & Neon */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .neon-text-blue { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .neon-text-green { text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .neon-text-red { text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        
+        /* Select personalizado */
+        .custom-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(5px);
+        }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8">
+<body class="min-h-screen p-4 md:p-8 overflow-x-hidden">
 
     <script>
         const URL_PERSONAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=39611097&single=true&output=csv";
@@ -36,19 +104,24 @@
         const URL_CONFIG = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=238892353&single=true&output=csv";
     </script>
 
-    <div class="max-w-7xl mx-auto space-y-8">
+    <div class="max-w-[1600px] mx-auto space-y-8 relative z-10">
         
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-dark-700 pb-6">
-            <div>
-                <h1 class="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                    <i data-lucide="layout-dashboard" class="text-brand-blue"></i>FINANCIAL <span class="text-dark-600">OS</span>
-                </h1>
-                <p class="text-slate-400 text-xs mt-1 font-mono tracking-widest uppercase">Sistema de Gestión Centralizada</p>
+        <header class="flex flex-col lg:flex-row justify-between items-end gap-6 pb-6 border-b border-white/5">
+            <div class="w-full lg:w-auto">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-primary/20 rounded-lg border border-primary/30">
+                        <i data-lucide="cpu" class="w-6 h-6 text-primary"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold tracking-tight text-white">
+                        EVO <span class="text-primary neon-text-blue">OS</span>
+                    </h1>
+                </div>
+                <p class="text-slate-400 text-xs font-mono tracking-[0.2em] uppercase pl-1">Financial Intelligence Unit</p>
             </div>
             
-            <div class="flex flex-wrap gap-3 bg-dark-800 p-2 rounded-lg border border-dark-700">
-                <div class="relative">
-                    <select id="filter-month" class="appearance-none bg-dark-900 border border-dark-600 text-white py-2 pl-4 pr-10 rounded focus:outline-none focus:border-brand-blue text-sm font-mono uppercase" onchange="applyFilter()">
+            <div class="flex flex-wrap gap-3 glass-card p-2 rounded-xl">
+                <div class="relative group">
+                    <select id="filter-month" class="custom-select appearance-none bg-surface/50 border border-white/10 text-white py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm font-mono uppercase transition-all hover:bg-surface" onchange="applyFilter()">
                         <option value="0">Enero</option>
                         <option value="1">Febrero</option>
                         <option value="2">Marzo</option>
@@ -64,172 +137,211 @@
                     </select>
                 </div>
                 <div class="relative">
-                    <select id="filter-year" class="appearance-none bg-dark-900 border border-dark-600 text-white py-2 pl-4 pr-10 rounded focus:outline-none focus:border-brand-blue text-sm font-mono" onchange="applyFilter()">
+                    <select id="filter-year" class="custom-select appearance-none bg-surface/50 border border-white/10 text-white py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary text-sm font-mono" onchange="applyFilter()">
                         <option value="2025">2025</option>
                         <option value="2026" selected>2026</option>
                         <option value="2027">2027</option>
                     </select>
                 </div>
-                <div class="flex flex-col justify-center px-4 border-l border-dark-600">
-                    <span class="text-[10px] text-slate-500 font-mono uppercase">TC REF</span>
-                    <span class="font-bold text-brand-green font-mono" id="tc-display">---</span>
+                <div class="flex items-center gap-2 px-4 border-l border-white/10">
+                    <span class="text-[10px] text-slate-500 font-mono uppercase">TC:</span>
+                    <span class="font-bold text-success font-mono" id="tc-display">---</span>
                 </div>
             </div>
         </header>
 
-        <div id="loading" class="flex flex-col items-center justify-center py-20 animate-pulse space-y-4">
-            <i data-lucide="database" class="w-10 h-10 text-brand-blue"></i>
-            <span class="text-brand-blue font-mono text-sm tracking-widest">SINCRONIZANDO DATOS...</span>
+        <div id="loading" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg">
+            <div class="relative">
+                <div class="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i data-lucide="loader-2" class="w-6 h-6 text-primary animate-pulse"></i>
+                </div>
+            </div>
+            <span class="mt-4 text-primary font-mono text-sm tracking-[0.2em] animate-pulse">CARGANDO SISTEMA...</span>
         </div>
 
-        <div id="dashboard" class="hidden space-y-8">
+        <div id="dashboard" class="hidden space-y-8 pb-20 opacity-0 transition-opacity duration-700">
             
-            <div class="space-y-4">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-2 h-2 bg-brand-blue rounded-full"></span> Flujo de Caja Empresarial (USD)
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-panel p-6 rounded-xl hover:border-brand-blue transition-colors group">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Profit Neto</span>
-                            <div class="p-2 bg-brand-blue/10 rounded text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                                <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+            <section>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
+                    <h2 class="text-sm font-bold text-primary uppercase tracking-widest px-2">EMPRESA (USD)</h2>
+                    <div class="h-px flex-1 bg-gradient-to-l from-primary/50 to-transparent"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500">
+                            <i data-lucide="landmark" class="w-24 h-24 text-white"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Profit Neto</span>
+                                <span class="px-2 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-[10px] text-slate-400">Cash Flow</span>
+                            </div>
+                            <div class="text-4xl font-mono font-bold text-white mb-2 neon-text-blue" id="biz-profit">$0.00</div>
+                            <div class="flex items-center gap-2 text-xs text-slate-400">
+                                <i data-lucide="check-circle" class="w-3 h-3 text-success"></i>
+                                <span>Disponible real</span>
                             </div>
                         </div>
-                        <div class="text-3xl font-mono font-bold text-white" id="biz-profit">$0.00</div>
-                        <div class="text-xs text-slate-500 mt-2">Disponible en cuenta</div>
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-transparent opacity-50"></div>
                     </div>
-                    <div class="glass-panel p-6 rounded-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Facturación</span>
-                            <i data-lucide="trending-up" class="w-4 h-4 text-brand-green"></i>
-                        </div>
-                        <div class="text-3xl font-mono font-bold text-brand-green" id="biz-ingresos">$0.00</div>
-                    </div>
-                    <div class="glass-panel p-6 rounded-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Op.</span>
-                            <i data-lucide="trending-down" class="w-4 h-4 text-brand-red"></i>
-                        </div>
-                        <div class="text-3xl font-mono font-bold text-brand-red" id="biz-gastos">$0.00</div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="space-y-4">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-2 h-2 bg-brand-green rounded-full"></span> Economía Personal (PEN)
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="glass-panel p-5 rounded-xl border-l-4 border-l-brand-blue">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Mi Nómina</span>
-                        <div class="text-2xl font-mono font-bold text-brand-blue mt-1" id="per-nomina">S/ 0.00</div>
-                        <div class="text-[10px] text-slate-500 mt-1">Base: $<span id="base-nomina-usd">0</span></div>
-                    </div>
-                    <div class="glass-panel p-5 rounded-xl">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Gastos Vida</span>
-                        <div class="text-2xl font-mono font-bold text-brand-orange mt-1" id="per-gastos">S/ 0.00</div>
-                    </div>
-                    <div class="glass-panel p-5 rounded-xl relative overflow-hidden">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Saldo / Ahorro</span>
-                        <div class="text-2xl font-mono font-bold text-white mt-1 z-10 relative" id="per-saldo">S/ 0.00</div>
-                        <div class="absolute bottom-0 right-0 p-4 opacity-10">
-                            <i data-lucide="piggy-bank" class="w-12 h-12 text-white"></i>
+                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Facturación</span>
+                                <i data-lucide="trending-up" class="w-5 h-5 text-success"></i>
+                            </div>
+                            <div class="text-4xl font-mono font-bold text-success mb-2 neon-text-green" id="biz-ingresos">$0.00</div>
+                            <div class="w-full bg-slate-800/50 h-1.5 rounded-full mt-4 overflow-hidden">
+                                <div class="bg-success h-full w-full rounded-full opacity-50"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="glass-panel p-5 rounded-xl">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Deuda Tarjeta</span>
-                        <div class="text-2xl font-mono font-bold text-brand-red mt-1" id="per-deuda">S/ 0.00</div>
+
+                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group cursor-pointer" onclick="openDetails('EMPRESA_GASTOS')">
+                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Gastos Op.</span>
+                                <i data-lucide="trending-down" class="w-5 h-5 text-danger"></i>
+                            </div>
+                            <div class="text-4xl font-mono font-bold text-danger mb-2 neon-text-red" id="biz-gastos">$0.00</div>
+                            <div class="text-xs text-slate-500 mt-2 group-hover:text-primary transition-colors">
+                                Click para ver detalle >
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="h-px flex-1 bg-gradient-to-r from-success/50 to-transparent"></div>
+                    <h2 class="text-sm font-bold text-success uppercase tracking-widest px-2">PERSONAL (PEN)</h2>
+                    <div class="h-px flex-1 bg-gradient-to-l from-success/50 to-transparent"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="glass-card p-6 rounded-2xl border-l-4 border-primary">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mi Nómina</span>
+                        <div class="text-2xl font-mono font-bold text-primary mt-2" id="per-nomina">S/ 0.00</div>
+                        <div class="mt-2 text-[10px] text-slate-400 font-mono">
+                            Base: $<span id="base-nomina-usd">0</span> USD
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border-l-4 border-warning cursor-pointer group" onclick="openDetails('PERSONAL_GASTOS')">
+                        <div class="flex justify-between">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Vida</span>
+                            <i data-lucide="search" class="w-3 h-3 text-slate-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-warning mt-2" id="per-gastos">S/ 0.00</div>
+                        <div class="w-full bg-slate-800 h-1 mt-3 rounded-full overflow-hidden">
+                            <div id="bar-gastos" class="h-full bg-warning transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-xl"></div>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Saldo Final</span>
+                        <div class="text-3xl font-mono font-bold text-white mt-2 relative z-10" id="per-saldo">S/ 0.00</div>
+                        <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-400">
+                            ---
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border-l-4 border-danger">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Deuda TC</span>
+                        <div class="text-2xl font-mono font-bold text-danger mt-2" id="per-deuda">S/ 0.00</div>
+                        <div class="text-[10px] text-slate-500 mt-1">A pagar prox. mes</div>
+                    </div>
+                </div>
+            </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="glass-panel p-6 rounded-xl col-span-2">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <i data-lucide="list" class="w-4 h-4"></i> Últimos Movimientos Personales
-                    </h3>
+                <div class="glass-card p-6 rounded-2xl col-span-1 flex flex-col items-center justify-center relative">
+                    <h3 class="absolute top-6 left-6 text-xs font-bold text-slate-500 uppercase tracking-widest">Distribución</h3>
+                    <div class="w-full h-[250px] mt-6">
+                        <canvas id="chartPersonal"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl col-span-1 lg:col-span-2 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                            <i data-lucide="activity" class="w-4 h-4 text-primary"></i> Live Feed (Personal)
+                        </h3>
+                        <button onclick="openDetails('PERSONAL_GASTOS')" class="text-[10px] text-primary hover:text-white transition-colors uppercase tracking-wider font-bold">
+                            Ver Todo
+                        </button>
+                    </div>
+                    
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
-                            <thead class="text-xs text-slate-500 uppercase border-b border-dark-600">
+                            <thead class="text-[10px] text-slate-500 uppercase bg-surfaceHighlight/50 rounded-lg">
                                 <tr>
-                                    <th class="py-2">Fecha</th>
-                                    <th class="py-2">Categoría</th>
-                                    <th class="py-2">Detalle</th>
-                                    <th class="py-2 text-right">Monto</th>
+                                    <th class="px-4 py-3 rounded-l-lg">Fecha</th>
+                                    <th class="px-4 py-3">Categoría</th>
+                                    <th class="px-4 py-3">Detalle</th>
+                                    <th class="px-4 py-3 text-right rounded-r-lg">Monto</th>
                                 </tr>
                             </thead>
-                            <tbody id="txn-list" class="divide-y divide-dark-700 text-slate-300">
+                            <tbody id="txn-list" class="text-slate-300 divide-y divide-white/5">
                                 </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="glass-panel p-6 rounded-xl flex flex-col">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Distribución</h3>
-                    <div class="flex-grow relative min-h-[200px]">
-                        <canvas id="chartPersonal"></canvas>
+    <div id="detail-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 modal-overlay" onclick="closeDetails()"></div>
+        <div class="absolute inset-y-0 right-0 w-full md:w-[500px] bg-[#0B1120] border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full" id="modal-panel">
+            <div class="h-full flex flex-col p-6">
+                <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i data-lucide="list-filter" class="w-5 h-5 text-primary"></i>
+                        <span id="modal-title">Detalle</span>
+                    </h2>
+                    <button onclick="closeDetails()" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                        <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                    </button>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto pr-2 space-y-3" id="modal-content">
                     </div>
-                    <div class="mt-4 text-center">
-                        <div id="health-indicator" class="text-xl font-mono font-bold">---</div>
-                        <div class="text-[10px] text-slate-500 uppercase">Estado Salud Financiera</div>
-                    </div>
+                
+                <div class="mt-4 pt-4 border-t border-white/10 text-right">
+                    <span class="text-xs text-slate-500 uppercase tracking-widest mr-2">Total Vista</span>
+                    <span class="text-xl font-mono font-bold text-white" id="modal-total">S/ 0.00</span>
                 </div>
             </div>
-
-            <div class="mt-8 p-4 bg-black rounded border border-dark-700 font-mono text-xs">
-                <div class="flex justify-between items-center mb-2 cursor-pointer" onclick="toggleDebug()">
-                    <span class="text-brand-purple font-bold">> CONSOLA DEL SISTEMA (Click para ver datos crudos)</span>
-                    <span class="text-slate-500" id="debug-status">Listo</span>
-                </div>
-                <div id="debug-content" class="hidden text-slate-400 space-y-1 h-32 overflow-y-auto">
-                    </div>
-            </div>
-
         </div>
     </div>
 
     <script>
-        // Inicializar Iconos
+        // --- 1. CONFIGURACIÓN & VARIABLES ---
         lucide.createIcons();
+        
+        let GLOBAL_DATA = { empresa: [], personal: [], config: [] };
+        let FILTERED_TXNS = { empresa: [], personal: [] }; // Para los popups
 
-        // VARIABLES GLOBALES (Almacén de datos)
-        let GLOBAL_DATA = {
-            empresa: [],
-            personal: [],
-            config: []
-        };
-
-        // --- 1. PARSEADOR DE FECHAS ROBUSTO ---
+        // --- 2. CORE LOGIC ---
         function parseLatamDate(dateStr) {
             if (!dateStr || typeof dateStr !== 'string') return null;
-            // Intenta DD/MM/YYYY
             const parts = dateStr.trim().split('/');
-            if (parts.length === 3) {
-                // Ojo: Javascript cuenta meses 0-11
-                return new Date(parts[2], parts[1] - 1, parts[0]);
-            }
-            // Intenta formato estandar por si acaso
+            if (parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
             const d = new Date(dateStr);
             return isNaN(d.getTime()) ? null : d;
         }
 
-        function logDebug(msg) {
-            const el = document.getElementById('debug-content');
-            const p = document.createElement('div');
-            p.innerText = `> ${msg}`;
-            el.appendChild(p);
-        }
-
-        function toggleDebug() {
-            document.getElementById('debug-content').classList.toggle('hidden');
-        }
-
-        // --- 2. CARGA DE DATOS (SOLO UNA VEZ) ---
         async function init() {
-            logDebug("Iniciando conexión...");
-            
-            // Setear mes actual por defecto
             const today = new Date();
             document.getElementById('filter-month').value = today.getMonth();
             document.getElementById('filter-year').value = today.getFullYear();
@@ -245,16 +357,22 @@
                 GLOBAL_DATA.empresa = emp;
                 GLOBAL_DATA.personal = per;
 
-                logDebug(`Datos Cargados: Empresa (${emp.length} filas), Personal (${per.length} filas)`);
+                // Animación de entrada
+                const loader = document.getElementById('loading');
+                const dash = document.getElementById('dashboard');
                 
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-
-                applyFilter(); // Ejecutar lógica por primera vez
+                loader.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    dash.classList.remove('hidden');
+                    // Forzar reflow
+                    void dash.offsetWidth; 
+                    dash.classList.remove('opacity-0');
+                    applyFilter();
+                }, 500);
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('loading').innerHTML = `<span class="text-brand-red">ERROR DE CONEXIÓN: ${err.message}</span>`;
+                document.getElementById('loading').innerHTML = `<span class="text-danger font-mono font-bold">ERROR CRÍTICO: CONEXIÓN FALLIDA</span>`;
             }
         }
 
@@ -262,176 +380,215 @@
             return new Promise((resolve, reject) => {
                 Papa.parse(url, {
                     download: true,
-                    header: false, // Importante: False para manejar indices manualmente
+                    header: false,
                     skipEmptyLines: true,
-                    complete: (results) => resolve(results.data),
+                    complete: (res) => resolve(res.data),
                     error: (err) => reject(err)
                 });
             });
         }
 
-        // --- 3. LÓGICA DE FILTRADO Y VISUALIZACIÓN ---
         function applyFilter() {
-            const selectedMonth = parseInt(document.getElementById('filter-month').value);
-            const selectedYear = parseInt(document.getElementById('filter-year').value);
+            const selMonth = parseInt(document.getElementById('filter-month').value);
+            const selYear = parseInt(document.getElementById('filter-year').value);
 
-            logDebug(`Aplicando filtro: Mes ${selectedMonth + 1}, Año ${selectedYear}`);
-
-            // 3.1 PROCESAR CONFIGURACIÓN
-            let tc = 3.75; 
-            let nominaUSD = 400;
-            // Buscar en todas las filas (Atribución segura)
+            // 1. CONFIG
+            let tc = 3.75, nominaUSD = 400;
             GLOBAL_DATA.config.forEach(row => {
-                const key = row[0] ? row[0].toString().toUpperCase() : "";
-                if(key.includes("TIPO DE CAMBIO")) tc = parseFloat(row[1]);
-                if(key.includes("NOMINA FIJA")) nominaUSD = parseFloat(row[1]);
+                const k = (row[0] || "").toUpperCase();
+                if(k.includes("TIPO DE CAMBIO")) tc = parseFloat(row[1]);
+                if(k.includes("NOMINA FIJA")) nominaUSD = parseFloat(row[1]);
             });
-
             document.getElementById('tc-display').innerText = `S/ ${tc.toFixed(2)}`;
             document.getElementById('base-nomina-usd').innerText = nominaUSD;
 
-            // 3.2 PROCESAR EMPRESA
-            let bizIngresos = 0, bizGastos = 0, bizNominaPagada = 0;
-            let rowsEmpresaFound = 0;
+            // 2. EMPRESA
+            let bizIng = 0, bizGas = 0, bizNom = 0;
+            FILTERED_TXNS.empresa = []; // Reset
 
-            GLOBAL_DATA.empresa.forEach((row, idx) => {
-                if (idx === 0) return; // Header
-                
-                // Mapeo DATA_EMPRESA: [0]Fecha, [1]Tipo, [5]MontoCalcUSD
-                const fecha = parseLatamDate(row[0]);
-                if (fecha && fecha.getMonth() === selectedMonth && fecha.getFullYear() === selectedYear) {
-                    rowsEmpresaFound++;
-                    const tipo = (row[1] || "").toUpperCase();
-                    // Limpieza: Quitar comas y simbolos
-                    const montoStr = row[5] ? row[5].toString().replace(/[^0-9.-]/g, '') : "0";
-                    const monto = parseFloat(montoStr) || 0;
+            // Detectar columnas empresa (Auto-detect logic)
+            let colF=0, colT=1, colM=5;
+            if(JSON.stringify(GLOBAL_DATA.empresa[0]||[]).toLowerCase().includes("marca temporal")) { colF=1; colT=2; colM=4; }
 
-                    if (tipo.includes("INGRESO")) bizIngresos += monto;
-                    if (tipo.includes("GASTO")) bizGastos += monto;
-                    if (tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNominaPagada += monto;
-                }
-            });
-
-            // 3.3 PROCESAR PERSONAL
-            let perGastos = 0, perDeuda = 0;
-            let categorias = {};
-            let ultimasTxn = [];
-
-            GLOBAL_DATA.personal.forEach((row, idx) => {
-                if (idx === 0) return; // Header
-
-                // Mapeo DATA_PERSONAL: [0]Fecha, [1]Cat, [2]Desc, [3]Monto, [4]Metodo
-                const fecha = parseLatamDate(row[0]);
-                
-                if (fecha && fecha.getMonth() === selectedMonth && fecha.getFullYear() === selectedYear) {
-                    const cat = row[1] || "Otros";
-                    const desc = row[2] || "-";
-                    const montoStr = row[3] ? row[3].toString().replace(/[^0-9.-]/g, '') : "0";
-                    const monto = parseFloat(montoStr) || 0;
-                    const metodo = (row[4] || "").toUpperCase();
-
-                    perGastos += monto;
+            GLOBAL_DATA.empresa.forEach((row, i) => {
+                if(i===0) return;
+                const date = parseLatamDate(row[colF]);
+                if(date && date.getMonth() === selMonth && date.getFullYear() === selYear) {
+                    const tipo = (row[colT]||"").toUpperCase();
+                    const monto = parseFloat((row[colM]||"0").toString().replace(/[^0-9.-]/g, '')) || 0;
                     
-                    // Sumar categoría
-                    categorias[cat] = (categorias[cat] || 0) + monto;
+                    if(tipo.includes("INGRESO")) bizIng += monto;
+                    if(tipo.includes("GASTO")) bizGas += monto;
+                    if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNom += monto;
 
-                    // Deuda
-                    if (metodo.includes("CRÉDITO") || metodo.includes("CREDITO")) perDeuda += monto;
-
-                    // Guardar para tabla
-                    ultimasTxn.push({ fecha: row[0], cat, desc, monto });
+                    FILTERED_TXNS.empresa.push({ date, tipo, desc: row[colT+1] || "S/D", monto, cat: "Empresa" });
                 }
             });
 
-            logDebug(`Resultados: ${rowsEmpresaFound} ops empresa, ${ultimasTxn.length} ops personal.`);
+            // 3. PERSONAL
+            let perGas = 0, perDeuda = 0;
+            let cats = {};
+            FILTERED_TXNS.personal = []; // Reset
 
-            // 3.4 CÁLCULOS FINALES
-            const profit = bizIngresos - bizGastos - bizNominaPagada;
-            const nominaPEN = bizNominaPagada * tc;
-            const saldo = nominaPEN - perGastos;
+            // Detectar columnas personal
+            let cpF=0, cpC=1, cpD=2, cpM=3, cpMet=4;
+            if(JSON.stringify(GLOBAL_DATA.personal[0]||[]).toLowerCase().includes("marca temporal")) { cpF=1; cpC=2; cpD=3; cpM=4; cpMet=5; }
 
-            // 3.5 RENDERIZAR DOM
-            animateValue('biz-profit', profit, '$');
-            animateValue('biz-ingresos', bizIngresos, '$');
-            animateValue('biz-gastos', bizGastos, '$');
+            GLOBAL_DATA.personal.forEach((row, i) => {
+                if(i===0) return;
+                const date = parseLatamDate(row[cpF]);
+                if(date && date.getMonth() === selMonth && date.getFullYear() === selYear) {
+                    const cat = row[cpC] || "Otros";
+                    const desc = row[cpD] || "";
+                    const monto = parseFloat((row[cpM]||"0").toString().replace(/[^0-9.-]/g, '')) || 0;
+                    const metodo = (row[cpMet]||"").toUpperCase();
 
-            animateValue('per-nomina', nominaPEN, 'S/ ');
-            animateValue('per-gastos', perGastos, 'S/ ');
-            animateValue('per-saldo', saldo, 'S/ ');
-            animateValue('per-deuda', perDeuda, 'S/ ');
+                    perGas += monto;
+                    cats[cat] = (cats[cat] || 0) + monto;
+                    if(metodo.includes("CRÉDITO") || metodo.includes("CREDITO")) perDeuda += monto;
 
-            // Estilos Dinámicos
+                    FILTERED_TXNS.personal.push({ date, tipo: cat, desc, monto, cat });
+                }
+            });
+
+            // 4. CALCULOS & UI
+            const profit = bizIng - bizGas - bizNom;
+            const nominaPEN = bizNom * tc;
+            const saldo = nominaPEN - perGas;
+
+            // Animate Numbers
+            animateNumber('biz-profit', profit, '$');
+            animateNumber('biz-ingresos', bizIng, '$');
+            animateNumber('biz-gastos', bizGas, '$');
+            animateNumber('per-nomina', nominaPEN, 'S/ ');
+            animateNumber('per-gastos', perGas, 'S/ ');
+            animateNumber('per-saldo', saldo, 'S/ ');
+            animateNumber('per-deuda', perDeuda, 'S/ ');
+
+            // Styles & Bars
+            const health = document.getElementById('health-indicator');
             const elSaldo = document.getElementById('per-saldo');
-            const elHealth = document.getElementById('health-indicator');
             if(saldo < 0) {
-                elSaldo.className = "text-2xl font-mono font-bold text-brand-red mt-1 z-10 relative";
-                elHealth.innerText = "CRÍTICO";
-                elHealth.className = "text-xl font-mono font-bold text-brand-red";
+                elSaldo.className = "text-3xl font-mono font-bold text-danger mt-2 relative z-10 neon-text-red";
+                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-danger/20 text-danger border border-danger/30";
+                health.innerText = "CRÍTICO";
             } else {
-                elSaldo.className = "text-2xl font-mono font-bold text-brand-green mt-1 z-10 relative";
-                elHealth.innerText = "SALUDABLE";
-                elHealth.className = "text-xl font-mono font-bold text-brand-green";
+                elSaldo.className = "text-3xl font-mono font-bold text-success mt-2 relative z-10 neon-text-green";
+                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-success/20 text-success border border-success/30";
+                health.innerText = "SALUDABLE";
             }
 
-            // Renderizar Tabla (Últimos 5)
+            // Barra Gastos (Porcentaje de nomina consumida)
+            const pct = Math.min((perGas / (nominaPEN || 1)) * 100, 100);
+            document.getElementById('bar-gastos').style.width = `${pct}%`;
+            document.getElementById('bar-gastos').className = `h-full transition-all duration-1000 ${pct > 90 ? 'bg-danger' : 'bg-warning'}`;
+
+            // Tabla Reciente
+            renderTable(FILTERED_TXNS.personal.slice().reverse().slice(0, 5));
+            
+            // Chart
+            renderChart(cats);
+        }
+
+        // --- 3. UI HELPERS ---
+        function animateNumber(id, endValue, prefix) {
+            const el = document.getElementById(id);
+            // Simple animation or just set text
+            el.innerText = prefix + endValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function renderTable(data) {
             const tbody = document.getElementById('txn-list');
-            tbody.innerHTML = '';
-            // Ordenar por fecha desc (aunque ya vienen ordenados del sheet usualmente)
-            ultimasTxn.reverse().slice(0, 10).forEach(txn => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="py-2 text-slate-400 font-mono text-xs">${txn.fecha}</td>
-                    <td class="py-2"><span class="bg-dark-700 px-2 py-1 rounded text-[10px] uppercase">${txn.cat}</span></td>
-                    <td class="py-2 text-slate-300">${txn.desc}</td>
-                    <td class="py-2 text-right font-mono text-brand-orange">S/ ${txn.monto.toFixed(2)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            // Renderizar Gráfico
-            renderChart(categorias);
+            tbody.innerHTML = data.map(t => `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="px-4 py-3 font-mono text-xs text-slate-400">${t.date.toLocaleDateString()}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 rounded-md bg-slate-800 text-[10px] uppercase text-slate-300 border border-slate-700">${t.cat.substring(0, 15)}</span></td>
+                    <td class="px-4 py-3 text-xs text-slate-300">${t.desc}</td>
+                    <td class="px-4 py-3 text-right font-mono text-sm text-white">S/ ${t.monto.toFixed(2)}</td>
+                </tr>
+            `).join('');
         }
 
-        // --- UTILIDADES ---
-        function animateValue(id, value, prefix) {
-            document.getElementById(id).innerText = prefix + value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        }
-
-        let myChart = null;
+        let chartInstance = null;
         function renderChart(dataObj) {
             const ctx = document.getElementById('chartPersonal').getContext('2d');
-            
-            if (myChart) myChart.destroy();
+            if(chartInstance) chartInstance.destroy();
 
-            // Colores Cyberpunk
-            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'];
-
-            myChart = new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(dataObj),
                     datasets: [{
                         data: Object.values(dataObj),
-                        backgroundColor: colors,
-                        borderWidth: 0,
-                        hoverOffset: 10
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'],
+                        borderColor: '#0f172a',
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '75%',
+                    cutout: '70%',
                     plugins: {
-                        legend: { 
-                            position: 'right', 
-                            labels: { color: '#94a3b8', font: { family: 'Inter', size: 10 }, boxWidth: 10, usePointStyle: true } 
-                        }
+                        legend: { position: 'right', labels: { color: '#94a3b8', font: { family: 'Inter', size: 10 }, usePointStyle: true, padding: 15 } }
                     }
                 }
             });
         }
 
-        // Arrancar
+        // --- 4. MODAL LOGIC ---
+        function openDetails(type) {
+            const modal = document.getElementById('detail-modal');
+            const panel = document.getElementById('modal-panel');
+            const content = document.getElementById('modal-content');
+            const title = document.getElementById('modal-title');
+            const totalEl = document.getElementById('modal-total');
+
+            let sourceData = [];
+            let prefix = "";
+
+            if (type === 'PERSONAL_GASTOS') {
+                title.innerText = "Historial Gastos Personales";
+                sourceData = FILTERED_TXNS.personal;
+                prefix = "S/ ";
+            } else if (type === 'EMPRESA_GASTOS') {
+                title.innerText = "Historial Gastos Operativos";
+                sourceData = FILTERED_TXNS.empresa.filter(t => t.tipo.includes("GASTO"));
+                prefix = "$ ";
+            }
+
+            // Ordenar por fecha desc
+            sourceData.sort((a,b) => b.date - a.date);
+
+            // Renderizar lista detallada
+            content.innerHTML = sourceData.map(t => `
+                <div class="p-3 bg-surfaceHighlight/30 rounded-lg border border-white/5 hover:border-primary/30 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div class="flex flex-col">
+                            <span class="text-xs text-slate-400 font-mono">${t.date.toLocaleDateString()}</span>
+                            <span class="text-sm font-bold text-white mt-1">${t.desc || "Sin descripción"}</span>
+                            <span class="text-[10px] text-primary uppercase mt-1">${t.cat}</span>
+                        </div>
+                        <span class="font-mono font-bold text-white">${prefix}${t.monto.toFixed(2)}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = sourceData.reduce((sum, t) => sum + t.monto, 0);
+            totalEl.innerText = prefix + total.toLocaleString('en-US', {minimumFractionDigits: 2});
+
+            // Abrir
+            modal.classList.remove('hidden');
+            setTimeout(() => { panel.classList.remove('translate-x-full'); }, 10);
+        }
+
+        function closeDetails() {
+            const panel = document.getElementById('modal-panel');
+            const modal = document.getElementById('detail-modal');
+            panel.classList.add('translate-x-full');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
         init();
     </script>
 </body>
