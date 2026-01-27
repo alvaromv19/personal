@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FINANCIAL AMV | ULTRA</title>
+    <title>FINANCIAL ALVARO | ULTRA</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -66,11 +66,9 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        /* Scrollbar Invisible pero funcional */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Custom Inputs */
         input[type="date"]::-webkit-calendar-picker-indicator {
@@ -156,7 +154,7 @@
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Profit Neto</span>
                         <span class="px-2 py-0.5 rounded text-[10px] bg-primary/20 text-primary border border-primary/20">Click Detalle</span>
                     </div>
-                    <div class="text-4xl font-mono font-bold text-white mb-1 shadow-neon-blue" id="biz-profit">$0.00</div>
+                    <div class="text-4xl font-mono font-bold text-white mb-1 transition-all duration-300" id="biz-profit">$0.00</div>
                     <div class="text-xs text-slate-500 flex items-center gap-1">
                         <div class="w-2 h-2 rounded-full bg-success"></div> Cash Flow Real
                     </div>
@@ -215,28 +213,27 @@
                         <span class="text-[10px] font-bold text-slate-400 uppercase">Saldo / Ahorro</span>
                     </div>
                     <div class="text-2xl font-mono font-bold text-white relative z-10" id="per-saldo">S/ 0.00</div>
-                    <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/30 border border-white/10 text-slate-400 relative z-10">
-                        ---
-                    </div>
+                    <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/30 border border-white/10 text-slate-400 relative z-10">---</div>
                     <div class="absolute right-0 top-0 w-20 h-20 bg-primary/10 blur-xl rounded-full"></div>
                 </div>
 
-                <div class="glass p-5 rounded-xl border-l-4 border-danger/80 bg-danger/5">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] font-bold text-danger uppercase tracking-widest">Consumo TC</span>
-                        <i data-lucide="credit-card" class="w-4 h-4 text-danger"></i>
+                <div class="glass p-4 rounded-xl border-l-4 border-danger/80 bg-danger/5 flex flex-col justify-between">
+                    <div class="mb-3 border-b border-danger/20 pb-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] text-danger font-bold uppercase">Pagar el <span id="tc-next-date">--</span></span>
+                            <i data-lucide="alert-circle" class="w-3 h-3 text-danger"></i>
+                        </div>
+                        <div class="text-xl font-mono font-bold text-white" id="tc-next-amount">S/ 0.00</div>
+                        <div class="text-[9px] text-slate-400">Cierre anterior (<span id="tc-prev-close">--</span>)</div>
                     </div>
-                    <div class="text-2xl font-mono font-bold text-white" id="per-deuda">S/ 0.00</div>
                     
-                    <div class="mt-3 pt-3 border-t border-danger/20 space-y-1">
-                        <div class="flex justify-between text-[10px] text-slate-400">
-                            <span>Cierre:</span>
-                            <span class="text-white font-mono" id="tc-cierre">--</span>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">Consumo Ciclo Actual</span>
+                            <i data-lucide="credit-card" class="w-3 h-3 text-slate-500"></i>
                         </div>
-                        <div class="flex justify-between text-[10px] text-slate-400">
-                            <span>Pagar el:</span>
-                            <span class="text-danger font-bold font-mono" id="tc-pago">--</span>
-                        </div>
+                        <div class="text-lg font-mono font-bold text-slate-300" id="tc-current-amount">S/ 0.00</div>
+                        <div class="text-[9px] text-slate-500">Cierra el <span id="tc-next-close">--</span></div>
                     </div>
                 </div>
             </div>
@@ -265,44 +262,23 @@
                                     <th class="px-4 py-3 text-right font-medium">Monto</th>
                                 </tr>
                             </thead>
-                            <tbody id="txn-list" class="divide-y divide-white/5 text-slate-300">
-                                </tbody>
+                            <tbody id="txn-list" class="divide-y divide-white/5 text-slate-300"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div id="loading" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg">
             <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
             <span class="mt-4 text-primary font-mono text-xs tracking-widest animate-pulse">CARGANDO DATOS...</span>
         </div>
-
-    </div>
-
-    <div id="detail-modal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal('detail-modal')"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[480px] bg-surface border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full" id="detail-panel">
-            <div class="h-full flex flex-col">
-                <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50">
-                    <h2 class="text-lg font-bold text-white" id="modal-title">Detalles</h2>
-                    <button onclick="closeModal('detail-modal')" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-4 space-y-2" id="modal-content"></div>
-                <div class="p-6 border-t border-white/10 bg-surfaceLight/30 text-right">
-                    <span class="text-xs text-slate-500 uppercase mr-2">Total</span>
-                    <span class="text-2xl font-mono font-bold text-white" id="modal-total">0.00</span>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div id="profit-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('profit-modal')"></div>
-        <div class="relative w-full max-w-4xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            
-            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50">
+        <div class="relative w-full max-w-4xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50 shrink-0">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2">
                         <i data-lucide="pie-chart" class="w-5 h-5 text-primary"></i> Desglose de Profit
@@ -313,24 +289,41 @@
             </div>
 
             <div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-                <div class="flex flex-col h-full">
-                    <div class="p-3 bg-success/10 border-b border-white/5 text-center">
+                <div class="flex flex-col h-full overflow-hidden">
+                    <div class="p-3 bg-success/10 border-b border-white/5 text-center shrink-0">
                         <span class="text-xs font-bold text-success uppercase tracking-widest">Ingresos (+)</span>
                     </div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2" id="profit-pos-list"></div>
-                    <div class="p-4 border-t border-white/5 text-right">
+                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-pos-list"></div>
+                    <div class="p-4 border-t border-white/5 text-right shrink-0">
                         <span class="font-mono font-bold text-success" id="profit-pos-total">$0.00</span>
                     </div>
                 </div>
 
-                <div class="flex flex-col h-full">
-                    <div class="p-3 bg-danger/10 border-b border-white/5 text-center">
+                <div class="flex flex-col h-full overflow-hidden">
+                    <div class="p-3 bg-danger/10 border-b border-white/5 text-center shrink-0">
                         <span class="text-xs font-bold text-danger uppercase tracking-widest">Egresos & Nómina (-)</span>
                     </div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2" id="profit-neg-list"></div>
-                    <div class="p-4 border-t border-white/5 text-right">
+                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-neg-list"></div>
+                    <div class="p-4 border-t border-white/5 text-right shrink-0">
                         <span class="font-mono font-bold text-danger" id="profit-neg-total">$0.00</span>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal('detail-modal')"></div>
+        <div class="absolute inset-y-0 right-0 w-full md:w-[480px] bg-surface border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full" id="detail-panel">
+            <div class="h-full flex flex-col">
+                <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50">
+                    <h2 class="text-lg font-bold text-white" id="modal-title">Detalles</h2>
+                    <button onclick="closeModal('detail-modal')" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="modal-content"></div>
+                <div class="p-6 border-t border-white/10 bg-surfaceLight/30 text-right">
+                    <span class="text-xs text-slate-500 uppercase mr-2">Total</span>
+                    <span class="text-2xl font-mono font-bold text-white" id="modal-total">0.00</span>
                 </div>
             </div>
         </div>
@@ -339,20 +332,21 @@
     <script>
         lucide.createIcons();
         let GLOBAL_DATA = {};
-        let CURRENT_FILTER_MODE = 'month'; // 'month' | 'range'
+        let CURRENT_FILTER_MODE = 'month'; 
         let PROCESSED_DATA = { empresa: [], personal: [] };
 
         // --- 1. INITIALIZATION ---
         async function init() {
-            // Set defaults
             const today = new Date();
             document.getElementById('filter-month').value = today.getMonth();
             document.getElementById('filter-year').value = today.getFullYear();
             
-            // Default range: First day of current month to today
+            // Set default range inputs
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-            document.getElementById('date-start').valueAsDate = firstDay;
-            document.getElementById('date-end').valueAsDate = today;
+            // Format dates as YYYY-MM-DD for input values
+            const formatDateInput = (d) => d.toISOString().split('T')[0];
+            document.getElementById('date-start').value = formatDateInput(firstDay);
+            document.getElementById('date-end').value = formatDateInput(today);
 
             try {
                 const [conf, emp, per] = await Promise.all([
@@ -372,7 +366,7 @@
 
             } catch (e) {
                 console.error(e);
-                alert("Error cargando datos");
+                alert("Error cargando datos. Verifique conexión.");
             }
         }
 
@@ -384,16 +378,13 @@
                 const m = parseInt(document.getElementById('filter-month').value);
                 const y = parseInt(document.getElementById('filter-year').value);
                 startDate = new Date(y, m, 1);
-                endDate = new Date(y, m + 1, 0, 23, 59, 59); // Last day of month
+                endDate = new Date(y, m + 1, 0, 23, 59, 59);
             } else {
                 // Range mode
                 const sVal = document.getElementById('date-start').value;
                 const eVal = document.getElementById('date-end').value;
-                startDate = sVal ? new Date(sVal) : new Date(2025,0,1); // Fallback
-                endDate = eVal ? new Date(eVal) : new Date();
-                // Ajustar horas para cubrir todo el día final
-                startDate.setHours(0,0,0);
-                endDate.setHours(23,59,59);
+                startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date();
+                endDate = eVal ? new Date(eVal + 'T23:59:59') : new Date();
             }
 
             processData(startDate, endDate);
@@ -414,7 +405,6 @@
             let bizIng = 0, bizGas = 0, bizNom = 0;
             PROCESSED_DATA.empresa = [];
             
-            // Auto-detect columns
             let cf=0, ct=1, cm=5;
             if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { cf=1; ct=2; cm=4; }
 
@@ -456,9 +446,9 @@
                 }
             });
 
-            // D. DEUDA TARJETA (LÓGICA ESPECIAL CICLOS)
-            // Calculamos la deuda del CICLO ACTIVO relativo a la fecha FIN del filtro
-            const cycleData = calculateCreditCardDebt(endDate); 
+            // D. DEUDA TARJETA (LÓGICA DUAL)
+            // Usamos endDate (normalmente "hoy" o fin de mes) como referencia
+            const cardData = calculateSplitCardDebt(endDate);
 
             // E. RESULTADOS
             const profit = bizIng - bizGas - bizNom;
@@ -474,10 +464,21 @@
             updateCard('per-gastos', perGas, 'S/ ');
             updateCard('per-saldo', saldo, 'S/ ');
             
-            // UI Deuda TC
-            updateCard('per-deuda', cycleData.total, 'S/ ');
-            document.getElementById('tc-cierre').innerText = cycleData.closeDate;
-            document.getElementById('tc-pago').innerText = cycleData.payDate;
+            // UI Profit Dinámico
+            const profitEl = document.getElementById('biz-profit');
+            if (profit >= 0) {
+                profitEl.className = "text-4xl font-mono font-bold text-success mb-1 shadow-neon-green";
+            } else {
+                profitEl.className = "text-4xl font-mono font-bold text-danger mb-1 shadow-neon-red";
+            }
+
+            // UI Tarjetas Dual
+            updateCard('tc-next-amount', cardData.nextPayment, 'S/ ');
+            document.getElementById('tc-next-date').innerText = cardData.nextPayDateStr;
+            document.getElementById('tc-prev-close').innerText = cardData.prevCloseStr;
+
+            updateCard('tc-current-amount', cardData.currentConsumption, 'S/ ');
+            document.getElementById('tc-next-close').innerText = cardData.currentCloseStr;
 
             // UI Barras & Estados
             const health = document.getElementById('health-indicator');
@@ -502,29 +503,48 @@
             renderChart(cats);
         }
 
-        // --- 3. LOGICA TC AVANZADA ---
-        function calculateCreditCardDebt(referenceDate) {
-            // Regla: Cierre 10, Apertura 11, Pago 05 (del mes siguiente al cierre)
-            // Paso 1: Determinar el ciclo en el que cae referenceDate
-            let cycleStart, cycleEnd, payDate;
+        // --- 3. LOGICA TC DUAL (11-10 / PAGO 05) ---
+        function calculateSplitCardDebt(refDate) {
+            // refDate es usualmente "Hoy"
             
-            // Si la fecha es <= 10, estamos en el ciclo que empezó el mes pasado
-            if (referenceDate.getDate() <= 10) {
-                // Ciclo: Mes Anterior 11 - Este Mes 10
-                cycleEnd = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), 10);
-                cycleStart = new Date(referenceDate.getFullYear(), referenceDate.getMonth() - 1, 11);
-            } else {
-                // Ciclo: Este Mes 11 - Mes Siguiente 10
-                cycleStart = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), 11);
-                cycleEnd = new Date(referenceDate.getFullYear(), referenceDate.getMonth() + 1, 10);
-            }
+            // 1. DEFINIR FECHAS CLAVE
+            // Si hoy es <= 10 (ej: 5 Ene), estamos en ciclo Dic 11 - Ene 10.
+            // Si hoy es > 10 (ej: 27 Ene), estamos en ciclo Ene 11 - Feb 10.
             
-            // Fecha Pago: 05 del mes SIGUIENTE a cycleEnd
-            payDate = new Date(cycleEnd.getFullYear(), cycleEnd.getMonth() + 1, 5);
+            let currentOpenStart, currentOpenEnd; // Para "Consumo Actual"
+            let prevClosedStart, prevClosedEnd;   // Para "Próximo Pago"
+            
+            const day = refDate.getDate();
+            const month = refDate.getMonth();
+            const year = refDate.getFullYear();
 
-            // Paso 2: Sumar gastos TC en ese rango exacto
-            let total = 0;
-            let pf=0, pm=3, pmet=4; // indices personal
+            if (day <= 10) {
+                // Ciclo Abierto: Mes Anterior 11 -> Este Mes 10
+                currentOpenStart = new Date(year, month - 1, 11);
+                currentOpenEnd = new Date(year, month, 10);
+                
+                // Ciclo Cerrado Anterior: Mes-2 11 -> Mes-1 10
+                prevClosedStart = new Date(year, month - 2, 11);
+                prevClosedEnd = new Date(year, month - 1, 10);
+            } else {
+                // Ciclo Abierto: Este Mes 11 -> Mes Siguiente 10
+                currentOpenStart = new Date(year, month, 11);
+                currentOpenEnd = new Date(year, month + 1, 10);
+                
+                // Ciclo Cerrado Anterior: Mes-1 11 -> Este Mes 10
+                prevClosedStart = new Date(year, month - 1, 11);
+                prevClosedEnd = new Date(year, month, 10);
+            }
+
+            // Fecha de pago del ciclo cerrado: 5 del mes siguiente al cierre
+            // El ciclo cerrado terminó en prevClosedEnd. Pago es mes siguiente dia 5.
+            const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5);
+
+            // 2. CALCULAR MONTOS
+            let nextPayment = 0;
+            let currentConsumption = 0;
+
+            let pf=0, pm=3, pmet=4; 
             if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pm=4; pmet=5; }
 
             GLOBAL_DATA.personal.forEach((row, i) => {
@@ -532,33 +552,50 @@
                 const d = parseDate(row[pf]);
                 const metodo = (row[pmet]||"").toUpperCase();
                 
-                // Normalizar horas para comparar fechas
-                if (d) d.setHours(12,0,0,0);
-                const s = new Date(cycleStart); s.setHours(0,0,0,0);
-                const e = new Date(cycleEnd); e.setHours(23,59,59,999);
+                if (d && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) {
+                    d.setHours(12,0,0,0);
+                    const amount = parseMonto(row[pm]);
 
-                if(d >= s && d <= e && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) {
-                    total += parseMonto(row[pm]);
+                    // Chequear si cae en Ciclo Cerrado (A pagar ya)
+                    if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) {
+                        nextPayment += amount;
+                    }
+                    // Chequear si cae en Ciclo Abierto (Acumulando)
+                    if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) {
+                        currentConsumption += amount;
+                    }
                 }
             });
 
             return {
-                total: total,
-                closeDate: cycleEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
-                payDate: payDate.toLocaleDateString('es-PE', {day:'2-digit', month:'short'})
+                nextPayment,
+                currentConsumption,
+                nextPayDateStr: nextPayDate.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
+                prevCloseStr: prevClosedEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
+                currentCloseStr: currentOpenEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'})
             };
         }
 
-        // --- 4. MODALS & UI ---
+        // --- 4. UI LOGIC ---
         function setFilterMode(mode) {
             CURRENT_FILTER_MODE = mode;
-            document.getElementById('btn-mode-month').className = mode === 'month' ? "px-3 py-1.5 rounded-md transition-colors bg-primary text-white shadow-lg" : "px-3 py-1.5 rounded-md transition-colors text-slate-400 hover:text-white";
-            document.getElementById('btn-mode-range').className = mode === 'range' ? "px-3 py-1.5 rounded-md transition-colors bg-primary text-white shadow-lg" : "px-3 py-1.5 rounded-md transition-colors text-slate-400 hover:text-white";
+            const btnMonth = document.getElementById('btn-mode-month');
+            const btnRange = document.getElementById('btn-mode-range');
             
             if(mode === 'month') {
+                btnMonth.classList.add('bg-primary', 'text-white', 'shadow-lg');
+                btnMonth.classList.remove('text-slate-400');
+                btnRange.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+                btnRange.classList.add('text-slate-400');
+                
                 document.getElementById('controls-month').classList.remove('hidden');
                 document.getElementById('controls-range').classList.add('hidden');
             } else {
+                btnRange.classList.add('bg-primary', 'text-white', 'shadow-lg');
+                btnRange.classList.remove('text-slate-400');
+                btnMonth.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+                btnMonth.classList.add('text-slate-400');
+
                 document.getElementById('controls-month').classList.add('hidden');
                 document.getElementById('controls-range').classList.remove('hidden');
             }
@@ -571,8 +608,6 @@
             listPos.innerHTML = ''; listNeg.innerHTML = '';
             
             let totalPos = 0, totalNeg = 0;
-
-            // Ordenar por fecha desc
             const sorted = PROCESSED_DATA.empresa.sort((a,b) => b.date - a.date);
 
             sorted.forEach(t => {
@@ -587,28 +622,20 @@
                         <div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'}">
                             ${isPos ? '+' : '-'} $${t.monto.toFixed(2)}
                         </div>
-                    </div>
-                `;
+                    </div>`;
 
-                if(isPos) {
-                    listPos.insertAdjacentHTML('beforeend', html);
-                    totalPos += t.monto;
-                } else {
-                    listNeg.insertAdjacentHTML('beforeend', html);
-                    totalNeg += t.monto;
-                }
+                if(isPos) { listPos.insertAdjacentHTML('beforeend', html); totalPos += t.monto; }
+                else { listNeg.insertAdjacentHTML('beforeend', html); totalNeg += t.monto; }
             });
 
             document.getElementById('profit-pos-total').innerText = '$' + totalPos.toFixed(2);
             document.getElementById('profit-neg-total').innerText = '-$' + totalNeg.toFixed(2);
-
-            const modal = document.getElementById('profit-modal');
-            modal.classList.remove('hidden');
+            document.getElementById('profit-modal').classList.remove('hidden');
         }
 
         function openDetails(type) {
-            const panel = document.getElementById('detail-panel');
             const modal = document.getElementById('detail-modal');
+            const panel = document.getElementById('detail-panel');
             const content = document.getElementById('modal-content');
             const title = document.getElementById('modal-title');
             
@@ -632,8 +659,7 @@
                         <div class="text-[10px] text-primary uppercase">${t.cat || t.tipo}</div>
                     </div>
                     <div class="font-mono font-bold text-slate-200">${symbol}${t.monto.toFixed(2)}</div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
             const total = data.reduce((s, t) => s + t.monto, 0);
             document.getElementById('modal-total').innerText = symbol + total.toFixed(2);
@@ -662,6 +688,9 @@
             const d = new Date(str);
             return isNaN(d) ? null : d;
         }
+        function setTime(date, h) {
+            const d = new Date(date); d.setHours(h, h===23?59:0, h===23?59:0, 0); return d;
+        }
         function parseMonto(val) {
             return parseFloat(String(val).replace(/[^0-9.-]/g, '')) || 0;
         }
@@ -689,8 +718,9 @@
                     datasets: [{
                         data: Object.values(data),
                         backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'],
-                        borderColor: '#020617',
-                        borderWidth: 4
+                        borderColor: '#020617', // Match BG for cleaner look
+                        borderWidth: 0,
+                        hoverOffset: 20
                     }]
                 },
                 options: {
