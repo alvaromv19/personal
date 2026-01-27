@@ -3,303 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVO Financial Dashboard</title>
+    <title>Finanxial Personal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
-                        brand: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', orange: '#f59e0b' }
+                        dark: { 900: '#0B1120', 800: '#151E32', 700: '#2A3655', 600: '#3B4D70' },
+                        brand: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', orange: '#f59e0b', purple: '#8b5cf6' }
                     },
-                    fontFamily: { mono: ['monospace'], sans: ['system-ui', 'sans-serif'] }
+                    fontFamily: { mono: ['"JetBrains Mono"', 'monospace'], sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
-    <style>body { background-color: #0f172a; color: #f8fafc; }</style>
+    <style>
+        body { background-color: #0B1120; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .glass-panel { background: rgba(21, 30, 50, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem; -webkit-print-color-adjust: exact; }
+    </style>
 </head>
-<body class="p-6">
+<body class="min-h-screen p-4 md:p-8">
 
     <script>
-        // TUS LINKS REALES YA CONFIGURADOS
         const URL_PERSONAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=50339649&single=true&output=csv";
         const URL_EMPRESA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=755120241&single=true&output=csv";
         const URL_CONFIG = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=238892353&single=true&output=csv";
     </script>
 
-    <div class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-10 border-b border-dark-700 pb-6">
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-dark-700 pb-6">
             <div>
-                <h1 class="text-3xl font-bold tracking-tight flex items-center gap-3">
-                    <i data-lucide="wallet" class="text-brand-blue"></i> EVO FINANCIAL OS
+                <h1 class="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+                    <i data-lucide="layout-dashboard" class="text-brand-blue"></i>FINANCIAL <span class="text-dark-600">OS</span>
                 </h1>
-                <p class="text-slate-400 text-sm mt-1 font-mono" id="fecha-header">CARGANDO...</p>
+                <p class="text-slate-400 text-xs mt-1 font-mono tracking-widest uppercase">Sistema de Gestión Centralizada</p>
             </div>
-            <div class="text-right">
-                <div class="text-[10px] text-slate-500 font-mono uppercase">TIPO DE CAMBIO</div>
-                <div class="font-mono font-bold text-brand-green text-xl" id="tc-display">...</div>
+            
+            <div class="flex flex-wrap gap-3 bg-dark-800 p-2 rounded-lg border border-dark-700">
+                <div class="relative">
+                    <select id="filter-month" class="appearance-none bg-dark-900 border border-dark-600 text-white py-2 pl-4 pr-10 rounded focus:outline-none focus:border-brand-blue text-sm font-mono uppercase" onchange="applyFilter()">
+                        <option value="0">Enero</option>
+                        <option value="1">Febrero</option>
+                        <option value="2">Marzo</option>
+                        <option value="3">Abril</option>
+                        <option value="4">Mayo</option>
+                        <option value="5">Junio</option>
+                        <option value="6">Julio</option>
+                        <option value="7">Agosto</option>
+                        <option value="8">Septiembre</option>
+                        <option value="9">Octubre</option>
+                        <option value="10">Noviembre</option>
+                        <option value="11">Diciembre</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <select id="filter-year" class="appearance-none bg-dark-900 border border-dark-600 text-white py-2 pl-4 pr-10 rounded focus:outline-none focus:border-brand-blue text-sm font-mono" onchange="applyFilter()">
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div class="flex flex-col justify-center px-4 border-l border-dark-600">
+                    <span class="text-[10px] text-slate-500 font-mono uppercase">TC REF</span>
+                    <span class="font-bold text-brand-green font-mono" id="tc-display">---</span>
+                </div>
             </div>
         </header>
 
-        <div id="loading" class="text-center py-20 animate-pulse text-brand-blue font-mono">
-            ANALIZANDO DATOS...
+        <div id="loading" class="flex flex-col items-center justify-center py-20 animate-pulse space-y-4">
+            <i data-lucide="database" class="w-10 h-10 text-brand-blue"></i>
+            <span class="text-brand-blue font-mono text-sm tracking-widest">SINCRONIZANDO DATOS...</span>
         </div>
 
-        <div id="dashboard" class="hidden">
+        <div id="dashboard" class="hidden space-y-8">
             
-            <div id="debug-info" class="mb-6 p-2 bg-red-900/20 text-red-400 text-xs font-mono hidden rounded"></div>
-
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-slate-300">
-                <span class="w-1 h-6 bg-brand-blue rounded-full"></span> NEGOCIO (USD)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">PROFIT NETO</div>
-                    <div class="text-3xl font-mono font-bold text-white" id="biz-profit">$0.00</div>
-                    <div class="text-xs text-slate-500 mt-1">Cash Flow Real</div>
-                </div>
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">FACTURACIÓN</div>
-                    <div class="text-3xl font-mono font-bold text-brand-green" id="biz-ingresos">$0.00</div>
-                    <div class="text-xs text-slate-500 mt-1">Ingresos Totales</div>
-                </div>
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">GASTOS OPERATIVOS</div>
-                    <div class="text-3xl font-mono font-bold text-brand-red" id="biz-gastos">$0.00</div>
-                    <div class="text-xs text-slate-500 mt-1">Sin incluir nómina</div>
+            <div class="space-y-4">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2 h-2 bg-brand-blue rounded-full"></span> Flujo de Caja Empresarial (USD)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-panel p-6 rounded-xl hover:border-brand-blue transition-colors group">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Profit Neto</span>
+                            <div class="p-2 bg-brand-blue/10 rounded text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                                <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-mono font-bold text-white" id="biz-profit">$0.00</div>
+                        <div class="text-xs text-slate-500 mt-2">Disponible en cuenta</div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Facturación</span>
+                            <i data-lucide="trending-up" class="w-4 h-4 text-brand-green"></i>
+                        </div>
+                        <div class="text-3xl font-mono font-bold text-brand-green" id="biz-ingresos">$0.00</div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Op.</span>
+                            <i data-lucide="trending-down" class="w-4 h-4 text-brand-red"></i>
+                        </div>
+                        <div class="text-3xl font-mono font-bold text-brand-red" id="biz-gastos">$0.00</div>
+                    </div>
                 </div>
             </div>
 
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-slate-300">
-                <span class="w-1 h-6 bg-brand-green rounded-full"></span> PERSONAL (PEN)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700 border-l-4 border-l-brand-blue">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">MI NÓMINA</div>
-                    <div class="text-2xl font-mono font-bold text-brand-blue" id="per-nomina">S/ 0.00</div>
-                    <div class="text-xs text-slate-500 mt-1">Base: $<span id="base-nomina-usd">0</span> USD</div>
-                </div>
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">GASTOS VIDA</div>
-                    <div class="text-2xl font-mono font-bold text-brand-orange" id="per-gastos">S/ 0.00</div>
-                    <div class="text-xs text-slate-500 mt-1">Consumo real</div>
-                </div>
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700" id="card-saldo">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">SALDO / AHORRO</div>
-                    <div class="text-2xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
-                    <div class="text-xs text-slate-500 mt-1" id="txt-saldo">Disponible</div>
-                </div>
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700">
-                    <div class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">DEUDA TARJETA</div>
-                    <div class="text-2xl font-mono font-bold text-brand-red" id="per-deuda">S/ 0.00</div>
-                    <div class="text-xs text-slate-500 mt-1">A pagar prox. mes</div>
+            <div class="space-y-4">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2 h-2 bg-brand-green rounded-full"></span> Economía Personal (PEN)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-l-brand-blue">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Mi Nómina</span>
+                        <div class="text-2xl font-mono font-bold text-brand-blue mt-1" id="per-nomina">S/ 0.00</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Base: $<span id="base-nomina-usd">0</span></div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Gastos Vida</span>
+                        <div class="text-2xl font-mono font-bold text-brand-orange mt-1" id="per-gastos">S/ 0.00</div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl relative overflow-hidden">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Saldo / Ahorro</span>
+                        <div class="text-2xl font-mono font-bold text-white mt-1 z-10 relative" id="per-saldo">S/ 0.00</div>
+                        <div class="absolute bottom-0 right-0 p-4 opacity-10">
+                            <i data-lucide="piggy-bank" class="w-12 h-12 text-white"></i>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Deuda Tarjeta</span>
+                        <div class="text-2xl font-mono font-bold text-brand-red mt-1" id="per-deuda">S/ 0.00</div>
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700 col-span-2">
-                    <h3 class="text-xs font-bold text-slate-500 mb-6 tracking-widest uppercase">Distribución de Gastos</h3>
-                    <div class="h-64 relative w-full">
-                        <canvas id="chartPersonal"></canvas>
+                <div class="glass-panel p-6 rounded-xl col-span-2">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="list" class="w-4 h-4"></i> Últimos Movimientos Personales
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-slate-500 uppercase border-b border-dark-600">
+                                <tr>
+                                    <th class="py-2">Fecha</th>
+                                    <th class="py-2">Categoría</th>
+                                    <th class="py-2">Detalle</th>
+                                    <th class="py-2 text-right">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txn-list" class="divide-y divide-dark-700 text-slate-300">
+                                </tbody>
+                        </table>
                     </div>
                 </div>
-                
-                <div class="bg-dark-800 p-6 rounded-2xl border border-dark-700 flex flex-col justify-center items-center text-center">
-                    <div id="health-indicator" class="text-4xl font-mono font-bold mb-2 text-white">---</div>
-                    <div class="text-xs text-slate-500 uppercase tracking-widest">Estado Financiero</div>
+
+                <div class="glass-panel p-6 rounded-xl flex flex-col">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Distribución</h3>
+                    <div class="flex-grow relative min-h-[200px]">
+                        <canvas id="chartPersonal"></canvas>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <div id="health-indicator" class="text-xl font-mono font-bold">---</div>
+                        <div class="text-[10px] text-slate-500 uppercase">Estado Salud Financiera</div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="mt-8 p-4 bg-black rounded border border-dark-700 font-mono text-xs">
+                <div class="flex justify-between items-center mb-2 cursor-pointer" onclick="toggleDebug()">
+                    <span class="text-brand-purple font-bold">> CONSOLA DEL SISTEMA (Click para ver datos crudos)</span>
+                    <span class="text-slate-500" id="debug-status">Listo</span>
+                </div>
+                <div id="debug-content" class="hidden text-slate-400 space-y-1 h-32 overflow-y-auto">
+                    </div>
             </div>
 
         </div>
     </div>
 
     <script>
+        // Inicializar Iconos
         lucide.createIcons();
 
-        // --- FUNCIÓN CLAVE: PARSEADOR DE FECHAS LATINO (DD/MM/YYYY) ---
+        // VARIABLES GLOBALES (Almacén de datos)
+        let GLOBAL_DATA = {
+            empresa: [],
+            personal: [],
+            config: []
+        };
+
+        // --- 1. PARSEADOR DE FECHAS ROBUSTO ---
         function parseLatamDate(dateStr) {
-            if (!dateStr) return null;
-            // Si viene como "23/01/2026"
-            const parts = dateStr.split('/');
+            if (!dateStr || typeof dateStr !== 'string') return null;
+            // Intenta DD/MM/YYYY
+            const parts = dateStr.trim().split('/');
             if (parts.length === 3) {
-                // new Date(Year, Month-1, Day)
+                // Ojo: Javascript cuenta meses 0-11
                 return new Date(parts[2], parts[1] - 1, parts[0]);
             }
-            // Fallback por si acaso viene en formato gringo
-            return new Date(dateStr);
+            // Intenta formato estandar por si acaso
+            const d = new Date(dateStr);
+            return isNaN(d.getTime()) ? null : d;
         }
 
-        async function init() {
-            const dateOptions = { month: 'long', year: 'numeric' };
-            const today = new Date();
-            document.getElementById('fecha-header').innerText = today.toLocaleDateString('es-PE', dateOptions).toUpperCase();
+        function logDebug(msg) {
+            const el = document.getElementById('debug-content');
+            const p = document.createElement('div');
+            p.innerText = `> ${msg}`;
+            el.appendChild(p);
+        }
 
-            Promise.all([
-                fetchCSV(URL_CONFIG),
-                fetchCSV(URL_EMPRESA),
-                fetchCSV(URL_PERSONAL)
-            ]).then(([configData, empresaData, personalData]) => {
-                procesarDatos(configData, empresaData, personalData);
-            }).catch(err => {
+        function toggleDebug() {
+            document.getElementById('debug-content').classList.toggle('hidden');
+        }
+
+        // --- 2. CARGA DE DATOS (SOLO UNA VEZ) ---
+        async function init() {
+            logDebug("Iniciando conexión...");
+            
+            // Setear mes actual por defecto
+            const today = new Date();
+            document.getElementById('filter-month').value = today.getMonth();
+            document.getElementById('filter-year').value = today.getFullYear();
+
+            try {
+                const [conf, emp, per] = await Promise.all([
+                    fetchCSV(URL_CONFIG),
+                    fetchCSV(URL_EMPRESA),
+                    fetchCSV(URL_PERSONAL)
+                ]);
+
+                GLOBAL_DATA.config = conf;
+                GLOBAL_DATA.empresa = emp;
+                GLOBAL_DATA.personal = per;
+
+                logDebug(`Datos Cargados: Empresa (${emp.length} filas), Personal (${per.length} filas)`);
+                
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+
+                applyFilter(); // Ejecutar lógica por primera vez
+
+            } catch (err) {
                 console.error(err);
-                document.getElementById('loading').innerText = "ERROR DE CONEXIÓN";
-            });
+                document.getElementById('loading').innerHTML = `<span class="text-brand-red">ERROR DE CONEXIÓN: ${err.message}</span>`;
+            }
         }
 
         function fetchCSV(url) {
             return new Promise((resolve, reject) => {
                 Papa.parse(url, {
                     download: true,
-                    header: false, 
+                    header: false, // Importante: False para manejar indices manualmente
+                    skipEmptyLines: true,
                     complete: (results) => resolve(results.data),
                     error: (err) => reject(err)
                 });
             });
         }
 
-        function procesarDatos(config, empresa, personal) {
-            const today = new Date();
-            const currentMonth = today.getMonth(); // 0 = Enero
-            const currentYear = today.getFullYear(); // 2026
+        // --- 3. LÓGICA DE FILTRADO Y VISUALIZACIÓN ---
+        function applyFilter() {
+            const selectedMonth = parseInt(document.getElementById('filter-month').value);
+            const selectedYear = parseInt(document.getElementById('filter-year').value);
 
-            // 1. Configuración
-            let tc = 3.5; // Default según tu CSV
-            let nominaUSD = 400; // Default según tu CSV
+            logDebug(`Aplicando filtro: Mes ${selectedMonth + 1}, Año ${selectedYear}`);
 
-            // Buscar en todas las filas de config
-            config.forEach(row => {
-                if(row[0] && row[0].includes("TIPO DE CAMBIO")) tc = parseFloat(row[1]);
-                if(row[0] && row[0].includes("NOMINA FIJA")) nominaUSD = parseFloat(row[1]);
+            // 3.1 PROCESAR CONFIGURACIÓN
+            let tc = 3.75; 
+            let nominaUSD = 400;
+            // Buscar en todas las filas (Atribución segura)
+            GLOBAL_DATA.config.forEach(row => {
+                const key = row[0] ? row[0].toString().toUpperCase() : "";
+                if(key.includes("TIPO DE CAMBIO")) tc = parseFloat(row[1]);
+                if(key.includes("NOMINA FIJA")) nominaUSD = parseFloat(row[1]);
             });
 
             document.getElementById('tc-display').innerText = `S/ ${tc.toFixed(2)}`;
             document.getElementById('base-nomina-usd').innerText = nominaUSD;
 
-            // 2. Procesar Empresa
+            // 3.2 PROCESAR EMPRESA
             let bizIngresos = 0, bizGastos = 0, bizNominaPagada = 0;
-            let debugRows = 0;
+            let rowsEmpresaFound = 0;
 
-            empresa.forEach((row, index) => {
-                if (index === 0) return; // Saltar cabecera
+            GLOBAL_DATA.empresa.forEach((row, idx) => {
+                if (idx === 0) return; // Header
                 
-                // DATA EMPRESA: Col 0 es Fecha, Col 1 es Tipo, Col 5 es Monto USD Calculado
+                // Mapeo DATA_EMPRESA: [0]Fecha, [1]Tipo, [5]MontoCalcUSD
                 const fecha = parseLatamDate(row[0]);
-                
-                if (fecha && fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear) {
-                    debugRows++;
-                    const tipo = row[1] || "";
-                    // Limpieza agresiva de números (quita comas si existen)
-                    const montoRaw = row[5] ? String(row[5]).replace(/,/g, '') : "0";
-                    const monto = parseFloat(montoRaw) || 0;
+                if (fecha && fecha.getMonth() === selectedMonth && fecha.getFullYear() === selectedYear) {
+                    rowsEmpresaFound++;
+                    const tipo = (row[1] || "").toUpperCase();
+                    // Limpieza: Quitar comas y simbolos
+                    const montoStr = row[5] ? row[5].toString().replace(/[^0-9.-]/g, '') : "0";
+                    const monto = parseFloat(montoStr) || 0;
 
-                    if (tipo.includes("Ingreso")) bizIngresos += monto;
-                    if (tipo.includes("Gasto")) bizGastos += monto;
-                    if (tipo.includes("Nómina")) bizNominaPagada += monto;
+                    if (tipo.includes("INGRESO")) bizIngresos += monto;
+                    if (tipo.includes("GASTO")) bizGastos += monto;
+                    if (tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNominaPagada += monto;
                 }
             });
 
-            // 3. Procesar Personal
+            // 3.3 PROCESAR PERSONAL
             let perGastos = 0, perDeuda = 0;
             let categorias = {};
+            let ultimasTxn = [];
 
-            personal.forEach((row, index) => {
-                if (index === 0) return; // Saltar cabecera
+            GLOBAL_DATA.personal.forEach((row, idx) => {
+                if (idx === 0) return; // Header
 
-                // DATA PERSONAL: Col 0 es Fecha, Col 1 Cat, Col 3 Monto, Col 4 Metodo
+                // Mapeo DATA_PERSONAL: [0]Fecha, [1]Cat, [2]Desc, [3]Monto, [4]Metodo
                 const fecha = parseLatamDate(row[0]);
-
-                if (fecha && fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear) {
+                
+                if (fecha && fecha.getMonth() === selectedMonth && fecha.getFullYear() === selectedYear) {
                     const cat = row[1] || "Otros";
-                    const montoRaw = row[3] ? String(row[3]).replace(/,/g, '') : "0";
-                    const monto = parseFloat(montoRaw) || 0;
-                    const metodo = row[4] || "";
+                    const desc = row[2] || "-";
+                    const montoStr = row[3] ? row[3].toString().replace(/[^0-9.-]/g, '') : "0";
+                    const monto = parseFloat(montoStr) || 0;
+                    const metodo = (row[4] || "").toUpperCase();
 
                     perGastos += monto;
+                    
+                    // Sumar categoría
                     categorias[cat] = (categorias[cat] || 0) + monto;
 
-                    if (metodo.toLowerCase().includes("crédito")) perDeuda += monto;
+                    // Deuda
+                    if (metodo.includes("CRÉDITO") || metodo.includes("CREDITO")) perDeuda += monto;
+
+                    // Guardar para tabla
+                    ultimasTxn.push({ fecha: row[0], cat, desc, monto });
                 }
             });
 
-            // Debug visual por si acaso
-            if (bizIngresos === 0 && bizGastos === 0 && perGastos === 0) {
-                 const debugEl = document.getElementById('debug-info');
-                 debugEl.classList.remove('hidden');
-                 debugEl.innerText = `ALERTA: Se encontraron filas pero ninguna coincide con la fecha actual (${currentMonth + 1}/${currentYear}). Verifica que las fechas en el Excel sean de este mes.`;
-            }
+            logDebug(`Resultados: ${rowsEmpresaFound} ops empresa, ${ultimasTxn.length} ops personal.`);
 
-            // Cálculos Finales
+            // 3.4 CÁLCULOS FINALES
             const profit = bizIngresos - bizGastos - bizNominaPagada;
-            const nominaPEN = bizNominaPagada * tc; 
+            const nominaPEN = bizNominaPagada * tc;
             const saldo = nominaPEN - perGastos;
 
-            // Renderizar
-            fmt('biz-profit', profit, '$');
-            fmt('biz-ingresos', bizIngresos, '$');
-            fmt('biz-gastos', bizGastos, '$');
+            // 3.5 RENDERIZAR DOM
+            animateValue('biz-profit', profit, '$');
+            animateValue('biz-ingresos', bizIngresos, '$');
+            animateValue('biz-gastos', bizGastos, '$');
 
-            fmt('per-nomina', nominaPEN, 'S/ ');
-            fmt('per-gastos', perGastos, 'S/ ');
-            fmt('per-saldo', saldo, 'S/ ');
-            fmt('per-deuda', perDeuda, 'S/ ');
+            animateValue('per-nomina', nominaPEN, 'S/ ');
+            animateValue('per-gastos', perGastos, 'S/ ');
+            animateValue('per-saldo', saldo, 'S/ ');
+            animateValue('per-deuda', perDeuda, 'S/ ');
 
-            // Estilos
-            const saldoEl = document.getElementById('per-saldo');
-            const txtSaldo = document.getElementById('txt-saldo');
-            const healthEl = document.getElementById('health-indicator');
-
-            if (saldo < 0) {
-                saldoEl.className = "text-2xl font-mono font-bold text-brand-red";
-                txtSaldo.innerText = "DÉFICIT";
-                healthEl.innerText = "CRÍTICO";
-                healthEl.className = "text-4xl font-mono font-bold mb-2 text-brand-red";
+            // Estilos Dinámicos
+            const elSaldo = document.getElementById('per-saldo');
+            const elHealth = document.getElementById('health-indicator');
+            if(saldo < 0) {
+                elSaldo.className = "text-2xl font-mono font-bold text-brand-red mt-1 z-10 relative";
+                elHealth.innerText = "CRÍTICO";
+                elHealth.className = "text-xl font-mono font-bold text-brand-red";
             } else {
-                saldoEl.className = "text-2xl font-mono font-bold text-brand-green";
-                healthEl.innerText = "SALUDABLE";
-                healthEl.className = "text-4xl font-mono font-bold mb-2 text-brand-green";
+                elSaldo.className = "text-2xl font-mono font-bold text-brand-green mt-1 z-10 relative";
+                elHealth.innerText = "SALUDABLE";
+                elHealth.className = "text-xl font-mono font-bold text-brand-green";
             }
 
+            // Renderizar Tabla (Últimos 5)
+            const tbody = document.getElementById('txn-list');
+            tbody.innerHTML = '';
+            // Ordenar por fecha desc (aunque ya vienen ordenados del sheet usualmente)
+            ultimasTxn.reverse().slice(0, 10).forEach(txn => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2 text-slate-400 font-mono text-xs">${txn.fecha}</td>
+                    <td class="py-2"><span class="bg-dark-700 px-2 py-1 rounded text-[10px] uppercase">${txn.cat}</span></td>
+                    <td class="py-2 text-slate-300">${txn.desc}</td>
+                    <td class="py-2 text-right font-mono text-brand-orange">S/ ${txn.monto.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Renderizar Gráfico
             renderChart(categorias);
-
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
         }
 
-        function fmt(id, val, sign) {
-            document.getElementById(id).innerText = sign + val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        // --- UTILIDADES ---
+        function animateValue(id, value, prefix) {
+            document.getElementById(id).innerText = prefix + value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
+        let myChart = null;
         function renderChart(dataObj) {
-            // Destruir chart previo si existe (para evitar bugs de redraw)
             const ctx = document.getElementById('chartPersonal').getContext('2d');
-            if (window.myPersonalChart) window.myPersonalChart.destroy();
+            
+            if (myChart) myChart.destroy();
 
-            window.myPersonalChart = new Chart(ctx, {
+            // Colores Cyberpunk
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'];
+
+            myChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(dataObj),
                     datasets: [{
                         data: Object.values(dataObj),
-                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#64748b'],
-                        borderWidth: 0
+                        backgroundColor: colors,
+                        borderWidth: 0,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '75%',
                     plugins: {
-                        legend: { position: 'right', labels: { color: '#94a3b8', font: { family: 'monospace' }, boxWidth: 10 } }
+                        legend: { 
+                            position: 'right', 
+                            labels: { color: '#94a3b8', font: { family: 'Inter', size: 10 }, boxWidth: 10, usePointStyle: true } 
+                        }
                     }
                 }
             });
         }
 
+        // Arrancar
         init();
     </script>
 </body>
