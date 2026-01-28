@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤑FINANCIAL ALVARO | ULTRA </title>
+    <title>🤑 FINANCIAL ALVARO | ULTRA v7</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -80,6 +80,20 @@
             filter: invert(1);
             cursor: pointer;
         }
+
+        /* Billetes de Fondo */
+        .bg-dollar {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/7b/United_States_one_dollar_bill%2C_obverse.jpg');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+        }
+        .bg-sol {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/eb/200_Nuevos_Soles_2009.jpg'); /* Referencia genérica */
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+        }
     </style>
 </head>
 <body class="min-h-screen overflow-x-hidden selection:bg-primary selection:text-white pb-20">
@@ -108,13 +122,14 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <div class="bg-surface border border-white/5 px-3 py-1.5 rounded-lg flex flex-col items-end min-w-[90px]">
-                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Balance USD</span>
-                        <span class="text-xs font-mono font-bold text-white" id="mini-bal-usd">...</span>
+                    <div class="bg-dollar bg-black/80 border border-white/5 px-4 py-2 rounded-lg flex flex-col items-end min-w-[100px] relative overflow-hidden">
+                        <div class="absolute inset-0 bg-black/80"></div> <span class="text-[9px] text-slate-300 font-bold uppercase tracking-wider relative z-10">Balance USD</span>
+                        <span class="text-sm font-mono font-bold text-white relative z-10" id="mini-bal-usd">...</span>
                     </div>
-                    <div class="bg-surface border border-white/5 px-3 py-1.5 rounded-lg flex flex-col items-end min-w-[90px]">
-                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Balance PEN</span>
-                        <span class="text-xs font-mono font-bold text-white" id="mini-bal-pen">...</span>
+                    <div class="bg-sol bg-black/80 border border-white/5 px-4 py-2 rounded-lg flex flex-col items-end min-w-[100px] relative overflow-hidden">
+                        <div class="absolute inset-0 bg-black/80"></div>
+                        <span class="text-[9px] text-slate-300 font-bold uppercase tracking-wider relative z-10">Balance PEN</span>
+                        <span class="text-sm font-mono font-bold text-white relative z-10" id="mini-bal-pen">...</span>
                     </div>
                 </div>
             </div>
@@ -162,17 +177,17 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-2 border-white/10" id="card-profit" onclick="openProfitModal()">
+                    <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-4" id="card-profit" onclick="openProfitModal()">
                         <div class="absolute top-4 right-4 opacity-30 group-hover:opacity-100 transition-opacity"><i data-lucide="maximize-2" class="w-4 h-4 text-white"></i></div>
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Profit Neto</div>
-                        <div class="text-4xl font-mono font-bold text-white mb-2 transition-all duration-300" id="biz-profit">$0.00</div>
+                        <div class="text-5xl font-mono font-bold text-white mb-2 transition-all duration-300 tracking-tighter" id="biz-profit">$0.00</div>
                         <div class="text-[10px] text-slate-500 bg-white/5 inline-block px-2 py-0.5 rounded">Cash Flow Real</div>
                     </div>
 
                     <div class="glass rounded-2xl p-6 border-l-2 border-success/30 relative">
                         <div class="absolute -right-4 -bottom-4 opacity-10"><i data-lucide="trending-up" class="w-24 h-24 text-success"></i></div>
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Ingresos Totales</div>
-                        <div class="text-4xl font-mono font-bold text-success mb-2" id="biz-ingresos">$0.00</div>
+                        <div class="text-5xl font-mono font-bold text-success mb-2 tracking-tighter" id="biz-ingresos">$0.00</div>
                         <div class="w-full bg-surfaceLight h-1 rounded-full overflow-hidden mt-2"><div class="h-full bg-success w-full opacity-50"></div></div>
                     </div>
 
@@ -181,7 +196,7 @@
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Gastos Operativos</span>
                             <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
                         </div>
-                        <div class="text-4xl font-mono font-bold text-danger mb-2" id="biz-gastos">$0.00</div>
+                        <div class="text-5xl font-mono font-bold text-danger mb-2 tracking-tighter" id="biz-gastos">$0.00</div>
                         <div class="text-xs text-slate-500">No incluye nómina</div>
                     </div>
                 </div>
@@ -191,38 +206,39 @@
 
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-1 h-6 bg-warning rounded-full shadow-neon-blue"></div> <h2 class="text-sm font-bold text-white tracking-widest uppercase">Finanzas Personales</h2>
+                    <div class="w-1 h-6 bg-warning rounded-full shadow-neon-blue"></div>
+                    <h2 class="text-sm font-bold text-white tracking-widest uppercase">Finanzas Personales</h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="glass p-6 rounded-xl border border-white/5 flex flex-col justify-center">
-                        <div class="flex items-center gap-2 mb-1">
+                    <div class="glass p-6 rounded-xl border border-white/5 flex flex-col justify-center items-center text-center">
+                        <div class="flex items-center gap-2 mb-2">
                             <i data-lucide="wallet" class="w-4 h-4 text-primary"></i>
                             <span class="text-[10px] font-bold text-slate-400 uppercase">Mi Nómina</span>
                         </div>
-                        <div class="text-2xl font-mono font-bold text-white" id="per-nomina">S/ 0.00</div>
+                        <div class="text-3xl font-mono font-bold text-white" id="per-nomina">S/ 0.00</div>
                         <div class="text-[10px] text-slate-500 mt-1">Base USD: $<span id="base-nomina-usd">0</span></div>
                     </div>
 
                     <div class="glass glass-hover p-6 rounded-xl border border-white/5 cursor-pointer flex flex-col justify-center" onclick="openDetails('PERSONAL_GASTOS')">
-                        <div class="flex justify-between items-center mb-1">
+                        <div class="flex justify-between items-center mb-2 w-full">
                             <div class="flex items-center gap-2">
                                 <i data-lucide="shopping-cart" class="w-4 h-4 text-warning"></i>
                                 <span class="text-[10px] font-bold text-slate-400 uppercase">Gastos Vida</span>
                             </div>
                             <i data-lucide="search" class="w-3 h-3 text-slate-600"></i>
                         </div>
-                        <div class="text-2xl font-mono font-bold text-warning" id="per-gastos">S/ 0.00</div>
-                        <div class="w-full bg-surfaceLight h-1 mt-2 rounded-full overflow-hidden"><div id="bar-gastos" class="h-full bg-warning transition-all duration-1000" style="width: 0%"></div></div>
+                        <div class="text-3xl font-mono font-bold text-warning text-center w-full" id="per-gastos">S/ 0.00</div>
+                        <div class="w-full bg-surfaceLight h-1 mt-3 rounded-full overflow-hidden"><div id="bar-gastos" class="h-full bg-warning transition-all duration-1000" style="width: 0%"></div></div>
                     </div>
 
-                    <div class="glass p-6 rounded-xl border border-white/5 bg-gradient-to-br from-surface to-surfaceLight relative overflow-hidden flex flex-col justify-center">
+                    <div class="glass p-6 rounded-xl border border-white/5 bg-gradient-to-br from-surface to-surfaceLight relative overflow-hidden flex flex-col justify-center items-center text-center">
                         <div class="relative z-10">
-                            <div class="flex items-center gap-2 mb-1">
+                            <div class="flex items-center justify-center gap-2 mb-2">
                                 <i data-lucide="piggy-bank" class="w-4 h-4 text-slate-300"></i>
                                 <span class="text-[10px] font-bold text-slate-400 uppercase">Saldo / Ahorro</span>
                             </div>
-                            <div class="text-2xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
+                            <div class="text-3xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
                             <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-black/30 text-slate-400">---</div>
                         </div>
                         <div class="absolute right-0 top-0 w-24 h-24 bg-primary/10 blur-2xl rounded-full"></div>
@@ -234,7 +250,7 @@
                                 <span class="text-[10px] text-danger font-bold uppercase">Pagar el <span id="tc-next-date">--</span></span>
                                 <i data-lucide="alert-circle" class="w-3 h-3 text-danger"></i>
                             </div>
-                            <div class="text-xl font-mono font-bold text-white" id="tc-next-amount">S/ 0.00</div>
+                            <div class="text-2xl font-mono font-bold text-white" id="tc-next-amount">S/ 0.00</div>
                             <div class="text-[9px] text-slate-400">Cierre: <span id="tc-prev-close">--</span></div>
                         </div>
                         <div>
@@ -242,7 +258,7 @@
                                 <span class="text-[10px] text-slate-400 font-bold uppercase">Consumo Actual</span>
                                 <i data-lucide="credit-card" class="w-3 h-3 text-slate-500"></i>
                             </div>
-                            <div class="text-lg font-mono font-bold text-slate-300" id="tc-current-amount">S/ 0.00</div>
+                            <div class="text-xl font-mono font-bold text-slate-300" id="tc-current-amount">S/ 0.00</div>
                             <div class="text-[9px] text-slate-500">Cierra: <span id="tc-next-close">--</span></div>
                         </div>
                     </div>
@@ -426,7 +442,6 @@
 
             // B. P2P & BALANCES EMPRESA PUROS
             let totalUSDT = 0, totalPEN = 0;
-            // Balance empresa: Solo movimientos de P2P
             GLOBAL_DATA.p2p.forEach((row, i) => {
                 if(i===0) return;
                 const date = parseDate(row[0]);
@@ -440,18 +455,30 @@
             document.getElementById('tc-display').innerText = `S/ ${tcReal.toFixed(3)}`;
             document.getElementById('base-nomina-usd').innerText = nominaUSD;
 
-            // C. EMPRESA
+            // C. EMPRESA (CON AUTO CONVERSIÓN PEN -> USD)
             let bizIng = 0, bizGas = 0, bizNom = 0;
             PROCESSED_DATA.empresa = [];
-            let cf=0, ct=1, cm=5;
-            if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { cf=1; ct=2; cm=4; }
+            let cf=0, ct=1, cm=5, cmon=3; // cm=monto_convertido, cmon=moneda_original_idx
+            
+            // Detección automática básica
+            if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { 
+                cf=1; ct=2; cm=4; cmon=5; // Ajusta estos indices según tu CSV real si falla
+                // Nota: Tu CSV "BD_EMPRESA" tiene Moneda en col 5 (F) y Monto en 4 (E)
+            }
 
             GLOBAL_DATA.empresa.forEach((row, i) => {
                 if(i===0) return;
                 const date = parseDate(row[cf]);
                 if(date >= startDate && date <= endDate) {
                     const tipo = (row[ct]||"").toUpperCase();
-                    const monto = parseMonto(row[cm]);
+                    let monto = parseMonto(row[cm]);
+                    const moneda = (row[cmon]||"USD").toUpperCase();
+
+                    // AUTO CONVERSIÓN SI ES PEN
+                    if(moneda.includes("PEN") || moneda.includes("SOLES")) {
+                        monto = monto / tcReal; 
+                    }
+
                     if(tipo.includes("INGRESO")) bizIng += monto;
                     if(tipo.includes("GASTO")) bizGas += monto;
                     if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNom += monto;
@@ -490,16 +517,8 @@
             const nominaPEN = bizNom * tcReal;
             const saldo = nominaPEN - perGas;
 
-            // Balance USD: Profit acumulado que queda en USD (no cambiado)
-            // Balance PEN: Dinero cambiado en P2P que aún no se gasta (liquidez empresarial disponible)
-            // Lógica ajustada: P2P PEN son los soles que entraron a la empresa. 
-            // Si usamos "Nómina" para sacar dinero, entonces:
-            // Caja USD = (Ingresos - Gastos Op - Nómina) -> Es lo que sobra en USD.
-            // Caja PEN = (Total P2P Recibido) -> Es lo que tienes en el banco producto de cambios.
-            // *Nota: Esto asume que la nómina sale de esa caja PEN o USD dependiendo de cómo te pagues. 
-            // Para simplificar vista empresarial:
-            updateCard('mini-bal-usd', profit, '$'); // Lo que queda limpio en USD
-            updateCard('mini-bal-pen', totalPEN, 'S/ '); // Todo lo que has cambiado a Soles este mes
+            updateCard('mini-bal-usd', profit, '$'); 
+            updateCard('mini-bal-pen', totalPEN, 'S/ '); 
 
             updateCard('biz-profit', profit, '$');
             updateCard('biz-ingresos', bizIng, '$');
@@ -511,12 +530,17 @@
             // UI Dinámica
             const profitEl = document.getElementById('biz-profit');
             const cardProfit = document.getElementById('card-profit');
+            
+            // Reset styles
+            cardProfit.classList.remove('border-danger', 'border-primary');
+            profitEl.classList.remove('text-success', 'text-danger', 'shadow-neon-green', 'shadow-neon-red');
+
             if (profit >= 0) {
-                profitEl.className = "text-4xl font-mono font-bold text-success mb-1 shadow-neon-green transition-all";
-                cardProfit.classList.remove('border-danger'); cardProfit.classList.add('border-primary');
+                profitEl.className = "text-5xl font-mono font-bold text-success mb-2 transition-all duration-300 tracking-tighter shadow-neon-green";
+                cardProfit.classList.add('border-primary');
             } else {
-                profitEl.className = "text-4xl font-mono font-bold text-danger mb-1 shadow-neon-red transition-all";
-                cardProfit.classList.remove('border-primary'); cardProfit.classList.add('border-danger');
+                profitEl.className = "text-5xl font-mono font-bold text-danger mb-2 transition-all duration-300 tracking-tighter shadow-neon-red";
+                cardProfit.classList.add('border-danger');
             }
 
             const health = document.getElementById('health-indicator');
@@ -691,10 +715,9 @@
             const ctx = document.getElementById('chartLine').getContext('2d');
             if(lineChart) lineChart.destroy();
             
-            // Fill missing days with 0
             const labels = [], dataPoints = [];
             for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                if(d.getMonth() === start.getMonth()) { // Only current month view
+                if(d.getMonth() === start.getMonth()) { 
                     labels.push(d.getDate());
                     dataPoints.push(dailyData[d.getDate()] || 0);
                 }
@@ -712,14 +735,30 @@
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
-                        pointRadius: 2,
+                        pointRadius: 3,
                         pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'S/ ' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2});
+                                },
+                                title: function(context) {
+                                    return 'Día ' + context[0].label;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#64748b' } },
                         y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' }, beginAtZero: true }
