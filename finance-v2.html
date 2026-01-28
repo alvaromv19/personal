@@ -2,7 +2,7 @@
 <html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FINANCIAL | ALVARO MV</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-weight=%22bold%22 fill=%22%2310b981%22>$</text></svg>">
     
@@ -50,6 +50,7 @@
                 radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
             color: #e2e8f0; 
             font-family: 'Inter', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* BENTO GRID CARD STYLES */
@@ -69,8 +70,8 @@
         }
 
         .glass-header {
-            background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(16px);
+            background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -119,7 +120,7 @@
         .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
-<body class="min-h-screen pb-20 selection:bg-primary/30 selection:text-white">
+<body class="min-h-screen pb-32 selection:bg-primary/30 selection:text-white">
 
     <script>
         const BASE_URL_PERSONAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=39611097&single=true&output=csv";
@@ -128,8 +129,8 @@
         const BASE_URL_P2P = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=1989801483&single=true&output=csv";
     </script>
 
-    <header class="fixed top-0 w-full glass-header z-50 h-16 flex items-center">
-        <div class="w-full max-w-[1800px] mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0">
+    <header class="fixed top-0 w-full glass-header z-50 h-auto md:h-16 py-3 md:py-0 flex items-center transition-all">
+        <div class="w-full max-w-[1800px] mx-auto px-5 md:px-6 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0">
             
             <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-start">
                 <div class="flex items-center gap-3">
@@ -139,14 +140,14 @@
                     <div>
                         <h1 class="text-sm font-bold tracking-tight text-white leading-tight">FINANCIAL <span class="text-slate-500">ALVARO</span></h1>
                         <div class="flex items-center gap-2">
-                            <span class="text-[9px] text-success font-mono tracking-wider bg-success/10 px-1 rounded">V9.0 ARCHITECT</span>
+                            <span class="text-[9px] text-success font-mono tracking-wider bg-success/10 px-1 rounded">V9.1 MOBILE</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <button onclick="openGoalsModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-xs font-bold text-slate-300">
-                        <i data-lucide="target" class="w-3 h-3 text-danger"></i> METAS
+                        <i data-lucide="target" class="w-3 h-3 text-danger"></i> <span class="hidden sm:inline">METAS</span>
                     </button>
                     <button onclick="reloadData()" class="p-2 rounded-lg hover:bg-white/5 text-slate-500 hover:text-white transition-colors">
                         <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refresh-icon"></i>
@@ -154,7 +155,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 bg-surface border border-white/5 rounded-lg p-1">
+            <div class="w-full md:w-auto flex items-center gap-3 bg-surface border border-white/5 rounded-lg p-1 justify-between md:justify-start">
                 <div class="hidden xl:flex gap-1 border-r border-white/10 pr-2 mr-2">
                     <button onclick="setQuickRange(7)" class="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded">7D</button>
                     <button onclick="setQuickRange(14)" class="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded">14D</button>
@@ -173,9 +174,9 @@
                 </div>
                 
                 <div id="controls-range" class="hidden flex items-center gap-2 px-2">
-                    <input type="date" id="date-start" class="bg-transparent text-xs text-white font-mono outline-none w-24" onchange="applyFilter()">
+                    <input type="date" id="date-start" class="bg-transparent text-xs text-white font-mono outline-none w-20 md:w-24" onchange="applyFilter()">
                     <span class="text-slate-600">/</span>
-                    <input type="date" id="date-end" class="bg-transparent text-xs text-white font-mono outline-none w-24" onchange="applyFilter()">
+                    <input type="date" id="date-end" class="bg-transparent text-xs text-white font-mono outline-none w-20 md:w-24" onchange="applyFilter()">
                 </div>
 
                 <button onclick="toggleFilterMode()" class="ml-1 p-1.5 rounded hover:bg-white/5 text-slate-400 hover:text-white transition-colors">
@@ -190,18 +191,17 @@
         </div>
     </header>
 
-    <main class="pt-24 px-4 md:px-6 max-w-[1800px] mx-auto opacity-0 transition-opacity duration-700 space-y-8" id="dashboard-content">
+    <main class="pt-32 md:pt-24 px-5 md:px-6 max-w-[1800px] mx-auto opacity-0 transition-opacity duration-700 space-y-10" id="dashboard-content">
 
-        <div class="space-y-4">
+        <div class="space-y-5">
             <div class="flex items-center gap-2 px-1">
                 <i data-lucide="building-2" class="w-4 h-4 text-primary"></i>
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Empresa (Business Core)</h2>
                 <div class="h-px bg-white/10 flex-1 ml-4"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-8 relative group overflow-hidden cursor-pointer flex flex-col justify-between" onclick="openProfitModal()" id="card-profit">
-                    <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6"> <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-6 md:p-8 relative group overflow-hidden cursor-pointer flex flex-col justify-between" onclick="openProfitModal()" id="card-profit">
+                    <div class="absolute top-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <div class="bg-white/10 p-1.5 rounded-lg backdrop-blur-md"><i data-lucide="expand" class="w-4 h-4 text-white"></i></div>
                     </div>
                     
@@ -215,12 +215,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-6xl font-mono font-bold tracking-tighter text-white transition-colors duration-300" id="biz-profit">$0.00</div>
+                        <div class="text-5xl md:text-6xl font-mono font-bold tracking-tighter text-white transition-colors duration-300 break-words" id="biz-profit">$0.00</div>
                         
                         <div class="mt-6 p-3 bg-black/20 rounded-xl border border-white/5">
                             <div class="flex justify-between text-[10px] text-slate-400 mb-1 uppercase font-bold">
                                 <span>Retenido USD</span>
-                                <span>Movido a PEN (P2P)</span>
+                                <span>Movido a PEN</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="font-mono text-xs text-primary" id="breakdown-usd">$0.00</span>
@@ -235,22 +235,22 @@
                     <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all duration-500"></div>
                 </div>
 
-                <div class="col-span-1 md:col-span-1 space-y-4">
-                    <div class="bento-card rounded-2xl p-6 flex flex-col justify-center h-full border-l-2 border-success/30">
+                <div class="col-span-1 md:col-span-1 flex flex-col gap-6">
+                    <div class="bento-card rounded-2xl p-6 flex flex-col justify-center h-auto md:h-full border-l-2 border-success/30">
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Ingresos Totales</span>
                         <div class="text-3xl font-mono font-bold text-success" id="biz-ingresos">$0.00</div>
                     </div>
-                    <div class="bento-card rounded-2xl p-6 flex flex-col justify-center h-full border-l-2 border-danger/30 cursor-pointer hover:bg-danger/5 transition-colors" onclick="openDetails('EMPRESA_GASTOS')">
+                    <div class="bento-card rounded-2xl p-6 flex flex-col justify-center h-auto md:h-full border-l-2 border-danger/30 cursor-pointer hover:bg-danger/5 transition-colors" onclick="openDetails('EMPRESA_GASTOS')">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Op.</span>
                             <i data-lucide="search" class="w-3 h-3 text-slate-600"></i>
                         </div>
                         <div class="text-3xl font-mono font-bold text-danger" id="biz-gastos">$0.00</div>
-                        <span class="text-[9px] text-slate-600 mt-1">Detalles</span>
+                        <span class="text-[9px] text-slate-600 mt-1">Ver detalles</span>
                     </div>
                 </div>
 
-                <div class="col-span-1 md:col-span-1 bento-card rounded-2xl p-0 flex flex-col overflow-hidden">
+                <div class="col-span-1 md:col-span-1 bento-card rounded-2xl p-0 flex flex-col overflow-hidden h-[300px] md:h-auto">
                     <div class="p-4 border-b border-white/5 bg-white/5">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Actividad Reciente</span>
                     </div>
@@ -265,31 +265,31 @@
             </div>
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-5">
             <div class="flex items-center gap-2 px-1">
                 <i data-lucide="user" class="w-4 h-4 text-warning"></i>
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Personal Finance</h2>
                 <div class="h-px bg-white/10 flex-1 ml-4"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 
-                <div class="col-span-1 bento-card rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden">
+                <div class="col-span-1 bento-card rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden h-auto md:h-full min-h-[160px]">
                     <div class="relative z-10 flex justify-between items-start">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Balance Disponible</span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Balance Disp.</span>
                         <i data-lucide="piggy-bank" class="w-5 h-5 text-warning"></i>
                     </div>
                     <div class="relative z-10">
                         <div class="text-3xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
-                        <div class="mt-2 flex items-center gap-2">
-                            <span class="text-[9px] text-slate-500 uppercase">Meta Ahorro: <span id="goal-save-display" class="text-slate-300">S/0</span></span>
+                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                            <span class="text-[9px] text-slate-500 uppercase">Meta: <span id="goal-save-display" class="text-slate-300">S/0</span></span>
                             <div id="health-indicator" class="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-white/10 text-slate-300 border border-white/10">---</div>
                         </div>
                     </div>
                     <div class="absolute bottom-0 right-0 w-24 h-24 bg-warning/10 rounded-full blur-2xl"></div>
                 </div>
 
-                <div class="col-span-1 bento-card rounded-2xl p-6 flex flex-col justify-between cursor-pointer hover:bg-white/5 transition-colors" onclick="openDetails('PERSONAL_GASTOS')">
+                <div class="col-span-1 bento-card rounded-2xl p-6 flex flex-col justify-between cursor-pointer hover:bg-white/5 transition-colors h-auto md:h-full min-h-[160px]" onclick="openDetails('PERSONAL_GASTOS')">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Vida</span>
                         <i data-lucide="shopping-bag" class="w-4 h-4 text-slate-600"></i>
@@ -306,19 +306,19 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-6 card-gradient flex flex-col justify-between group cursor-pointer shadow-lg hover:shadow-primary/20 transition-all" onclick="openCreditModal()">
+                <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-6 card-gradient flex flex-col justify-between group cursor-pointer shadow-lg hover:shadow-primary/20 transition-all h-auto md:h-full min-h-[200px]" onclick="openCreditModal()">
                     <div class="flex justify-between items-start">
                         <div class="w-10 h-7 chip"></div>
                         <i data-lucide="rss" class="w-6 h-6 text-slate-400 rotate-90"></i>
                     </div>
-                    <div class="space-y-1 mt-4">
+                    <div class="space-y-1 mt-6">
                         <span class="text-[10px] text-slate-400 font-mono tracking-widest uppercase">Próximo Pago (Cierre <span id="tc-prev-close" class="text-white">--</span>)</span>
                         <div class="flex items-baseline gap-2">
                             <span class="text-3xl font-mono font-bold text-white tracking-widest" id="tc-next-amount">S/ 0.00</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
                         </div>
                     </div>
-                    <div class="flex justify-between items-end mt-2">
+                    <div class="flex justify-between items-end mt-4">
                         <div>
                             <span class="text-[8px] text-slate-500 uppercase block">Consumo Ciclo Actual</span>
                             <span class="text-sm font-mono text-slate-300" id="tc-current-amount">S/ 0.00</span>
@@ -329,16 +329,16 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-8">
-            <div class="bento-card rounded-2xl p-6">
-                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Distribución de Gastos</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-8">
+            <div class="bento-card rounded-2xl p-6 h-[250px] md:h-auto">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Distribución</h3>
                 <div class="h-[180px] relative">
                     <canvas id="chartPersonal"></canvas>
                 </div>
             </div>
-            <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-6">
+            <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-6 h-[250px] md:h-auto">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tendencia Diaria (Hover para detalle)</h3>
+                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tendencia Diaria</h3>
                 </div>
                 <div class="h-[180px] w-full">
                     <canvas id="chartLine"></canvas>
@@ -353,12 +353,12 @@
             <div class="w-16 h-16 border-t-2 border-b-2 border-primary rounded-full animate-spin"></div>
             <div class="absolute inset-0 flex items-center justify-center text-primary font-bold text-lg">$</div>
         </div>
-        <span class="mt-6 text-slate-500 font-mono text-[10px] tracking-[0.2em] animate-pulse">CARGANDO DATA...</span>
+        <span class="mt-6 text-slate-500 font-mono text-[10px] tracking-[0.2em] animate-pulse">CARGANDO...</span>
     </div>
 
     <div id="goals-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('goals-modal')"></div>
-        <div class="relative w-full max-w-md bg-surface border border-white/10 rounded-2xl shadow-2xl p-6">
+        <div class="relative w-full max-w-md bg-surface border border-white/10 rounded-2xl shadow-2xl p-6 transform transition-all">
             <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="target" class="w-5 h-5 text-danger"></i> Objetivos Mensuales</h2>
             <div class="space-y-4">
                 <div>
@@ -383,7 +383,7 @@
         <div class="relative w-full max-w-4xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
             <div class="p-4 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight">
                 <h2 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                    <i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i> Comando de Credito
+                    <i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i> Comando Crédito
                 </h2>
                 <button onclick="closeModal('credit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button>
             </div>
@@ -459,7 +459,7 @@
             const end = new Date();
             const start = new Date();
             if(days === 365) {
-                start.setMonth(0, 1); // Start of year
+                start.setMonth(0, 1);
             } else {
                 start.setDate(end.getDate() - days);
             }
@@ -529,7 +529,6 @@
         }
 
         function processData(startDate, endDate) {
-            // A. CONFIG
             const mes = String(startDate.getMonth()+1).padStart(2,'0');
             const year = startDate.getFullYear();
             const filterKey = `${mes}/${year}`;
@@ -545,7 +544,6 @@
                 }
             });
 
-            // B. P2P & TC REAL
             let totalUSDT_Sold = 0, totalPEN_Bought = 0;
             GLOBAL_DATA.p2p.forEach((row, i) => {
                 if(i===0) return;
@@ -559,7 +557,6 @@
             let tcReal = (totalUSDT_Sold > 0) ? (totalPEN_Bought / totalUSDT_Sold) : tcManual;
             document.getElementById('tc-display').innerText = `S/ ${tcReal.toFixed(3)}`;
             
-            // C. EMPRESA
             let bizIng = 0, bizGas = 0, bizNom = 0;
             PROCESSED_DATA.empresa = [];
             let cf=0, ct=1, cm=5, cmon=3; 
@@ -573,7 +570,6 @@
                     let monto = parseMonto(row[cm]);
                     const moneda = (row[cmon]||"USD").toUpperCase();
 
-                    // AGGRESSIVE PEN TO USD
                     if(moneda.includes("PEN") || moneda.includes("SOL") || moneda.includes("S/")) { 
                         monto = monto / tcReal; 
                     }
@@ -585,7 +581,6 @@
                 }
             });
 
-            // D. PERSONAL
             let perGas = 0;
             let cats = {};
             let dailyTxns = {}; 
@@ -603,7 +598,6 @@
                     perGas += monto;
                     cats[cat] = (cats[cat] || 0) + monto;
                     
-                    // Txn grouping for tooltip
                     const dayKey = date.getDate();
                     if(!dailyTxns[dayKey]) dailyTxns[dayKey] = { amount: 0, items: [] };
                     dailyTxns[dayKey].amount += monto;
@@ -613,29 +607,22 @@
                 }
             });
 
-            // E. RESULTADOS & LOGICA DE BREAKDOWN
             const profit = bizIng - bizGas - bizNom; 
             const nominaPEN = bizNom * tcReal;
             const saldo = nominaPEN - perGas;
 
-            // Breakdown Logic: How much of my Profit (USD) did I sell via P2P?
-            // "Retenido USD" = Profit - USDT Sold via P2P
-            // "Movido a PEN" = USDT Sold via P2P
-            // Edge case: If I sold more than profit (eating into savings), cap it visually.
             const usdtSold = totalUSDT_Sold; 
             const retainedUSD = Math.max(0, profit - usdtSold);
-            const movedToPEN = Math.min(profit, usdtSold); // Visual representation regarding this month's profit
+            const movedToPEN = Math.min(profit, usdtSold); 
 
-            // Update Cards
             updateCard('biz-profit', profit, '$');
             updateCard('biz-ingresos', bizIng, '$');
             updateCard('biz-gastos', bizGas, '$');
             updateCard('per-gastos', perGas, 'S/ ');
             updateCard('per-saldo', saldo, 'S/ ');
 
-            // Breakdown Visuals
             updateCard('breakdown-usd', retainedUSD, '$');
-            updateCard('breakdown-pen', movedToPEN * tcReal, 'S/ '); // Showing equivalent in PEN
+            updateCard('breakdown-pen', movedToPEN * tcReal, 'S/ '); 
             
             const totalVis = retainedUSD + (movedToPEN > 0 ? movedToPEN : 0);
             if(totalVis > 0) {
@@ -643,30 +630,25 @@
                  document.getElementById('bar-pen').style.width = `${(movedToPEN/totalVis)*100}%`;
             }
 
-            // Goals Logic
             updateGoalBars(profit, perGas, saldo);
 
-            // Credit Card
             CREDIT_DATA_CACHE = calculateSplitCardDebt(endDate);
             updateCard('tc-next-amount', CREDIT_DATA_CACHE.nextPayment, 'S/ ');
             updateCard('tc-current-amount', CREDIT_DATA_CACHE.currentConsumption, 'S/ ');
             document.getElementById('tc-prev-close').innerText = CREDIT_DATA_CACHE.prevCloseStr;
 
-            // Renders
             renderTable(PROCESSED_DATA.empresa.slice().reverse().slice(0, 5), 'txn-list-empresa', '$');
             renderChart(cats);
             renderLineChart(dailyTxns, startDate, endDate);
         }
 
         function updateGoalBars(profit, expense, savings) {
-            // Profit Goal
             if(USER_GOALS.profit > 0) {
                 const p = Math.min((profit / USER_GOALS.profit) * 100, 100);
                 document.getElementById('goal-profit-bar').style.width = `${p}%`;
                 document.getElementById('goal-profit-bar').className = `h-full ${p >= 100 ? 'bg-success' : 'bg-primary'}`;
             }
 
-            // Expense Limit
             if(USER_GOALS.limit > 0) {
                 const p = Math.min((expense / USER_GOALS.limit) * 100, 100);
                 document.getElementById('bar-gastos').style.width = `${p}%`;
@@ -674,7 +656,6 @@
                 document.getElementById('pct-gastos').innerText = `${p.toFixed(0)}% del límite`;
             }
 
-            // Savings Goal
             const health = document.getElementById('health-indicator');
             if(USER_GOALS.save > 0) {
                 if(savings >= USER_GOALS.save) {
@@ -690,7 +671,6 @@
             }
         }
 
-        // GOALS MODAL LOGIC
         function openGoalsModal() {
             document.getElementById('input-goal-profit').value = USER_GOALS.profit || '';
             document.getElementById('input-goal-limit').value = USER_GOALS.limit || '';
@@ -704,7 +684,7 @@
             localStorage.setItem('evo_goals', JSON.stringify(USER_GOALS));
             closeModal('goals-modal');
             loadGoalsUI();
-            applyFilter(); // Re-render to update bars
+            applyFilter(); 
         }
         function loadGoalsUI() {
             updateCard('goal-profit-display', USER_GOALS.profit, '$');
@@ -712,14 +692,12 @@
             updateCard('goal-save-display', USER_GOALS.save, 'S/ ');
         }
 
-        // CREDIT CARD LOGIC
         function calculateSplitCardDebt(refDate) {
             let currentOpenStart, currentOpenEnd, prevClosedStart, prevClosedEnd;
             const day = refDate.getDate();
             const month = refDate.getMonth();
             const year = refDate.getFullYear();
 
-            // Regla Cierre día 10
             if (day <= 10) {
                 currentOpenStart = new Date(year, month - 1, 11);
                 currentOpenEnd = new Date(year, month, 10);
@@ -783,8 +761,6 @@
             document.getElementById('credit-modal').classList.remove('hidden');
         }
 
-
-        // --- UTILS & CHARTS ---
         function setFilterMode(mode) {
             CURRENT_FILTER_MODE = mode;
             if(mode === 'month') {
