@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FINANCIAL ALVARO | ULTRA </title>
+    <title>FINANCIAL ALVARO | ULTRA v6</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -31,9 +31,9 @@
                         sans: ['"Inter"', 'sans-serif'],
                     },
                     boxShadow: {
-                        'neon-blue': '0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3)',
-                        'neon-green': '0 0 10px rgba(16, 185, 129, 0.5), 0 0 20px rgba(16, 185, 129, 0.3)',
-                        'neon-red': '0 0 10px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)',
+                        'neon-blue': '0 0 15px rgba(59, 130, 246, 0.4)',
+                        'neon-green': '0 0 15px rgba(16, 185, 129, 0.4)',
+                        'neon-red': '0 0 15px rgba(239, 68, 68, 0.4)',
                     }
                 }
             }
@@ -59,6 +59,13 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         }
         
+        .glass-header {
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 50;
+        }
+
         .glass-hover:hover {
             background: rgba(30, 41, 59, 0.8);
             border-color: rgba(59, 130, 246, 0.4);
@@ -66,197 +73,183 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Scrollbar Invisible */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Custom Inputs */
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
         }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden selection:bg-primary selection:text-white">
+<body class="min-h-screen overflow-x-hidden selection:bg-primary selection:text-white pb-20">
 
     <script>
-        // TUS LINKS (Añadimos timestamp random para romper caché)
         const BASE_URL_PERSONAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=39611097&single=true&output=csv";
         const BASE_URL_EMPRESA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=1240076781&single=true&output=csv";
         const BASE_URL_CONFIG = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=238892353&single=true&output=csv";
         const BASE_URL_P2P = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=1989801483&single=true&output=csv";
     </script>
 
-    <div class="max-w-[1800px] mx-auto p-4 md:p-8 space-y-8 relative">
-        
-        <header class="flex flex-col xl:flex-row justify-between items-end gap-6 pb-6 border-b border-white/5">
-            <div class="w-full xl:w-auto flex flex-col md:flex-row justify-between xl:justify-start gap-6">
-                <div class="flex items-center gap-3 mb-1">
-                    <div class="p-2.5 bg-primary/10 rounded-xl border border-primary/20 shadow-neon-blue">
-                        <i data-lucide="cpu" class="w-6 h-6 text-primary"></i>
+    <header class="fixed top-0 w-full glass-header py-4 px-4 md:px-8 transition-all duration-300">
+        <div class="max-w-[1800px] mx-auto flex flex-col xl:flex-row justify-between items-center gap-4">
+            
+            <div class="w-full xl:w-auto flex justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-primary/10 rounded-lg border border-primary/20 shadow-neon-blue">
+                        <i data-lucide="cpu" class="w-5 h-5 text-primary"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold tracking-tight text-white leading-none">
-                            FINANCIAL <span class="text-primary">ALVARO</span>
-                        </h1>
-                        <div class="flex items-center gap-2 mt-1">
-                            <p class="text-xs text-slate-400 font-mono tracking-[0.3em] uppercase">Financial Intelligence</p>
-                            <button onclick="reloadData()" class="p-1 hover:bg-white/10 rounded-full transition-colors text-slate-500 hover:text-primary" title="Forzar actualización de datos">
-                                <i data-lucide="refresh-cw" class="w-3 h-3" id="refresh-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex gap-3">
-                    <div class="glass px-4 py-2 rounded-lg border-l-2 border-primary">
-                        <div class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Balance USD</div>
-                        <div class="text-sm font-mono font-bold text-white" id="mini-bal-usd">...</div>
-                    </div>
-                    <div class="glass px-4 py-2 rounded-lg border-l-2 border-success">
-                        <div class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Balance PEN</div>
-                        <div class="text-sm font-mono font-bold text-white" id="mini-bal-pen">...</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="glass p-1.5 rounded-xl flex flex-wrap gap-2 items-center">
-                <div class="bg-surfaceLight/50 p-1 rounded-lg flex text-xs font-medium">
-                    <button onclick="setFilterMode('month')" id="btn-mode-month" class="px-3 py-1.5 rounded-md transition-colors bg-primary text-white shadow-lg">Mensual</button>
-                    <button onclick="setFilterMode('range')" id="btn-mode-range" class="px-3 py-1.5 rounded-md transition-colors text-slate-400 hover:text-white">Rango</button>
-                </div>
-
-                <div id="controls-month" class="flex gap-2 animate-fade-in">
-                    <select id="filter-month" class="bg-surfaceLight border border-white/10 text-white text-sm rounded-lg px-3 py-2 outline-none focus:border-primary" onchange="applyFilter()">
-                        <option value="0">ENERO</option>
-                        <option value="1">FEBRERO</option>
-                        <option value="2">MARZO</option>
-                        <option value="3">ABRIL</option>
-                        <option value="4">MAYO</option>
-                        <option value="5">JUNIO</option>
-                        <option value="6">JULIO</option>
-                        <option value="7">AGOSTO</option>
-                        <option value="8">SEPTIEMBRE</option>
-                        <option value="9">OCTUBRE</option>
-                        <option value="10">NOVIEMBRE</option>
-                        <option value="11">DICIEMBRE</option>
-                    </select>
-                    <select id="filter-year" class="bg-surfaceLight border border-white/10 text-white text-sm rounded-lg px-3 py-2 outline-none focus:border-primary" onchange="applyFilter()">
-                        <option value="2025">2025</option>
-                        <option value="2026" selected>2026</option>
-                        <option value="2027">2027</option>
-                    </select>
-                </div>
-
-                <div id="controls-range" class="hidden flex gap-2 items-center animate-fade-in">
-                    <input type="date" id="date-start" class="bg-surfaceLight border border-white/10 text-white text-sm rounded-lg px-3 py-2 outline-none focus:border-primary font-mono" onchange="applyFilter()">
-                    <span class="text-slate-500">-</span>
-                    <input type="date" id="date-end" class="bg-surfaceLight border border-white/10 text-white text-sm rounded-lg px-3 py-2 outline-none focus:border-primary font-mono" onchange="applyFilter()">
-                </div>
-
-                <div class="px-4 border-l border-white/10 flex flex-col items-end">
-                    <span class="text-[10px] text-slate-500 uppercase font-bold">Tasa de Cambio</span>
-                    <span class="text-sm font-mono font-bold text-success" id="tc-display">---</span>
-                </div>
-            </div>
-        </header>
-
-        <div id="dashboard-content" class="space-y-8 opacity-0 transition-opacity duration-500">
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-4" id="card-profit" onclick="openProfitModal()">
-                    <div class="absolute top-4 right-4 opacity-50 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
-                    </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Profit Neto</span>
-                        <span class="px-2 py-0.5 rounded text-[10px] bg-white/10 text-white border border-white/20">    Detalle</span>
-                    </div>
-                    <div class="text-4xl font-mono font-bold text-white mb-1 transition-all duration-300" id="biz-profit">$0.00</div>
-                    <div class="text-xs text-slate-500 flex items-center gap-1">
-                        <div class="w-2 h-2 rounded-full bg-success"></div> Cash Flow Real
-                    </div>
-                </div>
-
-                <div class="glass rounded-2xl p-6 border-l-4 border-success relative overflow-hidden">
-                    <div class="absolute -right-6 -bottom-6 opacity-5">
-                        <i data-lucide="trending-up" class="w-32 h-32 text-success"></i>
-                    </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Ingresos Totales</span>
-                    </div>
-                    <div class="text-4xl font-mono font-bold text-success mb-1" id="biz-ingresos">$0.00</div>
-                    <div class="w-full bg-surfaceLight h-1 mt-4 rounded-full overflow-hidden">
-                        <div class="h-full bg-success w-full opacity-50"></div>
-                    </div>
-                </div>
-
-                <div class="glass glass-hover rounded-2xl p-6 border-l-4 border-danger cursor-pointer" onclick="openDetails('EMPRESA_GASTOS')">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Gastos Operativos</span>
-                        <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
-                    </div>
-                    <div class="text-4xl font-mono font-bold text-danger mb-1" id="biz-gastos">$0.00</div>
-                    <div class="text-xs text-slate-500 mt-2">Excluye tu nómina</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="glass p-5 rounded-xl border border-white/5">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i data-lucide="wallet" class="w-4 h-4 text-primary"></i>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">Mi Nómina</span>
-                    </div>
-                    <div class="text-2xl font-mono font-bold text-white" id="per-nomina">S/ 0.00</div>
-                    <div class="text-[10px] text-slate-500 mt-1">Base USD: $<span id="base-nomina-usd">0</span></div>
-                </div>
-
-                <div class="glass glass-hover p-5 rounded-xl border border-white/5 cursor-pointer" onclick="openDetails('PERSONAL_GASTOS')">
-                    <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center gap-2">
-                            <i data-lucide="shopping-cart" class="w-4 h-4 text-warning"></i>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Gastos Vida</span>
+                            <h1 class="text-xl font-bold tracking-tight text-white leading-none">FINANCIAL <span class="text-primary">ALVARO</span></h1>
+                            <button onclick="reloadData()" class="text-slate-500 hover:text-white transition-colors" title="Actualizar Datos"><i data-lucide="refresh-cw" class="w-3 h-3" id="refresh-icon"></i></button>
                         </div>
-                        <i data-lucide="search" class="w-3 h-3 text-slate-600"></i>
-                    </div>
-                    <div class="text-2xl font-mono font-bold text-warning" id="per-gastos">S/ 0.00</div>
-                    <div class="w-full bg-surfaceLight h-1.5 mt-3 rounded-full overflow-hidden">
-                        <div id="bar-gastos" class="h-full bg-warning transition-all duration-1000" style="width: 0%"></div>
                     </div>
                 </div>
 
-                <div class="glass p-5 rounded-xl border border-white/5 bg-gradient-to-br from-surface to-surfaceLight relative overflow-hidden">
-                    <div class="flex items-center gap-2 mb-2 relative z-10">
-                        <i data-lucide="piggy-bank" class="w-4 h-4 text-slate-300"></i>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">Saldo / Ahorro</span>
+                <div class="flex gap-2">
+                    <div class="bg-surface border border-white/5 px-3 py-1.5 rounded-lg flex flex-col items-end min-w-[90px]">
+                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Caja USD</span>
+                        <span class="text-xs font-mono font-bold text-white" id="mini-bal-usd">...</span>
                     </div>
-                    <div class="text-2xl font-mono font-bold text-white relative z-10" id="per-saldo">S/ 0.00</div>
-                    <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/30 border border-white/10 text-slate-400 relative z-10">---</div>
-                    <div class="absolute right-0 top-0 w-20 h-20 bg-primary/10 blur-xl rounded-full"></div>
+                    <div class="bg-surface border border-white/5 px-3 py-1.5 rounded-lg flex flex-col items-end min-w-[90px]">
+                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Caja PEN</span>
+                        <span class="text-xs font-mono font-bold text-white" id="mini-bal-pen">...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-surface border border-white/5 p-1 rounded-lg">
+                <div class="flex text-[10px] font-medium bg-black/20 rounded p-0.5">
+                    <button onclick="setFilterMode('month')" id="btn-mode-month" class="px-3 py-1 rounded transition-colors bg-primary text-white">Mes</button>
+                    <button onclick="setFilterMode('range')" id="btn-mode-range" class="px-3 py-1 rounded transition-colors text-slate-400 hover:text-white">Rango</button>
                 </div>
 
-                <div class="glass p-4 rounded-xl border-l-4 border-danger/80 bg-danger/5 flex flex-col justify-between">
-                    <div class="mb-3 border-b border-danger/20 pb-2">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[10px] text-danger font-bold uppercase">Pagar el <span id="tc-next-date">--</span></span>
-                            <i data-lucide="alert-circle" class="w-3 h-3 text-danger"></i>
-                        </div>
-                        <div class="text-xl font-mono font-bold text-white" id="tc-next-amount">S/ 0.00</div>
-                        <div class="text-[9px] text-slate-400">Cierre anterior (<span id="tc-prev-close">--</span>)</div>
+                <div id="controls-month" class="flex gap-1 animate-fade-in">
+                    <select id="filter-month" class="bg-transparent text-white text-xs px-2 py-1 outline-none font-mono uppercase cursor-pointer hover:text-primary" onchange="applyFilter()">
+                        <option value="0">ENE</option><option value="1">FEB</option><option value="2">MAR</option>
+                        <option value="3">ABR</option><option value="4">MAY</option><option value="5">JUN</option>
+                        <option value="6">JUL</option><option value="7">AGO</option><option value="8">SEP</option>
+                        <option value="9">OCT</option><option value="10">NOV</option><option value="11">DIC</option>
+                    </select>
+                    <select id="filter-year" class="bg-transparent text-white text-xs px-2 py-1 outline-none font-mono cursor-pointer hover:text-primary" onchange="applyFilter()">
+                        <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+                    </select>
+                </div>
+
+                <div id="controls-range" class="hidden flex gap-1 items-center animate-fade-in px-2">
+                    <input type="date" id="date-start" class="bg-transparent text-white text-xs outline-none font-mono w-24" onchange="applyFilter()">
+                    <span class="text-slate-600">-</span>
+                    <input type="date" id="date-end" class="bg-transparent text-white text-xs outline-none font-mono w-24" onchange="applyFilter()">
+                </div>
+
+                <div class="pl-2 border-l border-white/10 flex items-center gap-2">
+                    <span class="text-[10px] text-slate-500 font-bold">TC</span>
+                    <span class="text-xs font-mono font-bold text-success" id="tc-display">---</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-[1800px] mx-auto p-4 md:p-8 mt-20 space-y-10">
+        
+        <div id="dashboard-content" class="space-y-10 opacity-0 transition-opacity duration-500">
+            
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 bg-primary rounded-full shadow-neon-blue"></div>
+                    <h2 class="text-sm font-bold text-white tracking-widest uppercase">Finanzas Corporativas</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-2 border-white/10" id="card-profit" onclick="openProfitModal()">
+                        <div class="absolute top-4 right-4 opacity-30 group-hover:opacity-100 transition-opacity"><i data-lucide="maximize-2" class="w-4 h-4 text-white"></i></div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Profit Neto</div>
+                        <div class="text-4xl font-mono font-bold text-white mb-2 transition-all duration-300" id="biz-profit">$0.00</div>
+                        <div class="text-[10px] text-slate-500 bg-white/5 inline-block px-2 py-0.5 rounded">Cash Flow Real</div>
                     </div>
-                    
-                    <div>
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[10px] text-slate-400 font-bold uppercase">Consumo Ciclo Actual</span>
-                            <i data-lucide="credit-card" class="w-3 h-3 text-slate-500"></i>
+
+                    <div class="glass rounded-2xl p-6 border-l-2 border-success/30 relative">
+                        <div class="absolute -right-4 -bottom-4 opacity-10"><i data-lucide="trending-up" class="w-24 h-24 text-success"></i></div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Ingresos Totales</div>
+                        <div class="text-4xl font-mono font-bold text-success mb-2" id="biz-ingresos">$0.00</div>
+                        <div class="w-full bg-surfaceLight h-1 rounded-full overflow-hidden mt-2"><div class="h-full bg-success w-full opacity-50"></div></div>
+                    </div>
+
+                    <div class="glass glass-hover rounded-2xl p-6 border-l-2 border-danger/30 cursor-pointer" onclick="openDetails('EMPRESA_GASTOS')">
+                        <div class="flex justify-between mb-3">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Gastos Operativos</span>
+                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
                         </div>
-                        <div class="text-lg font-mono font-bold text-slate-300" id="tc-current-amount">S/ 0.00</div>
-                        <div class="text-[9px] text-slate-500">Cierra el <span id="tc-next-close">--</span></div>
+                        <div class="text-4xl font-mono font-bold text-danger mb-2" id="biz-gastos">$0.00</div>
+                        <div class="text-xs text-slate-500">No incluye nómina</div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 bg-warning rounded-full shadow-neon-blue"></div> <h2 class="text-sm font-bold text-white tracking-widest uppercase">Finanzas Personales</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="glass p-6 rounded-xl border border-white/5 flex flex-col justify-center">
+                        <div class="flex items-center gap-2 mb-1">
+                            <i data-lucide="wallet" class="w-4 h-4 text-primary"></i>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Mi Nómina</span>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-white" id="per-nomina">S/ 0.00</div>
+                        <div class="text-[10px] text-slate-500 mt-1">Base USD: $<span id="base-nomina-usd">0</span></div>
+                    </div>
+
+                    <div class="glass glass-hover p-6 rounded-xl border border-white/5 cursor-pointer flex flex-col justify-center" onclick="openDetails('PERSONAL_GASTOS')">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="shopping-cart" class="w-4 h-4 text-warning"></i>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Gastos Vida</span>
+                            </div>
+                            <i data-lucide="search" class="w-3 h-3 text-slate-600"></i>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-warning" id="per-gastos">S/ 0.00</div>
+                        <div class="w-full bg-surfaceLight h-1 mt-2 rounded-full overflow-hidden"><div id="bar-gastos" class="h-full bg-warning transition-all duration-1000" style="width: 0%"></div></div>
+                    </div>
+
+                    <div class="glass p-6 rounded-xl border border-white/5 bg-gradient-to-br from-surface to-surfaceLight relative overflow-hidden flex flex-col justify-center">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i data-lucide="piggy-bank" class="w-4 h-4 text-slate-300"></i>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Saldo / Ahorro</span>
+                            </div>
+                            <div class="text-2xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
+                            <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-black/30 text-slate-400">---</div>
+                        </div>
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-primary/10 blur-2xl rounded-full"></div>
+                    </div>
+
+                    <div class="glass p-4 rounded-xl border-l-4 border-danger/80 bg-danger/5 flex flex-col justify-between">
+                        <div class="mb-3 border-b border-danger/20 pb-2">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[10px] text-danger font-bold uppercase">Pagar el <span id="tc-next-date">--</span></span>
+                                <i data-lucide="alert-circle" class="w-3 h-3 text-danger"></i>
+                            </div>
+                            <div class="text-xl font-mono font-bold text-white" id="tc-next-amount">S/ 0.00</div>
+                            <div class="text-[9px] text-slate-400">Cierre: <span id="tc-prev-close">--</span></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase">Consumo Actual</span>
+                                <i data-lucide="credit-card" class="w-3 h-3 text-slate-500"></i>
+                            </div>
+                            <div class="text-lg font-mono font-bold text-slate-300" id="tc-current-amount">S/ 0.00</div>
+                            <div class="text-[9px] text-slate-500">Cierra: <span id="tc-next-close">--</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
                 <div class="glass p-6 rounded-2xl flex flex-col justify-center items-center relative">
                     <h3 class="absolute top-6 left-6 text-xs font-bold text-slate-500 uppercase">Distribución de Gastos</h3>
                     <div class="w-full h-[250px] mt-4">
@@ -265,12 +258,12 @@
                 </div>
 
                 <div class="glass p-6 rounded-2xl lg:col-span-2 flex flex-col">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                            <i data-lucide="list" class="w-4 h-4 text-primary"></i> Últimos Movimientos
+                            <i data-lucide="list" class="w-4 h-4 text-primary"></i> Live Feed
                         </h3>
                     </div>
-                    <div class="overflow-hidden rounded-lg border border-white/5">
+                    <div class="overflow-hidden rounded-lg border border-white/5 bg-surface/50">
                         <table class="w-full text-sm text-left">
                             <thead class="text-[10px] text-slate-400 uppercase bg-surfaceLight">
                                 <tr>
@@ -280,16 +273,27 @@
                                     <th class="px-4 py-3 text-right font-medium">Monto</th>
                                 </tr>
                             </thead>
-                            <tbody id="txn-list" class="divide-y divide-white/5 text-slate-300"></tbody>
+                            <tbody id="txn-list" class="divide-y divide-white/5 text-slate-300 text-xs"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
+            <div class="glass p-6 rounded-2xl">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="activity" class="w-4 h-4 text-warning"></i>
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Ritmo de Gasto Diario</h3>
+                </div>
+                <div class="w-full h-[150px]">
+                    <canvas id="chartLine"></canvas>
+                </div>
+            </div>
+
         </div>
 
         <div id="loading" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg">
             <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            <span class="mt-4 text-primary font-mono text-xs tracking-widest animate-pulse">CONECTANDO A LA BASE...</span>
+            <span class="mt-4 text-primary font-mono text-xs tracking-widest animate-pulse">SISTEMA INICIANDO...</span>
         </div>
     </div>
 
@@ -299,32 +303,21 @@
             <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50 shrink-0">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i data-lucide="pie-chart" class="w-5 h-5 text-primary"></i> Desglose de Profit
+                        <i data-lucide="pie-chart" class="w-5 h-5 text-primary"></i> Desglose Profit
                     </h2>
-                    <p class="text-xs text-slate-400 font-mono mt-1">Ingresos vs Gastos/Nómina</p>
                 </div>
-                <button onclick="closeModal('profit-modal')" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="closeModal('profit-modal')" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
             </div>
-
             <div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
                 <div class="flex flex-col h-full overflow-hidden">
-                    <div class="p-3 bg-success/10 border-b border-white/5 text-center shrink-0">
-                        <span class="text-xs font-bold text-success uppercase tracking-widest">Ingresos (+)</span>
-                    </div>
+                    <div class="p-3 bg-success/10 border-b border-white/5 text-center shrink-0"><span class="text-xs font-bold text-success uppercase">Ingresos</span></div>
                     <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-pos-list"></div>
-                    <div class="p-4 border-t border-white/5 text-right shrink-0">
-                        <span class="font-mono font-bold text-success" id="profit-pos-total">$0.00</span>
-                    </div>
+                    <div class="p-4 border-t border-white/5 text-right shrink-0"><span class="font-mono font-bold text-success" id="profit-pos-total">$0.00</span></div>
                 </div>
-
                 <div class="flex flex-col h-full overflow-hidden">
-                    <div class="p-3 bg-danger/10 border-b border-white/5 text-center shrink-0">
-                        <span class="text-xs font-bold text-danger uppercase tracking-widest">Egresos & Nómina (-)</span>
-                    </div>
+                    <div class="p-3 bg-danger/10 border-b border-white/5 text-center shrink-0"><span class="text-xs font-bold text-danger uppercase">Egresos</span></div>
                     <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-neg-list"></div>
-                    <div class="p-4 border-t border-white/5 text-right shrink-0">
-                        <span class="font-mono font-bold text-danger" id="profit-neg-total">$0.00</span>
-                    </div>
+                    <div class="p-4 border-t border-white/5 text-right shrink-0"><span class="font-mono font-bold text-danger" id="profit-neg-total">$0.00</span></div>
                 </div>
             </div>
         </div>
@@ -353,7 +346,6 @@
         let CURRENT_FILTER_MODE = 'month'; 
         let PROCESSED_DATA = { empresa: [], personal: [] };
 
-        // --- 1. INITIALIZATION ---
         async function init(forceReload = false) {
             if(forceReload) {
                 document.getElementById('loading').classList.remove('hidden');
@@ -361,11 +353,9 @@
             }
 
             const today = new Date();
-            // Solo resetear filtros si es primera carga
             if(!GLOBAL_DATA.config) {
                 document.getElementById('filter-month').value = today.getMonth();
                 document.getElementById('filter-year').value = today.getFullYear();
-                
                 const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
                 const formatDateInput = (d) => d.toISOString().split('T')[0];
                 document.getElementById('date-start').value = formatDateInput(firstDay);
@@ -387,12 +377,11 @@
                 const dash = document.getElementById('dashboard-content');
                 dash.classList.remove('hidden');
                 setTimeout(() => dash.classList.remove('opacity-0'), 100);
-                
                 applyFilter();
 
             } catch (e) {
                 console.error(e);
-                alert("Error cargando datos. Verifique conexión.");
+                alert("Error cargando datos.");
             }
         }
 
@@ -402,10 +391,8 @@
             init(true).then(() => icon.classList.remove('animate-spin'));
         }
 
-        // --- 2. DATA PROCESSING ---
         function applyFilter() {
             let startDate, endDate;
-
             if (CURRENT_FILTER_MODE === 'month') {
                 const m = parseInt(document.getElementById('filter-month').value);
                 const y = parseInt(document.getElementById('filter-year').value);
@@ -417,34 +404,29 @@
                 startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date();
                 endDate = eVal ? new Date(eVal + 'T23:59:59') : new Date();
             }
-
             processData(startDate, endDate);
         }
 
         function processData(startDate, endDate) {
-            // A. CONFIG DINÁMICA
-            // El filtroKey debe coincidir con el formato del CSV (ej: 01/2026 o 1/2026)
-            const mes = String(startDate.getMonth()+1).padStart(2,'0'); // "01"
+            // A. CONFIG
+            const mes = String(startDate.getMonth()+1).padStart(2,'0');
             const year = startDate.getFullYear();
             const filterKey = `${mes}/${year}`;
             
-            let tcManual = 3.75;
-            let nominaUSD = 400;
+            let tcManual = 3.75, nominaUSD = 400;
 
             GLOBAL_DATA.config.forEach(row => {
-                // row[0] es Mes/Año. Puede venir como "01/2026" o "1/2026"
-                // Normalizamos para comparar
                 if(!row[0]) return;
                 const rowDate = row[0].includes('/') ? row[0] : '';
-                // Comparación flexible (01/2026 == 1/2026)
                 if(rowDate === filterKey || rowDate === `${startDate.getMonth()+1}/${year}`) {
                     if(row[1]) nominaUSD = parseFloat(row[1].replace(/,/g, ''));
                     if(row[2]) tcManual = parseFloat(row[2].replace(/,/g, ''));
                 }
             });
 
-            // B. CALCULAR TC PONDERADO (P2P)
+            // B. P2P & BALANCES EMPRESA PUROS
             let totalUSDT = 0, totalPEN = 0;
+            // Balance empresa: Solo movimientos de P2P
             GLOBAL_DATA.p2p.forEach((row, i) => {
                 if(i===0) return;
                 const date = parseDate(row[0]);
@@ -454,16 +436,13 @@
                 }
             });
 
-            // Lógica Maestra: Si hay P2P usa P2P, sino usa Manual de Config
             let tcReal = (totalUSDT > 0) ? (totalPEN / totalUSDT) : tcManual;
-            
             document.getElementById('tc-display').innerText = `S/ ${tcReal.toFixed(3)}`;
             document.getElementById('base-nomina-usd').innerText = nominaUSD;
 
             // C. EMPRESA
             let bizIng = 0, bizGas = 0, bizNom = 0;
             PROCESSED_DATA.empresa = [];
-            
             let cf=0, ct=1, cm=5;
             if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { cf=1; ct=2; cm=4; }
 
@@ -473,20 +452,18 @@
                 if(date >= startDate && date <= endDate) {
                     const tipo = (row[ct]||"").toUpperCase();
                     const monto = parseMonto(row[cm]);
-                    
                     if(tipo.includes("INGRESO")) bizIng += monto;
                     if(tipo.includes("GASTO")) bizGas += monto;
                     if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNom += monto;
-
                     PROCESSED_DATA.empresa.push({date, tipo, desc: row[ct+1]||"S/D", monto});
                 }
             });
 
-            // D. PERSONAL
+            // D. PERSONAL & DIARIO PARA CHART
             let perGas = 0;
             let cats = {};
+            let dailyExpenses = {}; // Para el chart lineal
             PROCESSED_DATA.personal = [];
-            
             let pf=0, pc=1, pd=2, pm=3, pmet=4;
             if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pc=2; pd=3; pm=4; pmet=5; }
 
@@ -497,70 +474,60 @@
                     const cat = row[pc] || "Otros";
                     const monto = parseMonto(row[pm]);
                     const metodo = (row[pmet]||"").toUpperCase();
-
                     perGas += monto;
                     cats[cat] = (cats[cat] || 0) + monto;
                     
+                    // Daily Chart Data
+                    const dayKey = date.getDate();
+                    dailyExpenses[dayKey] = (dailyExpenses[dayKey] || 0) + monto;
+
                     PROCESSED_DATA.personal.push({date, cat, desc: row[pd], monto, metodo});
                 }
             });
 
-            // E. DEUDA TARJETA (DUAL)
-            const cardData = calculateSplitCardDebt(endDate);
-
-            // F. RESULTADOS
-            const profit = bizIng - bizGas - bizNom;
-            // IMPORTANTE: Aquí usamos la nominaUSD que sacamos del CONFIG, no la suma de la tabla empresa (para planificación vs realidad)
-            // Ojo: Tu lógica anterior sumaba lo de la tabla empresa. Si quieres usar la PLANIFICADA, usa nominaUSD.
-            // Para ser coherentes con el cashflow, usaremos la REAL PAGADA (bizNom) pero convertida al TC Real para el saldo personal.
-            // SI prefieres que el saldo personal se base en lo que DEBERÍAS haber cobrado, cambia bizNom por nominaUSD.
-            const nominaPEN = bizNom * tcReal; 
+            // E. RESULTADOS & BALANCES PUROS
+            const profit = bizIng - bizGas - bizNom; // Profit antes de cambiar a soles
+            const nominaPEN = bizNom * tcReal;
             const saldo = nominaPEN - perGas;
 
-            // Mini Balances
-            updateCard('mini-bal-usd', (bizIng - bizGas), '$'); // Caja Empresa
-            updateCard('mini-bal-pen', (totalPEN - perGas), 'S/ '); // Liquidez PEN Real
+            // Balance USD: Profit acumulado que queda en USD (no cambiado)
+            // Balance PEN: Dinero cambiado en P2P que aún no se gasta (liquidez empresarial disponible)
+            // Lógica ajustada: P2P PEN son los soles que entraron a la empresa. 
+            // Si usamos "Nómina" para sacar dinero, entonces:
+            // Caja USD = (Ingresos - Gastos Op - Nómina) -> Es lo que sobra en USD.
+            // Caja PEN = (Total P2P Recibido) -> Es lo que tienes en el banco producto de cambios.
+            // *Nota: Esto asume que la nómina sale de esa caja PEN o USD dependiendo de cómo te pagues. 
+            // Para simplificar vista empresarial:
+            updateCard('mini-bal-usd', profit, '$'); // Lo que queda limpio en USD
+            updateCard('mini-bal-pen', totalPEN, 'S/ '); // Todo lo que has cambiado a Soles este mes
 
-            // UI Updates
             updateCard('biz-profit', profit, '$');
             updateCard('biz-ingresos', bizIng, '$');
             updateCard('biz-gastos', bizGas, '$');
-            
             updateCard('per-nomina', nominaPEN, 'S/ ');
             updateCard('per-gastos', perGas, 'S/ ');
             updateCard('per-saldo', saldo, 'S/ ');
-            
-            // UI Profit Dinámico
+
+            // UI Dinámica
             const profitEl = document.getElementById('biz-profit');
             const cardProfit = document.getElementById('card-profit');
             if (profit >= 0) {
                 profitEl.className = "text-4xl font-mono font-bold text-success mb-1 shadow-neon-green transition-all";
-                cardProfit.classList.remove('border-danger');
-                cardProfit.classList.add('border-primary'); // O success
+                cardProfit.classList.remove('border-danger'); cardProfit.classList.add('border-primary');
             } else {
                 profitEl.className = "text-4xl font-mono font-bold text-danger mb-1 shadow-neon-red transition-all";
-                cardProfit.classList.remove('border-primary');
-                cardProfit.classList.add('border-danger');
+                cardProfit.classList.remove('border-primary'); cardProfit.classList.add('border-danger');
             }
 
-            // UI Tarjetas Dual
-            updateCard('tc-next-amount', cardData.nextPayment, 'S/ ');
-            document.getElementById('tc-next-date').innerText = cardData.nextPayDateStr;
-            document.getElementById('tc-prev-close').innerText = cardData.prevCloseStr;
-
-            updateCard('tc-current-amount', cardData.currentConsumption, 'S/ ');
-            document.getElementById('tc-next-close').innerText = cardData.currentCloseStr;
-
-            // UI Barras & Estados
             const health = document.getElementById('health-indicator');
             const saldoEl = document.getElementById('per-saldo');
             if(saldo < 0) {
-                saldoEl.className = "text-3xl font-mono font-bold text-danger relative z-10 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]";
-                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-danger/20 text-danger border border-danger/30";
+                saldoEl.className = "text-3xl font-mono font-bold text-danger relative z-10";
+                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-danger/20 text-danger border border-danger/30 relative z-10";
                 health.innerText = "CRÍTICO";
             } else {
-                saldoEl.className = "text-3xl font-mono font-bold text-success relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]";
-                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-success/20 text-success border border-success/30";
+                saldoEl.className = "text-3xl font-mono font-bold text-success relative z-10";
+                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-success/20 text-success border border-success/30 relative z-10";
                 health.innerText = "SALUDABLE";
             }
 
@@ -569,16 +536,20 @@
             bar.style.width = `${pct}%`;
             bar.className = `h-full transition-all duration-1000 ${pct>90 ? 'bg-danger shadow-neon-red' : 'bg-warning shadow-neon-warning'}`;
 
-            // Tables & Charts
+            const cardData = calculateSplitCardDebt(endDate);
+            updateCard('tc-next-amount', cardData.nextPayment, 'S/ ');
+            document.getElementById('tc-next-date').innerText = cardData.nextPayDateStr;
+            document.getElementById('tc-prev-close').innerText = cardData.prevCloseStr;
+            updateCard('tc-current-amount', cardData.currentConsumption, 'S/ ');
+            document.getElementById('tc-next-close').innerText = cardData.currentCloseStr;
+
             renderTable(PROCESSED_DATA.personal.slice().reverse().slice(0, 5));
             renderChart(cats);
+            renderLineChart(dailyExpenses, startDate, endDate);
         }
 
-        // --- 3. LOGICA TC DUAL ---
         function calculateSplitCardDebt(refDate) {
-            let currentOpenStart, currentOpenEnd; 
-            let prevClosedStart, prevClosedEnd;   
-            
+            let currentOpenStart, currentOpenEnd, prevClosedStart, prevClosedEnd;
             const day = refDate.getDate();
             const month = refDate.getMonth();
             const year = refDate.getFullYear();
@@ -594,12 +565,8 @@
                 prevClosedStart = new Date(year, month - 1, 11);
                 prevClosedEnd = new Date(year, month, 10);
             }
-
             const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5);
-
-            let nextPayment = 0;
-            let currentConsumption = 0;
-
+            let nextPayment = 0, currentConsumption = 0;
             let pf=0, pm=3, pmet=4; 
             if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pm=4; pmet=5; }
 
@@ -607,35 +574,26 @@
                 if(i===0) return;
                 const d = parseDate(row[pf]);
                 const metodo = (row[pmet]||"").toUpperCase();
-                
                 if (d && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) {
                     d.setHours(12,0,0,0);
                     const amount = parseMonto(row[pm]);
-
-                    if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) {
-                        nextPayment += amount;
-                    }
-                    if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) {
-                        currentConsumption += amount;
-                    }
+                    if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) nextPayment += amount;
+                    if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) currentConsumption += amount;
                 }
             });
-
             return {
-                nextPayment,
-                currentConsumption,
+                nextPayment, currentConsumption,
                 nextPayDateStr: nextPayDate.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
                 prevCloseStr: prevClosedEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
                 currentCloseStr: currentOpenEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'})
             };
         }
 
-        // --- 4. MODALS & UI ---
+        // --- UI & CHARTS ---
         function setFilterMode(mode) {
             CURRENT_FILTER_MODE = mode;
             const btnMonth = document.getElementById('btn-mode-month');
             const btnRange = document.getElementById('btn-mode-range');
-            
             if(mode === 'month') {
                 btnMonth.classList.add('bg-primary', 'text-white', 'shadow-lg');
                 btnMonth.classList.remove('text-slate-400');
@@ -658,28 +616,18 @@
             const listPos = document.getElementById('profit-pos-list');
             const listNeg = document.getElementById('profit-neg-list');
             listPos.innerHTML = ''; listNeg.innerHTML = '';
-            
             let totalPos = 0, totalNeg = 0;
             const sorted = PROCESSED_DATA.empresa.sort((a,b) => b.date - a.date);
-
             sorted.forEach(t => {
                 const isPos = t.tipo.includes("INGRESO");
                 const html = `
                     <div class="flex justify-between items-center p-3 rounded bg-surfaceLight/30 border border-white/5 hover:border-white/20 transition-colors">
-                        <div>
-                            <div class="text-[10px] text-slate-400 font-mono">${t.date.toLocaleDateString()}</div>
-                            <div class="text-sm font-bold text-white">${t.desc}</div>
-                            <div class="text-[10px] text-slate-500 uppercase">${t.tipo}</div>
-                        </div>
-                        <div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'}">
-                            ${isPos ? '+' : '-'} $${t.monto.toFixed(2)}
-                        </div>
+                        <div><div class="text-[10px] text-slate-400 font-mono">${t.date.toLocaleDateString()}</div><div class="text-sm font-bold text-white">${t.desc}</div><div class="text-[10px] text-slate-500 uppercase">${t.tipo}</div></div>
+                        <div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'}">${isPos ? '+' : '-'} $${t.monto.toFixed(2)}</div>
                     </div>`;
-
                 if(isPos) { listPos.insertAdjacentHTML('beforeend', html); totalPos += t.monto; }
                 else { listNeg.insertAdjacentHTML('beforeend', html); totalNeg += t.monto; }
             });
-
             document.getElementById('profit-pos-total').innerText = '$' + totalPos.toFixed(2);
             document.getElementById('profit-neg-total').innerText = '-$' + totalNeg.toFixed(2);
             document.getElementById('profit-modal').classList.remove('hidden');
@@ -690,76 +638,42 @@
             const panel = document.getElementById('detail-panel');
             const content = document.getElementById('modal-content');
             const title = document.getElementById('modal-title');
-            
             let data = [], symbol = "";
-            if(type === 'PERSONAL_GASTOS') {
-                title.innerHTML = `Gastos Personales <span class="text-xs text-slate-500 ml-2 font-normal">(Filtrado)</span>`;
-                data = PROCESSED_DATA.personal;
-                symbol = "S/ ";
-            } else if (type === 'EMPRESA_GASTOS') {
-                title.innerHTML = `Gastos Empresa <span class="text-xs text-slate-500 ml-2 font-normal">(Op + Nómina)</span>`;
-                data = PROCESSED_DATA.empresa.filter(t => !t.tipo.includes("INGRESO"));
-                symbol = "$ ";
-            }
-
+            if(type === 'PERSONAL_GASTOS') { title.innerHTML = `Gastos Personales`; data = PROCESSED_DATA.personal; symbol = "S/ "; } 
+            else if (type === 'EMPRESA_GASTOS') { title.innerHTML = `Gastos Empresa`; data = PROCESSED_DATA.empresa.filter(t => !t.tipo.includes("INGRESO")); symbol = "$ "; }
             data.sort((a,b) => b.date - a.date);
             content.innerHTML = data.map(t => `
                 <div class="p-3 bg-surfaceLight/20 rounded border border-white/5 flex justify-between items-center">
-                    <div>
-                        <div class="text-[10px] text-slate-400 font-mono">${t.date.toLocaleDateString()}</div>
-                        <div class="text-sm text-white font-medium">${t.desc || t.tipo}</div>
-                        <div class="text-[10px] text-primary uppercase">${t.cat || t.tipo}</div>
-                    </div>
+                    <div><div class="text-[10px] text-slate-400 font-mono">${t.date.toLocaleDateString()}</div><div class="text-sm text-white font-medium">${t.desc || t.tipo}</div><div class="text-[10px] text-primary uppercase">${t.cat || t.tipo}</div></div>
                     <div class="font-mono font-bold text-slate-200">${symbol}${t.monto.toFixed(2)}</div>
                 </div>`).join('');
-
-            const total = data.reduce((s, t) => s + t.monto, 0);
-            document.getElementById('modal-total').innerText = symbol + total.toFixed(2);
-
+            document.getElementById('modal-total').innerText = symbol + data.reduce((s, t) => s + t.monto, 0).toFixed(2);
             modal.classList.remove('hidden');
             setTimeout(() => panel.classList.remove('translate-x-full'), 10);
         }
 
         function closeModal(id) {
-            if(id === 'detail-modal') {
-                document.getElementById('detail-panel').classList.add('translate-x-full');
-                setTimeout(() => document.getElementById(id).classList.add('hidden'), 300);
-            } else {
-                document.getElementById(id).classList.add('hidden');
-            }
+            if(id === 'detail-modal') { document.getElementById('detail-panel').classList.add('translate-x-full'); setTimeout(() => document.getElementById(id).classList.add('hidden'), 300); }
+            else { document.getElementById(id).classList.add('hidden'); }
         }
 
-        // --- HELPERS ---
-        function updateCard(id, val, prefix) {
-            document.getElementById(id).innerText = prefix + val.toLocaleString('en-US', {minimumFractionDigits: 2});
-        }
-        function parseDate(str) {
-            if(!str) return null;
-            const p = str.trim().split('/');
-            if(p.length===3) return new Date(p[2], p[1]-1, p[0]);
-            const d = new Date(str);
-            return isNaN(d) ? null : d;
-        }
-        function setTime(date, h) {
-            const d = new Date(date); d.setHours(h, h===23?59:0, h===23?59:0, 0); return d;
-        }
-        function parseMonto(val) {
-            return parseFloat(String(val).replace(/[^0-9.-]/g, '')) || 0;
-        }
-        function fetchCSV(url) {
-            return new Promise(r => Papa.parse(url, {download:true, complete:res=>r(res.data)}));
-        }
+        function updateCard(id, val, prefix) { document.getElementById(id).innerText = prefix + val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
+        function parseDate(str) { if(!str) return null; const p = str.trim().split('/'); if(p.length===3) return new Date(p[2], p[1]-1, p[0]); const d = new Date(str); return isNaN(d) ? null : d; }
+        function setTime(date, h) { const d = new Date(date); d.setHours(h, h===23?59:0, h===23?59:0, 0); return d; }
+        function parseMonto(val) { return parseFloat(String(val).replace(/[^0-9.-]/g, '')) || 0; }
+        function fetchCSV(url) { return new Promise(r => Papa.parse(url, {download:true, complete:res=>r(res.data)})); }
         
-        let chart;
         function renderTable(data) {
             document.getElementById('txn-list').innerHTML = data.map(t => `
                 <tr class="hover:bg-white/5 transition-colors">
-                    <td class="px-4 py-2 font-mono text-xs text-slate-400">${t.date.toLocaleDateString()}</td>
-                    <td class="px-4 py-2 text-xs text-primary uppercase">${t.cat.substring(0,12)}</td>
-                    <td class="px-4 py-2 text-xs text-white">${t.desc}</td>
-                    <td class="px-4 py-2 text-right font-mono text-xs text-warning">S/ ${t.monto.toFixed(2)}</td>
+                    <td class="px-4 py-2 font-mono text-slate-400">${t.date.toLocaleDateString()}</td>
+                    <td class="px-4 py-2 text-primary uppercase">${t.cat.substring(0,12)}</td>
+                    <td class="px-4 py-2 text-white">${t.desc}</td>
+                    <td class="px-4 py-2 text-right font-mono text-warning">S/ ${t.monto.toFixed(2)}</td>
                 </tr>`).join('');
         }
+
+        let chart, lineChart;
         function renderChart(data) {
             const ctx = document.getElementById('chartPersonal').getContext('2d');
             if(chart) chart.destroy();
@@ -767,19 +681,49 @@
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(data),
+                    datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'], borderWidth: 0, hoverOffset: 20 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: {size:10}, boxWidth: 8, usePointStyle: true } } } }
+            });
+        }
+
+        function renderLineChart(dailyData, start, end) {
+            const ctx = document.getElementById('chartLine').getContext('2d');
+            if(lineChart) lineChart.destroy();
+            
+            // Fill missing days with 0
+            const labels = [], dataPoints = [];
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                if(d.getMonth() === start.getMonth()) { // Only current month view
+                    labels.push(d.getDate());
+                    dataPoints.push(dailyData[d.getDate()] || 0);
+                }
+            }
+
+            lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
                     datasets: [{
-                        data: Object.values(data),
-                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'],
-                        borderColor: '#020617',
-                        borderWidth: 0,
-                        hoverOffset: 20
+                        label: 'Gasto Diario',
+                        data: dataPoints,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 2,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '80%',
-                    plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: {size:10}, boxWidth: 8, usePointStyle: true } } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' }, beginAtZero: true }
+                    }
                 }
             });
         }
