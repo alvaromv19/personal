@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FINANCIAL ALVARO | ULTRA</title>
+    <title>FINANCIAL ALVARO | ULTRA v5</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -66,7 +66,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Scrollbar Invisible pero funcional */
+        /* Scrollbar Invisible */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -80,15 +80,19 @@
 <body class="min-h-screen overflow-x-hidden selection:bg-primary selection:text-white">
 
     <script>
+        // TUS LINKS ACTUALIZADOS
         const URL_PERSONAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=39611097&single=true&output=csv";
         const URL_EMPRESA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=1240076781&single=true&output=csv";
+        // CONFIG NUEVO (TABLA MES/NOMINA/TC)
         const URL_CONFIG = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=238892353&single=true&output=csv";
+        // DATA P2P (NUEVO)
+        const URL_P2P = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=1989801483&single=true&output=csv";
     </script>
 
     <div class="max-w-[1800px] mx-auto p-4 md:p-8 space-y-8 relative">
         
         <header class="flex flex-col xl:flex-row justify-between items-end gap-6 pb-6 border-b border-white/5">
-            <div>
+            <div class="w-full xl:w-auto flex flex-col md:flex-row justify-between xl:justify-start gap-6">
                 <div class="flex items-center gap-3 mb-1">
                     <div class="p-2.5 bg-primary/10 rounded-xl border border-primary/20 shadow-neon-blue">
                         <i data-lucide="cpu" class="w-6 h-6 text-primary"></i>
@@ -98,6 +102,17 @@
                             FINANCIAL <span class="text-primary">ALVARO</span>
                         </h1>
                         <p class="text-xs text-slate-400 font-mono tracking-[0.3em] uppercase mt-1">Financial Intelligence</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <div class="glass px-4 py-2 rounded-lg border-l-2 border-primary">
+                        <div class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Balance USD</div>
+                        <div class="text-sm font-mono font-bold text-white" id="mini-bal-usd">...</div>
+                    </div>
+                    <div class="glass px-4 py-2 rounded-lg border-l-2 border-success">
+                        <div class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Balance PEN</div>
+                        <div class="text-sm font-mono font-bold text-white" id="mini-bal-pen">...</div>
                     </div>
                 </div>
             </div>
@@ -137,7 +152,7 @@
                 </div>
 
                 <div class="px-4 border-l border-white/10 flex flex-col items-end">
-                    <span class="text-[10px] text-slate-500 uppercase font-bold">Tipo Cambio</span>
+                    <span class="text-[10px] text-slate-500 uppercase font-bold">TC Ponderado</span>
                     <span class="text-sm font-mono font-bold text-success" id="tc-display">---</span>
                 </div>
             </div>
@@ -146,13 +161,13 @@
         <div id="dashboard-content" class="space-y-8 opacity-0 transition-opacity duration-500">
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-4 border-primary" onclick="openProfitModal()">
+                <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-4" id="card-profit" onclick="openProfitModal()">
                     <div class="absolute top-4 right-4 opacity-50 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="maximize-2" class="w-4 h-4 text-primary"></i>
+                        <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
                     </div>
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Profit Neto</span>
-                        <span class="px-2 py-0.5 rounded text-[10px] bg-primary/20 text-primary border border-primary/20">Click Detalle</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] bg-white/10 text-white border border-white/20">Click Detalle</span>
                     </div>
                     <div class="text-4xl font-mono font-bold text-white mb-1 transition-all duration-300" id="biz-profit">$0.00</div>
                     <div class="text-xs text-slate-500 flex items-center gap-1">
@@ -271,7 +286,7 @@
 
         <div id="loading" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg">
             <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            <span class="mt-4 text-primary font-mono text-xs tracking-widest animate-pulse">CARGANDO DATOS...</span>
+            <span class="mt-4 text-primary font-mono text-xs tracking-widest animate-pulse">CONECTANDO A BINANCE P2P...</span>
         </div>
     </div>
 
@@ -341,21 +356,21 @@
             document.getElementById('filter-month').value = today.getMonth();
             document.getElementById('filter-year').value = today.getFullYear();
             
-            // Set default range inputs
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-            // Format dates as YYYY-MM-DD for input values
             const formatDateInput = (d) => d.toISOString().split('T')[0];
             document.getElementById('date-start').value = formatDateInput(firstDay);
             document.getElementById('date-end').value = formatDateInput(today);
 
             try {
-                const [conf, emp, per] = await Promise.all([
+                // FETCH CON P2P
+                const [conf, emp, per, p2p] = await Promise.all([
                     fetchCSV(URL_CONFIG),
                     fetchCSV(URL_EMPRESA),
-                    fetchCSV(URL_PERSONAL)
+                    fetchCSV(URL_PERSONAL),
+                    fetchCSV(URL_P2P)
                 ]);
                 
-                GLOBAL_DATA = { config: conf, empresa: emp, personal: per };
+                GLOBAL_DATA = { config: conf, empresa: emp, personal: per, p2p: p2p };
                 
                 document.getElementById('loading').classList.add('hidden');
                 const dash = document.getElementById('dashboard-content');
@@ -380,7 +395,6 @@
                 startDate = new Date(y, m, 1);
                 endDate = new Date(y, m + 1, 0, 23, 59, 59);
             } else {
-                // Range mode
                 const sVal = document.getElementById('date-start').value;
                 const eVal = document.getElementById('date-end').value;
                 startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date();
@@ -391,17 +405,42 @@
         }
 
         function processData(startDate, endDate) {
-            // A. CONFIG
-            let tc = 3.75, nominaUSD = 400;
-            GLOBAL_DATA.config.forEach(r => {
-                const k = (r[0]||"").toUpperCase();
-                if(k.includes("TIPO DE CAMBIO")) tc = parseFloat(r[1]);
-                if(k.includes("NOMINA FIJA")) nominaUSD = parseFloat(r[1]);
+            // A. CONFIG DINÁMICA (MES ACTUAL O POR DEFECTO)
+            // Buscamos la configuración que coincida con el mes de INICIO del filtro
+            const filterKey = `${String(startDate.getMonth()+1).padStart(2,'0')}/${startDate.getFullYear()}`;
+            
+            let tcManual = 3.75;
+            let nominaUSD = 400;
+
+            // Buscar en tabla Config
+            GLOBAL_DATA.config.forEach(row => {
+                // row[0] es Mes/Año (ej: 01/2026)
+                if(row[0] === filterKey) {
+                    if(row[1]) nominaUSD = parseFloat(row[1]);
+                    if(row[2]) tcManual = parseFloat(row[2]);
+                }
             });
-            document.getElementById('tc-display').innerText = `S/ ${tc.toFixed(2)}`;
+
+            // B. CALCULAR TC PONDERADO (P2P)
+            // Sumar todos los USDT vendidos y PEN recibidos en el rango
+            let totalUSDT = 0, totalPEN = 0;
+            // P2P Columns: 0:Fecha, 1:USDT, 2:PEN
+            GLOBAL_DATA.p2p.forEach((row, i) => {
+                if(i===0) return;
+                const date = parseDate(row[0]); // P2P usa columna 0 fecha normal
+                if(date >= startDate && date <= endDate) {
+                    totalUSDT += parseMonto(row[1]);
+                    totalPEN += parseMonto(row[2]);
+                }
+            });
+
+            // Si hay movimientos P2P, usar ponderado. Si no, usar manual.
+            let tcReal = (totalUSDT > 0) ? (totalPEN / totalUSDT) : tcManual;
+            
+            document.getElementById('tc-display').innerText = `S/ ${tcReal.toFixed(3)}`;
             document.getElementById('base-nomina-usd').innerText = nominaUSD;
 
-            // B. EMPRESA
+            // C. EMPRESA
             let bizIng = 0, bizGas = 0, bizNom = 0;
             PROCESSED_DATA.empresa = [];
             
@@ -423,7 +462,7 @@
                 }
             });
 
-            // C. PERSONAL
+            // D. PERSONAL
             let perGas = 0;
             let cats = {};
             PROCESSED_DATA.personal = [];
@@ -446,16 +485,19 @@
                 }
             });
 
-            // D. DEUDA TARJETA (LÓGICA DUAL)
-            // Usamos endDate (normalmente "hoy" o fin de mes) como referencia
+            // E. DEUDA TARJETA (DUAL)
             const cardData = calculateSplitCardDebt(endDate);
 
-            // E. RESULTADOS
+            // F. RESULTADOS
             const profit = bizIng - bizGas - bizNom;
-            const nominaPEN = bizNom * tc;
+            const nominaPEN = bizNom * tcReal; // Usamos TC Ponderado
             const saldo = nominaPEN - perGas;
 
-            // F. UI UPDATES
+            // Mini Balances
+            updateCard('mini-bal-usd', (bizIng - bizGas), '$'); // Caja Empresa
+            updateCard('mini-bal-pen', (totalPEN - perGas), 'S/ '); // Liquidez PEN Real
+
+            // UI Updates
             updateCard('biz-profit', profit, '$');
             updateCard('biz-ingresos', bizIng, '$');
             updateCard('biz-gastos', bizGas, '$');
@@ -466,10 +508,15 @@
             
             // UI Profit Dinámico
             const profitEl = document.getElementById('biz-profit');
+            const cardProfit = document.getElementById('card-profit');
             if (profit >= 0) {
-                profitEl.className = "text-4xl font-mono font-bold text-success mb-1 shadow-neon-green";
+                profitEl.className = "text-4xl font-mono font-bold text-success mb-1 shadow-neon-green transition-all";
+                cardProfit.classList.remove('border-danger');
+                cardProfit.classList.add('border-primary'); // O success
             } else {
-                profitEl.className = "text-4xl font-mono font-bold text-danger mb-1 shadow-neon-red";
+                profitEl.className = "text-4xl font-mono font-bold text-danger mb-1 shadow-neon-red transition-all";
+                cardProfit.classList.remove('border-primary');
+                cardProfit.classList.add('border-danger');
             }
 
             // UI Tarjetas Dual
@@ -503,44 +550,29 @@
             renderChart(cats);
         }
 
-        // --- 3. LOGICA TC DUAL (11-10 / PAGO 05) ---
+        // --- 3. LOGICA TC DUAL ---
         function calculateSplitCardDebt(refDate) {
-            // refDate es usualmente "Hoy"
-            
-            // 1. DEFINIR FECHAS CLAVE
-            // Si hoy es <= 10 (ej: 5 Ene), estamos en ciclo Dic 11 - Ene 10.
-            // Si hoy es > 10 (ej: 27 Ene), estamos en ciclo Ene 11 - Feb 10.
-            
-            let currentOpenStart, currentOpenEnd; // Para "Consumo Actual"
-            let prevClosedStart, prevClosedEnd;   // Para "Próximo Pago"
+            let currentOpenStart, currentOpenEnd; 
+            let prevClosedStart, prevClosedEnd;   
             
             const day = refDate.getDate();
             const month = refDate.getMonth();
             const year = refDate.getFullYear();
 
             if (day <= 10) {
-                // Ciclo Abierto: Mes Anterior 11 -> Este Mes 10
                 currentOpenStart = new Date(year, month - 1, 11);
                 currentOpenEnd = new Date(year, month, 10);
-                
-                // Ciclo Cerrado Anterior: Mes-2 11 -> Mes-1 10
                 prevClosedStart = new Date(year, month - 2, 11);
                 prevClosedEnd = new Date(year, month - 1, 10);
             } else {
-                // Ciclo Abierto: Este Mes 11 -> Mes Siguiente 10
                 currentOpenStart = new Date(year, month, 11);
                 currentOpenEnd = new Date(year, month + 1, 10);
-                
-                // Ciclo Cerrado Anterior: Mes-1 11 -> Este Mes 10
                 prevClosedStart = new Date(year, month - 1, 11);
                 prevClosedEnd = new Date(year, month, 10);
             }
 
-            // Fecha de pago del ciclo cerrado: 5 del mes siguiente al cierre
-            // El ciclo cerrado terminó en prevClosedEnd. Pago es mes siguiente dia 5.
             const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5);
 
-            // 2. CALCULAR MONTOS
             let nextPayment = 0;
             let currentConsumption = 0;
 
@@ -556,11 +588,9 @@
                     d.setHours(12,0,0,0);
                     const amount = parseMonto(row[pm]);
 
-                    // Chequear si cae en Ciclo Cerrado (A pagar ya)
                     if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) {
                         nextPayment += amount;
                     }
-                    // Chequear si cae en Ciclo Abierto (Acumulando)
                     if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) {
                         currentConsumption += amount;
                     }
@@ -576,7 +606,7 @@
             };
         }
 
-        // --- 4. UI LOGIC ---
+        // --- 4. MODALS & UI ---
         function setFilterMode(mode) {
             CURRENT_FILTER_MODE = mode;
             const btnMonth = document.getElementById('btn-mode-month');
@@ -587,7 +617,6 @@
                 btnMonth.classList.remove('text-slate-400');
                 btnRange.classList.remove('bg-primary', 'text-white', 'shadow-lg');
                 btnRange.classList.add('text-slate-400');
-                
                 document.getElementById('controls-month').classList.remove('hidden');
                 document.getElementById('controls-range').classList.add('hidden');
             } else {
@@ -595,7 +624,6 @@
                 btnRange.classList.remove('text-slate-400');
                 btnMonth.classList.remove('bg-primary', 'text-white', 'shadow-lg');
                 btnMonth.classList.add('text-slate-400');
-
                 document.getElementById('controls-month').classList.add('hidden');
                 document.getElementById('controls-range').classList.remove('hidden');
             }
@@ -718,7 +746,7 @@
                     datasets: [{
                         data: Object.values(data),
                         backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'],
-                        borderColor: '#020617', // Match BG for cleaner look
+                        borderColor: '#020617',
                         borderWidth: 0,
                         hoverOffset: 20
                     }]
