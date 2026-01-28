@@ -177,7 +177,7 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-4" id="card-profit" onclick="openProfitModal()">
+                    <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-2 border-white/10" id="card-profit" onclick="openProfitModal()">
                         <div class="absolute top-4 right-4 opacity-30 group-hover:opacity-100 transition-opacity"><i data-lucide="maximize-2" class="w-4 h-4 text-white"></i></div>
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Profit Neto</div>
                         <div class="text-5xl font-mono font-bold text-white mb-2 transition-all duration-300 tracking-tighter" id="biz-profit">$0.00</div>
@@ -458,12 +458,10 @@
             // C. EMPRESA (CON AUTO CONVERSIÓN PEN -> USD)
             let bizIng = 0, bizGas = 0, bizNom = 0;
             PROCESSED_DATA.empresa = [];
-            let cf=0, ct=1, cm=5, cmon=3; // cm=monto_convertido, cmon=moneda_original_idx
+            let cf=0, ct=1, cm=5, cmon=3; 
             
-            // Detección automática básica
             if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { 
-                cf=1; ct=2; cm=4; cmon=5; // Ajusta estos indices según tu CSV real si falla
-                // Nota: Tu CSV "BD_EMPRESA" tiene Moneda en col 5 (F) y Monto en 4 (E)
+                cf=1; ct=2; cm=4; cmon=5; 
             }
 
             GLOBAL_DATA.empresa.forEach((row, i) => {
@@ -504,7 +502,6 @@
                     perGas += monto;
                     cats[cat] = (cats[cat] || 0) + monto;
                     
-                    // Daily Chart Data
                     const dayKey = date.getDate();
                     dailyExpenses[dayKey] = (dailyExpenses[dayKey] || 0) + monto;
 
@@ -512,8 +509,8 @@
                 }
             });
 
-            // E. RESULTADOS & BALANCES PUROS
-            const profit = bizIng - bizGas - bizNom; // Profit antes de cambiar a soles
+            // E. RESULTADOS
+            const profit = bizIng - bizGas - bizNom; 
             const nominaPEN = bizNom * tcReal;
             const saldo = nominaPEN - perGas;
 
@@ -531,7 +528,6 @@
             const profitEl = document.getElementById('biz-profit');
             const cardProfit = document.getElementById('card-profit');
             
-            // Reset styles
             cardProfit.classList.remove('border-danger', 'border-primary');
             profitEl.classList.remove('text-success', 'text-danger', 'shadow-neon-green', 'shadow-neon-red');
 
