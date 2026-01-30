@@ -51,72 +51,36 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* TEXT NEON EFFECTS */
-        .text-neon-green {
-            color: #10b981;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.6), 0 0 20px rgba(16, 185, 129, 0.3);
-        }
-        .text-neon-red {
-            color: #ef4444;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3);
-        }
-        .text-neon-white {
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
+        .text-neon-green { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.6), 0 0 20px rgba(16, 185, 129, 0.3); }
+        .text-neon-red { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3); }
+        .text-neon-white { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
 
-        /* BENTO GRID CARD STYLES */
         .bento-card {
-            background: rgba(20, 20, 22, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: rgba(20, 20, 22, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .bento-card:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            background: rgba(30, 30, 35, 0.7);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+            border-color: rgba(255, 255, 255, 0.15); background: rgba(30, 30, 35, 0.7);
+            transform: translateY(-2px); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
         }
 
-        .glass-header {
-            background: rgba(5, 5, 5, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Select Options Dark Fix */
+        .glass-header { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         select option { background-color: #050505; color: #fff; padding: 10px; }
-
-        /* SCROLLBAR & UTILS */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
 
-        /* CREDIT CARD STYLES */
         .card-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
+            background: linear-gradient(135deg, #0f172a 0%, #020617 100%); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
         }
         .card-gradient::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 50%);
-            transform: rotate(30deg); pointer-events: none;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 50%); transform: rotate(30deg); pointer-events: none;
         }
-        .chip {
-            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
-            border-radius: 4px; position: relative;
-        }
+        .chip { background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%); border-radius: 4px; position: relative; }
         .chip::after {
             content: ''; position: absolute; inset: 0;
-            background: repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 3px);
-            border-radius: 4px;
+            background: repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 3px); border-radius: 4px;
         }
-
-        /* ANIMATIONS */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
     </style>
@@ -132,7 +96,6 @@
 
     <header class="fixed top-0 w-full glass-header z-50 h-auto md:h-16 py-3 md:py-0 flex items-center transition-all">
         <div class="w-full max-w-[1800px] mx-auto px-5 md:px-6 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0">
-            
             <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-start">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
@@ -141,11 +104,10 @@
                     <div>
                         <h1 class="text-sm font-bold tracking-tight text-white leading-tight">FINANCIAL <span class="text-slate-500">ALVARO</span></h1>
                         <div class="flex items-center gap-2">
-                            <span class="text-[9px] text-success font-mono tracking-wider bg-success/10 px-1 rounded">V9.5 GOD LEVEL</span>
+                            <span class="text-[9px] text-success font-mono tracking-wider bg-success/10 px-1 rounded">V9.7 PAYROLL</span>
                         </div>
                     </div>
                 </div>
-
                 <div class="flex items-center gap-2">
                     <button onclick="openGoalsModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-xs font-bold text-slate-300">
                         <i data-lucide="target" class="w-3 h-3 text-danger"></i> <span class="hidden sm:inline">METAS</span>
@@ -155,35 +117,28 @@
                     </button>
                 </div>
             </div>
-
             <div class="w-full md:w-auto flex items-center gap-3 bg-surface border border-white/5 rounded-lg p-1 justify-between md:justify-start">
                 <div class="hidden xl:flex gap-1 border-r border-white/10 pr-2 mr-2">
                     <button onclick="setQuickRange(7)" class="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded">7D</button>
                     <button onclick="setQuickRange(14)" class="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded">14D</button>
                     <button onclick="setQuickRange(365)" class="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded">YTD</button>
                 </div>
-
                 <div id="controls-month" class="flex items-center">
                     <select id="filter-month" class="bg-transparent text-xs text-slate-300 px-2 py-1 outline-none font-medium hover:text-white cursor-pointer" onchange="applyFilter()">
-                        <option value="0">ENE</option><option value="1">FEB</option><option value="2">MAR</option><option value="3">ABR</option>
-                        <option value="4">MAY</option><option value="5">JUN</option><option value="6">JUL</option><option value="7">AGO</option>
-                        <option value="8">SEP</option><option value="9">OCT</option><option value="10">NOV</option><option value="11">DIC</option>
+                        <option value="0">ENE</option><option value="1">FEB</option><option value="2">MAR</option><option value="3">ABR</option><option value="4">MAY</option><option value="5">JUN</option><option value="6">JUL</option><option value="7">AGO</option><option value="8">SEP</option><option value="9">OCT</option><option value="10">NOV</option><option value="11">DIC</option>
                     </select>
                     <select id="filter-year" class="bg-transparent text-xs text-slate-300 px-2 py-1 outline-none font-mono hover:text-white cursor-pointer" onchange="applyFilter()">
                         <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
                     </select>
                 </div>
-                
                 <div id="controls-range" class="hidden flex items-center gap-2 px-2">
                     <input type="date" id="date-start" class="bg-transparent text-xs text-white font-mono outline-none w-20 md:w-24" onchange="applyFilter()">
                     <span class="text-slate-600">/</span>
                     <input type="date" id="date-end" class="bg-transparent text-xs text-white font-mono outline-none w-20 md:w-24" onchange="applyFilter()">
                 </div>
-
                 <button onclick="toggleFilterMode()" class="ml-1 p-1.5 rounded hover:bg-white/5 text-slate-400 hover:text-white transition-colors">
                     <i data-lucide="calendar-days" class="w-3 h-3"></i>
                 </button>
-                
                 <div class="px-3 border-l border-white/10 flex flex-col items-end">
                     <span class="text-[8px] text-slate-500 font-bold uppercase">TC REF</span>
                     <span class="text-xs font-mono font-bold text-success" id="tc-display">---</span>
@@ -206,24 +161,17 @@
                     <div class="absolute top-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <div class="bg-white/10 p-1.5 rounded-lg backdrop-blur-md"><i data-lucide="expand" class="w-4 h-4 text-white"></i></div>
                     </div>
-                    
                     <div class="relative z-10">
                         <div class="flex items-center justify-between mb-4">
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Profit Neto</span>
                             <div class="flex items-center gap-2">
                                 <span class="text-[9px] text-slate-500 uppercase">Meta: <span id="goal-profit-display" class="text-slate-300">$0</span></span>
-                                <div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
-                                    <div id="goal-profit-bar" class="h-full bg-primary" style="width: 0%"></div>
-                                </div>
+                                <div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden"><div id="goal-profit-bar" class="h-full bg-primary" style="width: 0%"></div></div>
                             </div>
                         </div>
                         <div class="text-6xl md:text-7xl font-mono font-bold tracking-tighter transition-colors duration-300 break-words" id="biz-profit">$0.00</div>
-                        
                         <div class="mt-6 p-3 bg-black/20 rounded-xl border border-white/5 max-w-lg">
-                            <div class="flex justify-between text-[10px] text-slate-400 mb-1 uppercase font-bold">
-                                <span>Retenido USD</span>
-                                <span>Movido a PEN</span>
-                            </div>
+                            <div class="flex justify-between text-[10px] text-slate-400 mb-1 uppercase font-bold"><span>Retenido USD</span><span>Movido a PEN</span></div>
                             <div class="flex items-center gap-2">
                                 <span class="font-mono text-xs text-primary" id="breakdown-usd">$0.00</span>
                                 <div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden flex">
@@ -243,10 +191,7 @@
                         <div class="text-3xl font-mono font-bold text-success" id="biz-ingresos">$0.00</div>
                     </div>
                     <div class="bento-card rounded-2xl p-6 flex flex-col justify-center h-auto md:h-full border-l-2 border-danger/30 cursor-pointer hover:bg-danger/5 transition-colors" onclick="openDetails('EMPRESA_GASTOS')">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Op.</span>
-                            <i data-lucide="search" class="w-3 h-3 text-slate-600"></i>
-                        </div>
+                        <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Op.</span><i data-lucide="search" class="w-3 h-3 text-slate-600"></i></div>
                         <div class="text-3xl font-mono font-bold text-danger" id="biz-gastos">$0.00</div>
                         <span class="text-[9px] text-slate-600 mt-1">Ver detalles</span>
                     </div>
@@ -261,7 +206,18 @@
                 <div class="h-px bg-white/10 flex-1 ml-4"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6"> <div class="col-span-1 bento-card rounded-2xl p-6 flex flex-col justify-center relative overflow-hidden h-auto md:h-full min-h-[160px]">
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="briefcase" class="w-4 h-4 text-primary"></i>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Nómina Real</span>
+                        </div>
+                        <div class="text-3xl font-mono font-bold text-white" id="per-nomina-usd">$0.00</div>
+                        <div class="text-xs text-slate-400 mt-1 font-mono" id="per-nomina-pen">aprox S/ 0.00</div>
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+                </div>
+
                 <div class="col-span-1 bento-card rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden h-auto md:h-full min-h-[160px]">
                     <div class="relative z-10 flex justify-between items-start">
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Balance Disp.</span>
@@ -294,7 +250,7 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-0 card-gradient flex flex-col cursor-pointer shadow-lg hover:shadow-primary/20 transition-all overflow-hidden" onclick="openCreditModal()">
+                <div class="col-span-1 md:col-span-3 bento-card rounded-2xl p-0 card-gradient flex flex-col cursor-pointer shadow-lg hover:shadow-primary/20 transition-all overflow-hidden" onclick="openCreditModal()">
                     <div class="p-5 flex justify-between items-start border-b border-white/5 bg-white/5">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-7 chip"></div>
@@ -302,7 +258,6 @@
                         </div>
                         <i data-lucide="rss" class="w-5 h-5 text-slate-400 rotate-90"></i>
                     </div>
-                    
                     <div class="grid grid-cols-3 divide-x divide-white/10 bg-black/20 flex-1">
                         <div class="p-4 flex flex-col justify-center">
                             <span class="text-[9px] text-danger font-bold uppercase mb-1">A Pagar</span>
@@ -332,7 +287,6 @@
                         <canvas id="chartPersonal"></canvas>
                     </div>
                 </div>
-                
                 <div class="col-span-1 md:col-span-2 bento-card rounded-2xl p-0 flex flex-col overflow-hidden h-[280px]">
                     <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Actividad Personal Reciente</span>
@@ -347,7 +301,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="bento-card rounded-2xl p-6 h-[250px] md:h-[300px]">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tendencia de Gasto Diaria</h3>
@@ -360,74 +313,11 @@
 
     </main>
 
-    <div id="loading" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#050505]">
-        <div class="relative">
-            <div class="w-16 h-16 border-t-2 border-b-2 border-primary rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center text-primary font-bold text-lg">$</div>
-        </div>
-        <span class="mt-6 text-slate-500 font-mono text-[10px] tracking-[0.2em] animate-pulse">CARGANDO...</span>
-    </div>
-
-    <div id="goals-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('goals-modal')"></div>
-        <div class="relative w-full max-w-md bg-surface border border-white/10 rounded-2xl shadow-2xl p-6">
-            <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="target" class="w-5 h-5 text-danger"></i> Objetivos Mensuales</h2>
-            <div class="space-y-4">
-                <div><label class="text-[10px] uppercase font-bold text-slate-500">Meta Profit (USD)</label><input type="number" id="input-goal-profit" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white font-mono outline-none"></div>
-                <div><label class="text-[10px] uppercase font-bold text-slate-500">Límite Gasto (PEN)</label><input type="number" id="input-goal-limit" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white font-mono outline-none"></div>
-                <div><label class="text-[10px] uppercase font-bold text-slate-500">Meta Ahorro (PEN)</label><input type="number" id="input-goal-save" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white font-mono outline-none"></div>
-                <button onclick="saveGoals()" class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-2 rounded">GUARDAR</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="credit-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('credit-modal')"></div>
-        <div class="relative w-full max-w-4xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight">
-                <h2 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i> Detalle Crédito</h2>
-                <button onclick="closeModal('credit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button>
-            </div>
-            <div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-                <div class="flex flex-col h-full bg-danger/5">
-                    <div class="p-4 border-b border-danger/10"><span class="text-[10px] text-danger font-bold uppercase block">Ciclo Cerrado (A Pagar Ya)</span><span class="text-2xl font-mono font-bold text-white" id="modal-cc-pay">S/ 0.00</span></div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="list-cc-pay"></div>
-                </div>
-                <div class="flex flex-col h-full bg-surface">
-                    <div class="p-4 border-b border-white/10"><span class="text-[10px] text-slate-500 font-bold uppercase block">Ciclo Abierto (En Curso)</span><span class="text-2xl font-mono font-bold text-slate-300" id="modal-cc-curr">S/ 0.00</span></div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="list-cc-curr"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="profit-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('profit-modal')"></div>
-        <div class="relative w-full max-w-5xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-sm font-bold text-white uppercase tracking-widest">Profit Breakdown</h2><button onclick="closeModal('profit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button></div>
-            <div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-                <div class="flex flex-col h-full bg-success/5">
-                    <div class="p-3 border-b border-success/10 text-center"><span class="text-[10px] font-bold text-success uppercase">Ingresos</span></div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-pos-list"></div>
-                    <div class="p-4 border-t border-success/10 text-right"><span class="font-mono text-xl font-bold text-success" id="profit-pos-total">$0.00</span></div>
-                </div>
-                <div class="flex flex-col h-full bg-danger/5">
-                    <div class="p-3 border-b border-danger/10 text-center"><span class="text-[10px] font-bold text-danger uppercase">Gastos</span></div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-neg-list"></div>
-                    <div class="p-4 border-t border-danger/10 text-right"><span class="font-mono text-xl font-bold text-danger" id="profit-neg-total">$0.00</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="detail-modal" class="fixed inset-0 z-[150] hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0" id="detail-overlay" onclick="closeModal('detail-modal')"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[480px] bg-surface border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full flex flex-col" id="detail-panel">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-sm font-bold text-white uppercase tracking-widest" id="modal-title">Detalles</h2><button onclick="closeModal('detail-modal')"><i data-lucide="arrow-right" class="w-5 h-5 text-slate-500"></i></button></div>
-            <div class="flex-1 overflow-y-auto p-6 space-y-3 no-scrollbar" id="modal-content"></div>
-            <div class="p-6 border-t border-white/10 bg-surfaceHighlight text-right"><span class="text-[10px] text-slate-500 uppercase tracking-widest mr-3">Total</span><span class="text-3xl font-mono font-bold text-white" id="modal-total">0.00</span></div>
-        </div>
-    </div>
+    <div id="loading" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#050505]"><div class="relative"><div class="w-16 h-16 border-t-2 border-b-2 border-primary rounded-full animate-spin"></div><div class="absolute inset-0 flex items-center justify-center text-primary font-bold text-lg">$</div></div><span class="mt-6 text-slate-500 font-mono text-[10px] tracking-[0.2em] animate-pulse">CARGANDO...</span></div>
+    <div id="goals-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('goals-modal')"></div><div class="relative w-full max-w-md bg-surface border border-white/10 rounded-2xl shadow-2xl p-6"><h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="target" class="w-5 h-5 text-danger"></i> Objetivos Mensuales</h2><div class="space-y-4"><div><label class="text-[10px] uppercase font-bold text-slate-500">Meta Profit (USD)</label><input type="number" id="input-goal-profit" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white font-mono outline-none"></div><div><label class="text-[10px] uppercase font-bold text-slate-500">Límite Gasto (PEN)</label><input type="number" id="input-goal-limit" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white font-mono outline-none"></div><div><label class="text-[10px] uppercase font-bold text-slate-500">Meta Ahorro (PEN)</label><input type="number" id="input-goal-save" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white font-mono outline-none"></div><button onclick="saveGoals()" class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-2 rounded">GUARDAR</button></div></div></div>
+    <div id="credit-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('credit-modal')"></div><div class="relative w-full max-w-4xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"><div class="p-4 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i> Detalle Crédito</h2><button onclick="closeModal('credit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button></div><div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10"><div class="flex flex-col h-full bg-danger/5"><div class="p-4 border-b border-danger/10"><span class="text-[10px] text-danger font-bold uppercase block">Ciclo Cerrado (A Pagar Ya)</span><span class="text-2xl font-mono font-bold text-white" id="modal-cc-pay">S/ 0.00</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="list-cc-pay"></div></div><div class="flex flex-col h-full bg-surface"><div class="p-4 border-b border-white/10"><span class="text-[10px] text-slate-500 font-bold uppercase block">Ciclo Abierto (En Curso)</span><span class="text-2xl font-mono font-bold text-slate-300" id="modal-cc-curr">S/ 0.00</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="list-cc-curr"></div></div></div></div></div>
+    <div id="profit-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal('profit-modal')"></div><div class="relative w-full max-w-5xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"><div class="p-4 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-sm font-bold text-white uppercase tracking-widest">Profit Breakdown</h2><button onclick="closeModal('profit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button></div><div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10"><div class="flex flex-col h-full bg-success/5"><div class="p-3 border-b border-success/10 text-center"><span class="text-[10px] font-bold text-success uppercase">Ingresos</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-pos-list"></div><div class="p-4 border-t border-success/10 text-right"><span class="font-mono text-xl font-bold text-success" id="profit-pos-total">$0.00</span></div></div><div class="flex flex-col h-full bg-danger/5"><div class="p-3 border-b border-danger/10 text-center"><span class="text-[10px] font-bold text-danger uppercase">Gastos</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-neg-list"></div><div class="p-4 border-t border-danger/10 text-right"><span class="font-mono text-xl font-bold text-danger" id="profit-neg-total">$0.00</span></div></div></div></div></div>
+    <div id="detail-modal" class="fixed inset-0 z-[150] hidden"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0" id="detail-overlay" onclick="closeModal('detail-modal')"></div><div class="absolute inset-y-0 right-0 w-full md:w-[480px] bg-surface border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full flex flex-col" id="detail-panel"><div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-sm font-bold text-white uppercase tracking-widest" id="modal-title">Detalles</h2><button onclick="closeModal('detail-modal')"><i data-lucide="arrow-right" class="w-5 h-5 text-slate-500"></i></button></div><div class="flex-1 overflow-y-auto p-6 space-y-3 no-scrollbar" id="modal-content"></div><div class="p-6 border-t border-white/10 bg-surfaceHighlight text-right"><span class="text-[10px] text-slate-500 uppercase tracking-widest mr-3">Total</span><span class="text-3xl font-mono font-bold text-white" id="modal-total">0.00</span></div></div></div>
 
     <script>
         lucide.createIcons();
@@ -437,40 +327,16 @@
         let USER_GOALS = JSON.parse(localStorage.getItem('evo_goals')) || { profit: 0, limit: 0, save: 0 };
         let CREDIT_DATA_CACHE = {}; 
 
-        function toggleFilterMode() {
-            setFilterMode(CURRENT_FILTER_MODE === 'month' ? 'range' : 'month');
-        }
-
-        function setQuickRange(days) {
-            const end = new Date();
-            const start = new Date();
-            if(days === 365) { start.setMonth(0, 1); } else { start.setDate(end.getDate() - days); }
-            document.getElementById('date-start').value = start.toISOString().split('T')[0];
-            document.getElementById('date-end').value = end.toISOString().split('T')[0];
-            setFilterMode('range');
-        }
+        function toggleFilterMode() { setFilterMode(CURRENT_FILTER_MODE === 'month' ? 'range' : 'month'); }
+        function setQuickRange(days) { const end = new Date(); const start = new Date(); if(days === 365) { start.setMonth(0, 1); } else { start.setDate(end.getDate() - days); } document.getElementById('date-start').value = start.toISOString().split('T')[0]; document.getElementById('date-end').value = end.toISOString().split('T')[0]; setFilterMode('range'); }
 
         async function init(forceReload = false) {
-            if(forceReload) {
-                document.getElementById('loading').classList.remove('hidden');
-                document.getElementById('dashboard-content').classList.add('opacity-0');
-            }
+            if(forceReload) { document.getElementById('loading').classList.remove('hidden'); document.getElementById('dashboard-content').classList.add('opacity-0'); }
             const today = new Date();
-            if(!GLOBAL_DATA.config) {
-                document.getElementById('filter-month').value = today.getMonth();
-                document.getElementById('filter-year').value = today.getFullYear();
-                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                document.getElementById('date-start').value = firstDay.toISOString().split('T')[0];
-                document.getElementById('date-end').value = today.toISOString().split('T')[0];
-            }
+            if(!GLOBAL_DATA.config) { document.getElementById('filter-month').value = today.getMonth(); document.getElementById('filter-year').value = today.getFullYear(); const firstDay = new Date(today.getFullYear(), today.getMonth(), 1); document.getElementById('date-start').value = firstDay.toISOString().split('T')[0]; document.getElementById('date-end').value = today.toISOString().split('T')[0]; }
             try {
                 const ts = forceReload ? `&t=${new Date().getTime()}` : '';
-                const [conf, emp, per, p2p] = await Promise.all([
-                    fetchCSV(BASE_URL_CONFIG + ts),
-                    fetchCSV(BASE_URL_EMPRESA + ts),
-                    fetchCSV(BASE_URL_PERSONAL + ts),
-                    fetchCSV(BASE_URL_P2P + ts)
-                ]);
+                const [conf, emp, per, p2p] = await Promise.all([ fetchCSV(BASE_URL_CONFIG + ts), fetchCSV(BASE_URL_EMPRESA + ts), fetchCSV(BASE_URL_PERSONAL + ts), fetchCSV(BASE_URL_P2P + ts) ]);
                 GLOBAL_DATA = { config: conf, empresa: emp, personal: per, p2p: p2p };
                 document.getElementById('loading').classList.add('hidden');
                 const dash = document.getElementById('dashboard-content');
@@ -478,33 +344,11 @@
                 setTimeout(() => dash.classList.remove('opacity-0'), 100);
                 loadGoalsUI();
                 applyFilter();
-            } catch (e) {
-                console.error(e);
-                alert("Error crítico cargando datos.");
-            }
+            } catch (e) { console.error(e); alert("Error crítico cargando datos."); }
         }
 
-        function reloadData() {
-            const icon = document.getElementById('refresh-icon');
-            icon.classList.add('animate-spin');
-            init(true).then(() => icon.classList.remove('animate-spin'));
-        }
-
-        function applyFilter() {
-            let startDate, endDate;
-            if (CURRENT_FILTER_MODE === 'month') {
-                const m = parseInt(document.getElementById('filter-month').value);
-                const y = parseInt(document.getElementById('filter-year').value);
-                startDate = new Date(y, m, 1);
-                endDate = new Date(y, m + 1, 0, 23, 59, 59);
-            } else {
-                const sVal = document.getElementById('date-start').value;
-                const eVal = document.getElementById('date-end').value;
-                startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date();
-                endDate = eVal ? new Date(eVal + 'T23:59:59') : new Date();
-            }
-            processData(startDate, endDate);
-        }
+        function reloadData() { const icon = document.getElementById('refresh-icon'); icon.classList.add('animate-spin'); init(true).then(() => icon.classList.remove('animate-spin')); }
+        function applyFilter() { let startDate, endDate; if (CURRENT_FILTER_MODE === 'month') { const m = parseInt(document.getElementById('filter-month').value); const y = parseInt(document.getElementById('filter-year').value); startDate = new Date(y, m, 1); endDate = new Date(y, m + 1, 0, 23, 59, 59); } else { const sVal = document.getElementById('date-start').value; const eVal = document.getElementById('date-end').value; startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date(); endDate = eVal ? new Date(eVal + 'T23:59:59') : new Date(); } processData(startDate, endDate); }
 
         function processData(startDate, endDate) {
             const mes = String(startDate.getMonth()+1).padStart(2,'0');
@@ -522,14 +366,7 @@
             });
 
             let totalUSDT_Sold = 0, totalPEN_Bought = 0;
-            GLOBAL_DATA.p2p.forEach((row, i) => {
-                if(i===0) return;
-                const date = parseDate(row[0]);
-                if(date >= startDate && date <= endDate) {
-                    totalUSDT_Sold += parseMonto(row[1]);
-                    totalPEN_Bought += parseMonto(row[2]);
-                }
-            });
+            GLOBAL_DATA.p2p.forEach((row, i) => { if(i===0) return; const date = parseDate(row[0]); if(date >= startDate && date <= endDate) { totalUSDT_Sold += parseMonto(row[1]); totalPEN_Bought += parseMonto(row[2]); } });
             let tcReal = (totalUSDT_Sold > 0) ? (totalPEN_Bought / totalUSDT_Sold) : tcManual;
             document.getElementById('tc-display').innerText = `S/ ${tcReal.toFixed(3)}`;
             
@@ -538,20 +375,7 @@
             let cf=0, ct=1, cm=5, cmon=3; 
             if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { cf=1; ct=2; cm=4; cmon=5; }
 
-            GLOBAL_DATA.empresa.forEach((row, i) => {
-                if(i===0) return;
-                const date = parseDate(row[cf]);
-                if(date >= startDate && date <= endDate) {
-                    const tipo = (row[ct]||"").toUpperCase();
-                    let monto = parseMonto(row[cm]);
-                    const moneda = (row[cmon]||"USD").toUpperCase();
-                    if(moneda.includes("PEN") || moneda.includes("SOL") || moneda.includes("S/")) { monto = monto / tcReal; }
-                    if(tipo.includes("INGRESO")) bizIng += monto;
-                    if(tipo.includes("GASTO")) bizGas += monto;
-                    if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNom += monto;
-                    PROCESSED_DATA.empresa.push({date, tipo, desc: row[ct+1]||"S/D", monto});
-                }
-            });
+            GLOBAL_DATA.empresa.forEach((row, i) => { if(i===0) return; const date = parseDate(row[cf]); if(date >= startDate && date <= endDate) { const tipo = (row[ct]||"").toUpperCase(); let monto = parseMonto(row[cm]); const moneda = (row[cmon]||"USD").toUpperCase(); if(moneda.includes("PEN") || moneda.includes("SOL") || moneda.includes("S/")) { monto = monto / tcReal; } if(tipo.includes("INGRESO")) bizIng += monto; if(tipo.includes("GASTO")) bizGas += monto; if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNom += monto; PROCESSED_DATA.empresa.push({date, tipo, desc: row[ct+1]||"S/D", monto}); } });
 
             let perGas = 0;
             let cats = {};
@@ -560,24 +384,8 @@
             let pf=0, pc=1, pd=2, pm=3, pmet=4;
             if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pc=2; pd=3; pm=4; pmet=5; }
 
-            GLOBAL_DATA.personal.forEach((row, i) => {
-                if(i===0) return;
-                const date = parseDate(row[pf]);
-                if(date >= startDate && date <= endDate) {
-                    const cat = row[pc] || "Otros";
-                    const monto = parseMonto(row[pm]);
-                    const metodo = (row[pmet]||"").toUpperCase();
-                    perGas += monto;
-                    cats[cat] = (cats[cat] || 0) + monto;
-                    const dayKey = date.getDate();
-                    if(!dailyTxns[dayKey]) dailyTxns[dayKey] = { amount: 0, items: [] };
-                    dailyTxns[dayKey].amount += monto;
-                    dailyTxns[dayKey].items.push(`${row[pd]} (S/ ${monto.toFixed(0)})`);
-                    PROCESSED_DATA.personal.push({date, cat, desc: row[pd], monto, metodo});
-                }
-            });
+            GLOBAL_DATA.personal.forEach((row, i) => { if(i===0) return; const date = parseDate(row[pf]); if(date >= startDate && date <= endDate) { const cat = row[pc] || "Otros"; const monto = parseMonto(row[pm]); const metodo = (row[pmet]||"").toUpperCase(); perGas += monto; cats[cat] = (cats[cat] || 0) + monto; const dayKey = date.getDate(); if(!dailyTxns[dayKey]) dailyTxns[dayKey] = { amount: 0, items: [] }; dailyTxns[dayKey].amount += monto; dailyTxns[dayKey].items.push(`${row[pd]} (S/ ${monto.toFixed(2)})`); PROCESSED_DATA.personal.push({date, cat, desc: row[pd], monto, metodo}); } });
 
-            // RESULTADOS & NEON LOGIC
             const profit = bizIng - bizGas - bizNom; 
             const nominaPEN = bizNom * tcReal;
             const saldo = nominaPEN - perGas;
@@ -585,6 +393,7 @@
             const retainedUSD = Math.max(0, profit - usdtSold);
             const movedToPEN = Math.min(profit, usdtSold); 
 
+            // UPDATE CARDS
             updateCard('biz-profit', profit, '$');
             const profitEl = document.getElementById('biz-profit');
             profitEl.className = `text-5xl md:text-7xl font-mono font-bold tracking-tighter transition-colors duration-300 break-words ${profit >= 0 ? 'text-neon-green' : 'text-neon-red'}`;
@@ -594,25 +403,22 @@
             updateCard('per-gastos', perGas, 'S/ ');
             updateCard('per-saldo', saldo, 'S/ ');
 
+            // ACTUALIZACIÓN DE NOMINA REAL
+            document.getElementById('per-nomina-usd').innerText = '$' + nominaUSD.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('per-nomina-pen').innerText = 'aprox S/ ' + (nominaUSD * tcReal).toLocaleString('en-US', {minimumFractionDigits: 2});
+
             updateCard('breakdown-usd', retainedUSD, '$');
             updateCard('breakdown-pen', movedToPEN * tcReal, 'S/ '); 
-            
             const totalVis = retainedUSD + (movedToPEN > 0 ? movedToPEN : 0);
-            if(totalVis > 0) {
-                 document.getElementById('bar-usd').style.width = `${(retainedUSD/totalVis)*100}%`;
-                 document.getElementById('bar-pen').style.width = `${(movedToPEN/totalVis)*100}%`;
-            }
+            if(totalVis > 0) { document.getElementById('bar-usd').style.width = `${(retainedUSD/totalVis)*100}%`; document.getElementById('bar-pen').style.width = `${(movedToPEN/totalVis)*100}%`; }
 
             updateGoalBars(profit, perGas, saldo);
 
-            // CREDIT CARD LOGIC
             CREDIT_DATA_CACHE = calculateSplitCardDebt(endDate);
             updateCard('tc-next-amount', CREDIT_DATA_CACHE.nextPayment, 'S/ ');
             document.getElementById('tc-next-date-label').innerText = `Paga el ${CREDIT_DATA_CACHE.nextPayDateStr}`;
-            
             updateCard('tc-current-amount', CREDIT_DATA_CACHE.currentConsumption, 'S/ ');
             document.getElementById('tc-current-range-label').innerText = CREDIT_DATA_CACHE.currentRangeLabel;
-
             updateCard('tc-mtd-amount', CREDIT_DATA_CACHE.mtdAmount, 'S/ ');
             document.getElementById('tc-mtd-range-label').innerText = `1 ${CREDIT_DATA_CACHE.currentMonthShort} - Hoy`;
 
@@ -621,102 +427,27 @@
             renderLineChart(dailyTxns, startDate, endDate);
         }
 
-        function updateGoalBars(profit, expense, savings) {
-            if(USER_GOALS.profit > 0) {
-                const p = Math.min((profit / USER_GOALS.profit) * 100, 100);
-                document.getElementById('goal-profit-bar').style.width = `${p}%`;
-                document.getElementById('goal-profit-bar').className = `h-full ${p >= 100 ? 'bg-success' : 'bg-primary'}`;
-            }
-            if(USER_GOALS.limit > 0) {
-                const p = Math.min((expense / USER_GOALS.limit) * 100, 100);
-                document.getElementById('bar-gastos').style.width = `${p}%`;
-                document.getElementById('bar-gastos').className = `h-full transition-all duration-1000 ${p > 90 ? 'bg-danger shadow-glow-danger' : 'bg-warning'}`;
-                document.getElementById('pct-gastos').innerText = `${p.toFixed(0)}% del límite`;
-            }
-            const health = document.getElementById('health-indicator');
-            if(USER_GOALS.save > 0) {
-                if(savings >= USER_GOALS.save) { health.className = "px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-success/20 text-success border border-success/30"; health.innerText = "META ALCANZADA"; } 
-                else if (savings > 0) { health.className = "px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-warning/20 text-warning border border-warning/30"; health.innerText = "EN PROGRESO"; } 
-                else { health.className = "px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-danger/20 text-danger border border-danger/30"; health.innerText = "DÉFICIT"; }
-            }
-        }
-
-        function calculateSplitCardDebt(refDate) {
-            let currentOpenStart, currentOpenEnd, prevClosedStart, prevClosedEnd;
-            const day = refDate.getDate();
-            const month = refDate.getMonth();
-            const year = refDate.getFullYear();
-
-            // Ciclos
-            if (day <= 10) {
-                currentOpenStart = new Date(year, month - 1, 11);
-                currentOpenEnd = new Date(year, month, 10);
-                prevClosedStart = new Date(year, month - 2, 11);
-                prevClosedEnd = new Date(year, month - 1, 10);
-            } else {
-                currentOpenStart = new Date(year, month, 11);
-                currentOpenEnd = new Date(year, month + 1, 10);
-                prevClosedStart = new Date(year, month - 1, 11);
-                prevClosedEnd = new Date(year, month, 10);
-            }
-            const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5);
-            
-            // Calendar MTD (1st of month to Today)
-            const today = new Date();
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-
-            let nextPayment = 0, currentConsumption = 0, mtdAmount = 0;
-            let payList = [], currList = [];
-            
-            let pf=0, pc=1, pd=2, pm=3, pmet=4; 
-            if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pc=2; pd=3; pm=4; pmet=5; }
-
-            GLOBAL_DATA.personal.forEach((row, i) => {
-                if(i===0) return;
-                const d = parseDate(row[pf]);
-                const metodo = (row[pmet]||"").toUpperCase();
-                if (d && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) {
-                    d.setHours(12,0,0,0);
-                    const amount = parseMonto(row[pm]);
-                    const item = { d, desc: row[pd], cat: row[pc], amount };
-
-                    if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) { nextPayment += amount; payList.push(item); }
-                    if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) { currentConsumption += amount; currList.push(item); }
-                    if (d >= setTime(startOfMonth, 0) && d <= setTime(today, 23)) { mtdAmount += amount; }
-                }
-            });
-
-            const fmtDate = (d) => d.toLocaleDateString('es-PE', {day:'2-digit', month:'short'});
-            return {
-                nextPayment, currentConsumption, mtdAmount, payList, currList,
-                nextPayDateStr: fmtDate(nextPayDate),
-                currentRangeLabel: `${fmtDate(currentOpenStart)} - ${fmtDate(currentOpenEnd)}`,
-                currentMonthShort: today.toLocaleDateString('es-PE', {month:'short'})
-            };
-        }
-
-        // --- Modales ---
+        function updateGoalBars(profit, expense, savings) { if(USER_GOALS.profit > 0) { const p = Math.min((profit / USER_GOALS.profit) * 100, 100); document.getElementById('goal-profit-bar').style.width = `${p}%`; document.getElementById('goal-profit-bar').className = `h-full ${p >= 100 ? 'bg-success' : 'bg-primary'}`; } if(USER_GOALS.limit > 0) { const p = Math.min((expense / USER_GOALS.limit) * 100, 100); document.getElementById('bar-gastos').style.width = `${p}%`; document.getElementById('bar-gastos').className = `h-full transition-all duration-1000 ${p > 90 ? 'bg-danger shadow-glow-danger' : 'bg-warning'}`; document.getElementById('pct-gastos').innerText = `${p.toFixed(0)}% del límite`; } const health = document.getElementById('health-indicator'); if(USER_GOALS.save > 0) { if(savings >= USER_GOALS.save) { health.className = "px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-success/20 text-success border border-success/30"; health.innerText = "META ALCANZADA"; } else if (savings > 0) { health.className = "px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-warning/20 text-warning border border-warning/30"; health.innerText = "EN PROGRESO"; } else { health.className = "px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-danger/20 text-danger border border-danger/30"; health.innerText = "DÉFICIT"; } } }
+        function calculateSplitCardDebt(refDate) { let currentOpenStart, currentOpenEnd, prevClosedStart, prevClosedEnd; const day = refDate.getDate(); const month = refDate.getMonth(); const year = refDate.getFullYear(); if (day <= 10) { currentOpenStart = new Date(year, month - 1, 11); currentOpenEnd = new Date(year, month, 10); prevClosedStart = new Date(year, month - 2, 11); prevClosedEnd = new Date(year, month - 1, 10); } else { currentOpenStart = new Date(year, month, 11); currentOpenEnd = new Date(year, month + 1, 10); prevClosedStart = new Date(year, month - 1, 11); prevClosedEnd = new Date(year, month, 10); } const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5); const today = new Date(); const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); let nextPayment = 0, currentConsumption = 0, mtdAmount = 0; let payList = [], currList = []; let pf=0, pc=1, pd=2, pm=3, pmet=4; if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pc=2; pd=3; pm=4; pmet=5; } GLOBAL_DATA.personal.forEach((row, i) => { if(i===0) return; const d = parseDate(row[pf]); const metodo = (row[pmet]||"").toUpperCase(); if (d && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) { d.setHours(12,0,0,0); const amount = parseMonto(row[pm]); const item = { d, desc: row[pd], cat: row[pc], amount }; if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) { nextPayment += amount; payList.push(item); } if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) { currentConsumption += amount; currList.push(item); } if (d >= setTime(startOfMonth, 0) && d <= setTime(today, 23)) { mtdAmount += amount; } } }); const fmtDate = (d) => d.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}); return { nextPayment, currentConsumption, mtdAmount, payList, currList, nextPayDateStr: fmtDate(nextPayDate), currentRangeLabel: `${fmtDate(currentOpenStart)} - ${fmtDate(currentOpenEnd)}`, currentMonthShort: today.toLocaleDateString('es-PE', {month:'short'}) }; }
         function openGoalsModal() { document.getElementById('input-goal-profit').value = USER_GOALS.profit||''; document.getElementById('input-goal-limit').value = USER_GOALS.limit||''; document.getElementById('input-goal-save').value = USER_GOALS.save||''; document.getElementById('goals-modal').classList.remove('hidden'); }
         function saveGoals() { USER_GOALS.profit=parseFloat(document.getElementById('input-goal-profit').value)||0; USER_GOALS.limit=parseFloat(document.getElementById('input-goal-limit').value)||0; USER_GOALS.save=parseFloat(document.getElementById('input-goal-save').value)||0; localStorage.setItem('evo_goals', JSON.stringify(USER_GOALS)); closeModal('goals-modal'); loadGoalsUI(); applyFilter(); }
         function loadGoalsUI() { updateCard('goal-profit-display', USER_GOALS.profit, '$'); updateCard('goal-limit-display', USER_GOALS.limit, 'S/ '); updateCard('goal-save-display', USER_GOALS.save, 'S/ '); }
-        function openCreditModal() { updateCard('modal-cc-pay', CREDIT_DATA_CACHE.nextPayment, 'S/ '); updateCard('modal-cc-curr', CREDIT_DATA_CACHE.currentConsumption, 'S/ '); const renderList = (list, elId) => { document.getElementById(elId).innerHTML = list.sort((a,b)=>b.d-a.d).map(t => `<div class="flex justify-between p-2 border-b border-white/5 text-[10px]"><div class="text-slate-400">${t.d.toLocaleDateString()} <span class="text-white ml-2">${t.desc}</span></div><div class="font-mono text-white">S/ ${t.amount.toFixed(2)}</div></div>`).join(''); }; renderList(CREDIT_DATA_CACHE.payList, 'list-cc-pay'); renderList(CREDIT_DATA_CACHE.currList, 'list-cc-curr'); document.getElementById('credit-modal').classList.remove('hidden'); }
-        function openProfitModal() { const listPos = document.getElementById('profit-pos-list'); const listNeg = document.getElementById('profit-neg-list'); listPos.innerHTML = ''; listNeg.innerHTML = ''; let totalPos = 0, totalNeg = 0; const sorted = PROCESSED_DATA.empresa.sort((a,b) => b.date - a.date); sorted.forEach(t => { const isPos = t.tipo.includes("INGRESO"); const html = `<div class="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5 hover:border-white/10 transition-colors"><div><div class="text-[10px] text-slate-500 font-mono">${t.date.toLocaleDateString()}</div><div class="text-xs font-bold text-slate-200">${t.desc}</div></div><div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'} text-sm">${isPos ? '+' : '-'} $${t.monto.toFixed(2)}</div></div>`; if(isPos) { listPos.insertAdjacentHTML('beforeend', html); totalPos += t.monto; } else { listNeg.insertAdjacentHTML('beforeend', html); totalNeg += t.monto; } }); document.getElementById('profit-pos-total').innerText = '$' + totalPos.toFixed(2); document.getElementById('profit-neg-total').innerText = '-$' + totalNeg.toFixed(2); document.getElementById('profit-modal').classList.remove('hidden'); }
-        function openDetails(type) { const modal = document.getElementById('detail-modal'); const panel = document.getElementById('detail-panel'); const overlay = document.getElementById('detail-overlay'); const content = document.getElementById('modal-content'); const title = document.getElementById('modal-title'); let data = [], symbol = ""; if(type === 'PERSONAL_GASTOS') { title.innerHTML = `Gastos Personales`; data = PROCESSED_DATA.personal; symbol = "S/ "; } else if (type === 'EMPRESA_GASTOS') { title.innerHTML = `Gastos Empresa`; data = PROCESSED_DATA.empresa.filter(t => !t.tipo.includes("INGRESO")); symbol = "$ "; } data.sort((a,b) => b.date - a.date); content.innerHTML = data.map(t => `<div class="p-4 bg-white/5 rounded-lg border border-white/5 flex justify-between items-center group hover:bg-white/10 transition-colors"><div><div class="flex items-center gap-2 mb-1"><span class="text-[9px] text-slate-500 font-mono px-1.5 py-0.5 rounded bg-black/20">${t.date.toLocaleDateString()}</span><span class="text-[9px] text-primary uppercase font-bold tracking-wider">${t.cat || t.tipo}</span></div><div class="text-sm text-slate-200 font-medium">${t.desc || t.tipo}</div></div><div class="font-mono font-bold text-white">${symbol}${t.monto.toFixed(2)}</div></div>`).join(''); document.getElementById('modal-total').innerText = symbol + data.reduce((s, t) => s + t.monto, 0).toFixed(2); modal.classList.remove('hidden'); setTimeout(() => { panel.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0'); }, 10); }
+        function openCreditModal() { updateCard('modal-cc-pay', CREDIT_DATA_CACHE.nextPayment, 'S/ '); updateCard('modal-cc-curr', CREDIT_DATA_CACHE.currentConsumption, 'S/ '); const renderList = (list, elId) => { document.getElementById(elId).innerHTML = list.sort((a,b)=>b.d-a.d).map(t => `<div class="flex justify-between p-2 border-b border-white/5 text-[10px]"><div class="text-slate-400">${t.d.toLocaleDateString()} <span class="text-white ml-2">${t.desc}</span></div><div class="font-mono text-white">S/ ${t.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div></div>`).join(''); }; renderList(CREDIT_DATA_CACHE.payList, 'list-cc-pay'); renderList(CREDIT_DATA_CACHE.currList, 'list-cc-curr'); document.getElementById('credit-modal').classList.remove('hidden'); }
+        function openProfitModal() { const listPos = document.getElementById('profit-pos-list'); const listNeg = document.getElementById('profit-neg-list'); listPos.innerHTML = ''; listNeg.innerHTML = ''; let totalPos = 0, totalNeg = 0; const sorted = PROCESSED_DATA.empresa.sort((a,b) => b.date - a.date); sorted.forEach(t => { const isPos = t.tipo.includes("INGRESO"); const html = `<div class="flex justify-between items-center p-3 rounded bg-white/5 border border-white/5 hover:border-white/10 transition-colors"><div><div class="text-[10px] text-slate-500 font-mono">${t.date.toLocaleDateString()}</div><div class="text-xs font-bold text-slate-200">${t.desc}</div></div><div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'} text-sm">${isPos ? '+' : '-'} $${t.monto.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div></div>`; if(isPos) { listPos.insertAdjacentHTML('beforeend', html); totalPos += t.monto; } else { listNeg.insertAdjacentHTML('beforeend', html); totalNeg += t.monto; } }); document.getElementById('profit-pos-total').innerText = '$' + totalPos.toFixed(2); document.getElementById('profit-neg-total').innerText = '-$' + totalNeg.toFixed(2); document.getElementById('profit-modal').classList.remove('hidden'); }
+        function openDetails(type) { const modal = document.getElementById('detail-modal'); const panel = document.getElementById('detail-panel'); const overlay = document.getElementById('detail-overlay'); const content = document.getElementById('modal-content'); const title = document.getElementById('modal-title'); let data = [], symbol = ""; if(type === 'PERSONAL_GASTOS') { title.innerHTML = `Gastos Personales`; data = PROCESSED_DATA.personal; symbol = "S/ "; } else if (type === 'EMPRESA_GASTOS') { title.innerHTML = `Gastos Empresa`; data = PROCESSED_DATA.empresa.filter(t => !t.tipo.includes("INGRESO")); symbol = "$ "; } data.sort((a,b) => b.date - a.date); content.innerHTML = data.map(t => `<div class="p-4 bg-white/5 rounded-lg border border-white/5 flex justify-between items-center group hover:bg-white/10 transition-colors"><div><div class="flex items-center gap-2 mb-1"><span class="text-[9px] text-slate-500 font-mono px-1.5 py-0.5 rounded bg-black/20">${t.date.toLocaleDateString()}</span><span class="text-[9px] text-primary uppercase font-bold tracking-wider">${t.cat || t.tipo}</span></div><div class="text-sm text-slate-200 font-medium">${t.desc || t.tipo}</div></div><div class="font-mono font-bold text-white">${symbol}${t.monto.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div></div>`).join(''); document.getElementById('modal-total').innerText = symbol + data.reduce((s, t) => s + t.monto, 0).toFixed(2); modal.classList.remove('hidden'); setTimeout(() => { panel.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0'); }, 10); }
         function closeModal(id) { if(id === 'detail-modal') { document.getElementById('detail-panel').classList.add('translate-x-full'); document.getElementById('detail-overlay').classList.add('opacity-0'); setTimeout(() => document.getElementById(id).classList.add('hidden'), 300); } else { document.getElementById(id).classList.add('hidden'); } }
-
-        // Utils
-        function updateCard(id, val, prefix) { document.getElementById(id).innerText = prefix + val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
+        function updateCard(id, val, prefix) { document.getElementById(id).innerText = prefix + val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
         function parseDate(str) { if(!str) return null; const p = str.trim().split('/'); if(p.length===3) return new Date(p[2], p[1]-1, p[0]); const d = new Date(str); return isNaN(d) ? null : d; }
         function setTime(date, h) { const d = new Date(date); d.setHours(h, h===23?59:0, h===23?59:0, 0); return d; }
         function parseMonto(val) { return parseFloat(String(val).replace(/[^0-9.-]/g, '')) || 0; }
         function fetchCSV(url) { return new Promise(r => Papa.parse(url, {download:true, complete:res=>r(res.data)})); }
         function setFilterMode(mode) { CURRENT_FILTER_MODE = mode; if(mode === 'month') { document.getElementById('controls-month').classList.remove('hidden'); document.getElementById('controls-range').classList.add('hidden'); } else { document.getElementById('controls-month').classList.add('hidden'); document.getElementById('controls-range').classList.remove('hidden'); } applyFilter(); }
         
-        function renderTable(data, elId, symbol) { document.getElementById(elId).innerHTML = data.map(t => `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group"><td class="py-2 text-slate-500 w-16">${t.date.toLocaleDateString(undefined, {day:'2-digit', month:'2-digit'})}</td><td class="py-2 text-slate-300 group-hover:text-white truncate max-w-[100px]">${t.desc}</td><td class="py-2 text-right text-slate-400 font-bold group-hover:text-primary">${symbol} ${t.monto.toFixed(0)}</td></tr>`).join(''); }
+        function renderTable(data, elId, symbol) { document.getElementById(elId).innerHTML = data.map(t => `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group"><td class="py-2 text-slate-500 w-16">${t.date.toLocaleDateString(undefined, {day:'2-digit', month:'2-digit'})}</td><td class="py-2 text-slate-300 group-hover:text-white truncate max-w-[100px]">${t.desc}</td><td class="py-2 text-right text-slate-400 font-bold group-hover:text-primary">${symbol} ${t.monto.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>`).join(''); }
         
         let chart, lineChart;
         function renderChart(data) { const ctx = document.getElementById('chartPersonal').getContext('2d'); if(chart) chart.destroy(); chart = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'], borderWidth: 0, hoverOffset: 10 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '85%', plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: {size:10, family: "'Inter', sans-serif"}, boxWidth: 6, usePointStyle: true, padding: 15 } } } } }); }
-        function renderLineChart(dailyTxns, start, end) { const ctx = document.getElementById('chartLine').getContext('2d'); if(lineChart) lineChart.destroy(); const labels = [], dataPoints = [], tooltips = []; for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) { if(d.getMonth() === start.getMonth() || CURRENT_FILTER_MODE === 'range') { const k = d.getDate(); labels.push(k); const info = dailyTxns[k] || { amount: 0, items: [] }; dataPoints.push(info.amount); tooltips.push(info.items); } } const gradient = ctx.createLinearGradient(0, 0, 0, 400); gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)'); gradient.addColorStop(1, 'rgba(59, 130, 246, 0)'); lineChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Gasto Diario', data: dataPoints, borderColor: '#3b82f6', backgroundColor: gradient, borderWidth: 2, tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: '#050505', pointBorderColor: '#3b82f6', pointHoverRadius: 6, pointHoverBackgroundColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.95)', titleColor: '#94a3b8', bodyColor: '#fff', bodyFont: { family: "'JetBrains Mono', monospace", size: 10 }, padding: 12, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, callbacks: { label: function(context) { return 'Total: S/ ' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2}); }, afterBody: function(context) { const items = tooltips[context[0].dataIndex]; return items.length > 0 ? '\n' + items.join('\n') : '\nSin movimientos'; } } } }, scales: { x: { grid: { display: false }, ticks: { color: '#475569', font: {size: 10} } }, y: { grid: { color: '#1e293b', drawBorder: false }, ticks: { color: '#475569', font: {size: 10} }, beginAtZero: true } } } }); }
+        function renderLineChart(dailyTxns, start, end) { const ctx = document.getElementById('chartLine').getContext('2d'); if(lineChart) lineChart.destroy(); const labels = [], dataPoints = [], tooltips = []; for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) { if(d.getMonth() === start.getMonth() || CURRENT_FILTER_MODE === 'range') { const k = d.getDate(); labels.push(k); const info = dailyTxns[k] || { amount: 0, items: [] }; dataPoints.push(info.amount); tooltips.push(info.items); } } const gradient = ctx.createLinearGradient(0, 0, 0, 400); gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)'); gradient.addColorStop(1, 'rgba(59, 130, 246, 0)'); lineChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Gasto Diario', data: dataPoints, borderColor: '#3b82f6', backgroundColor: gradient, borderWidth: 2, tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: '#050505', pointBorderColor: '#3b82f6', pointHoverRadius: 6, pointHoverBackgroundColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.95)', titleColor: '#94a3b8', bodyColor: '#fff', bodyFont: { family: "'JetBrains Mono', monospace", size: 10 }, padding: 12, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, callbacks: { label: function(context) { return 'Total: S/ ' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2}); }, afterBody: function(context) { const items = tooltips[context[0].dataIndex]; return items.length > 0 ? '\n' + items.join('\n') : '\nSin movimientos'; } } } }, scales: { x: { grid: { display: false }, ticks: { color: '#475569', font: {size: 10} } }, y: { grid: { color: '#1e293b', drawBorder: false }, ticks: { color: '#475569', font: {size: 10}, callback: function(value) { return 'S/ ' + value.toFixed(2); } }, beginAtZero: true } } } }); }
 
         init();
     </script>
