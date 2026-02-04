@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤑 FINANCIAL ALVARO | ULTRA v7</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FINANCIAL | ALVARO MV</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-weight=%22bold%22 fill=%22%2310b981%22>$</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -16,14 +17,13 @@
             theme: {
                 extend: {
                     colors: {
-                        bg: '#020617', 
-                        surface: '#0f172a',
-                        surfaceLight: '#1e293b',
+                        background: '#050505',
+                        surface: '#0A0A0A',
+                        surfaceHighlight: '#121212',
+                        border: '#222222',
                         primary: '#3b82f6', 
-                        secondary: '#6366f1',
-                        accent: '#8b5cf6',
                         success: '#10b981',
-                        danger: '#ef4444',
+                        danger: '#ef4444', 
                         warning: '#f59e0b',
                     },
                     fontFamily: {
@@ -31,9 +31,8 @@
                         sans: ['"Inter"', 'sans-serif'],
                     },
                     boxShadow: {
-                        'neon-blue': '0 0 15px rgba(59, 130, 246, 0.4)',
-                        'neon-green': '0 0 15px rgba(16, 185, 129, 0.4)',
-                        'neon-red': '0 0 15px rgba(239, 68, 68, 0.4)',
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'neon-blue': '0 0 10px rgba(59, 130, 246, 0.5)',
                     }
                 }
             }
@@ -41,62 +40,128 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
         body { 
-            background-color: #020617; 
-            background-image: radial-gradient(circle at top center, #1e293b 0%, #020617 60%);
-            color: #f8fafc; 
+            background-color: #050505; 
+            /* 1. UI/UX: Noise Texture para profundidad táctil */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
+            radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            color: #e2e8f0; 
             font-family: 'Inter', sans-serif; 
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Glassmorphism */
-        .glass {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(16px);
+        /* 1. UI/UX: Gradientes en Textos para volumen */
+        .text-gradient-success {
+            background: linear-gradient(180deg, #4ade80 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-danger {
+            background: linear-gradient(180deg, #f87171 0%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-primary {
+            background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-white {
+            background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 1. UI/UX: Bordes Glass Reales (Luz cenital) */
+        .bento-card {
+            background: rgba(15, 15, 15, 0.6); 
+            backdrop-filter: blur(16px); 
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            /* Borde degradado simulado con box-shadow inset */
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), 0 10px 30px -10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        
-        .glass-header {
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 50;
-        }
-
-        .glass-hover:hover {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(59, 130, 246, 0.4);
+        .bento-card:hover {
             transform: translateY(-2px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 20px 40px -10px rgba(0,0,0,0.6);
+            background: rgba(20, 20, 20, 0.7);
         }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
+        .glass-header { 
+            background: rgba(5, 5, 5, 0.85); 
+            backdrop-filter: blur(20px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
         }
 
-        /* Billetes de Fondo */
-        .bg-dollar {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/7b/United_States_one_dollar_bill%2C_obverse.jpg');
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: overlay;
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Chip Holográfico */
+        .chip { 
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); 
+            border-radius: 6px; 
+            position: relative; 
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
         }
-        .bg-sol {
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/eb/200_Nuevos_Soles_2009.jpg'); /* Referencia genérica */
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: overlay;
+        .chip::after {
+            content: ''; position: absolute; inset: 0;
+            background: repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 3px);
+            border-radius: 6px;
         }
+
+        /* Login Screen Animation */
+        #login-screen { transition: opacity 0.5s ease-out, visibility 0.5s; }
+        .hidden-auth { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        /* Separador Sutil con Gradiente */
+        .separator-gradient {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+            border: none;
+        }
+
+        /* Sparkline Canvas Container */
+        .sparkline-container { width: 100%; height: 40px; position: relative; }
+        
+        /* Delta Badge */
+        .delta-badge {
+            font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-flex; items-center; gap: 2px;
+        }
+        .delta-pos { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .delta-neg { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .delta-neutral { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2); }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden selection:bg-primary selection:text-white pb-20">
+<body class="min-h-screen pb-32 selection:bg-primary/20 selection:text-white overflow-x-hidden">
+
+    <div id="login-screen" class="fixed inset-0 z-[999] bg-[#050505] flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-xs space-y-8 text-center relative z-10">
+            <div class="mb-6 flex justify-center">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-surface to-black border border-white/10 flex items-center justify-center shadow-2xl shadow-primary/20">
+                    <i data-lucide="lock" class="w-6 h-6 text-slate-400"></i>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-white tracking-widest uppercase mb-2">Acceso Restringido</h2>
+                <p class="text-xs text-slate-500 font-mono">FINANCIAL OS | ALVARO MV</p>
+            </div>
+            <div class="relative group">
+                <input type="password" id="auth-pass" class="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-center text-white font-mono tracking-[0.5em] outline-none focus:border-primary/50 transition-all placeholder:tracking-normal placeholder:text-slate-700" placeholder="PASSCODE" onkeyup="checkEnter(event)">
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-primary transition-all duration-300 group-focus-within:w-full"></div>
+            </div>
+            <button onclick="attemptLogin()" class="w-full bg-white text-black font-bold py-3 rounded-lg text-xs tracking-widest uppercase hover:bg-slate-200 transition-colors shadow-lg shadow-white/5">Desbloquear</button>
+        </div>
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/3 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-1/3 right-1/4 w-96 h-96 bg-success/5 rounded-full blur-[100px]"></div>
+        </div>
+    </div>
 
     <script>
         const BASE_URL_PERSONAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=39611097&single=true&output=csv";
@@ -105,665 +170,662 @@
         const BASE_URL_P2P = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdBRmrPd4KcOxECZQt0uTNqkJ64uGVL_toRiSPjzKwx8zxEhPvHvaC7_qQeQn3GadcJpiObSS9sK0/pub?gid=1989801483&single=true&output=csv";
     </script>
 
-    <header class="fixed top-0 w-full glass-header py-4 px-4 md:px-8 transition-all duration-300">
-        <div class="max-w-[1800px] mx-auto flex flex-col xl:flex-row justify-between items-center gap-4">
-            
-            <div class="w-full xl:w-auto flex justify-between items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-primary/10 rounded-lg border border-primary/20 shadow-neon-blue">
-                        <i data-lucide="cpu" class="w-5 h-5 text-primary"></i>
+    <header class="fixed top-0 w-full glass-header z-50 h-auto md:h-16 py-3 md:py-0 flex items-center transition-all">
+        <div class="w-full max-w-[1600px] mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0">
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-4 select-none">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-primary"></i>
                     </div>
                     <div>
+                        <h1 class="text-sm font-bold tracking-tight text-white leading-tight" id="dynamic-greeting">FINANCIAL ALVARO</h1>
                         <div class="flex items-center gap-2">
-                            <h1 class="text-xl font-bold tracking-tight text-white leading-none">FINANCIAL <span class="text-primary">ALVARO</span></h1>
-                            <button onclick="reloadData()" class="text-slate-500 hover:text-white transition-colors" title="Actualizar Datos"><i data-lucide="refresh-cw" class="w-3 h-3" id="refresh-icon"></i></button>
+                            <div class="flex items-center gap-1.5">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+                                </span>
+                                <span class="text-[9px] text-slate-500 font-mono font-medium tracking-wider">ONLINE V9.8</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="flex gap-2">
-                    <div class="bg-dollar bg-black/80 border border-white/5 px-4 py-2 rounded-lg flex flex-col items-end min-w-[100px] relative overflow-hidden">
-                        <div class="absolute inset-0 bg-black/80"></div> <span class="text-[9px] text-slate-300 font-bold uppercase tracking-wider relative z-10">Balance USD</span>
-                        <span class="text-sm font-mono font-bold text-white relative z-10" id="mini-bal-usd">...</span>
-                    </div>
-                    <div class="bg-sol bg-black/80 border border-white/5 px-4 py-2 rounded-lg flex flex-col items-end min-w-[100px] relative overflow-hidden">
-                        <div class="absolute inset-0 bg-black/80"></div>
-                        <span class="text-[9px] text-slate-300 font-bold uppercase tracking-wider relative z-10">Balance PEN</span>
-                        <span class="text-sm font-mono font-bold text-white relative z-10" id="mini-bal-pen">...</span>
-                    </div>
+                <div class="flex md:hidden items-center gap-2">
+                    <button onclick="reloadData()" class="p-2 rounded-lg bg-white/5 border border-white/5 text-slate-400">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-2 bg-surface border border-white/5 p-1 rounded-lg">
-                <div class="flex text-[10px] font-medium bg-black/20 rounded p-0.5">
-                    <button onclick="setFilterMode('month')" id="btn-mode-month" class="px-3 py-1 rounded transition-colors bg-primary text-white">Mes</button>
-                    <button onclick="setFilterMode('range')" id="btn-mode-range" class="px-3 py-1 rounded transition-colors text-slate-400 hover:text-white">Rango</button>
-                </div>
 
-                <div id="controls-month" class="flex gap-1 animate-fade-in">
-                    <select id="filter-month" class="bg-transparent text-white text-xs px-2 py-1 outline-none font-mono uppercase cursor-pointer hover:text-primary" onchange="applyFilter()">
-                        <option value="0">ENE</option><option value="1">FEB</option><option value="2">MAR</option>
-                        <option value="3">ABR</option><option value="4">MAY</option><option value="5">JUN</option>
-                        <option value="6">JUL</option><option value="7">AGO</option><option value="8">SEP</option>
-                        <option value="9">OCT</option><option value="10">NOV</option><option value="11">DIC</option>
-                    </select>
-                    <select id="filter-year" class="bg-transparent text-white text-xs px-2 py-1 outline-none font-mono cursor-pointer hover:text-primary" onchange="applyFilter()">
-                        <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
-                    </select>
+            <div class="w-full md:w-auto flex items-center gap-3 bg-surfaceHighlight border border-white/5 rounded-xl p-1 justify-between md:justify-start shadow-xl">
+                <div class="hidden xl:flex gap-1 border-r border-white/5 pr-2 mr-2">
+                    <button onclick="setQuickRange(7)" class="px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">7D</button>
+                    <button onclick="setQuickRange(30)" class="px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">30D</button>
+                    <button onclick="setQuickRange(365)" class="px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">YTD</button>
                 </div>
-
-                <div id="controls-range" class="hidden flex gap-1 items-center animate-fade-in px-2">
-                    <input type="date" id="date-start" class="bg-transparent text-white text-xs outline-none font-mono w-24" onchange="applyFilter()">
+                <div id="controls-month" class="flex items-center">
+                    <select id="filter-month" class="bg-transparent text-xs text-slate-300 px-2 py-1.5 outline-none font-medium hover:text-white cursor-pointer" onchange="applyFilter()">
+                        <option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option><option value="3">Abril</option><option value="4">Mayo</option><option value="5">Junio</option><option value="6">Julio</option><option value="7">Agosto</option><option value="8">Septiembre</option><option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option>
+                    </select>
+                    <select id="filter-year" class="bg-transparent text-xs text-slate-300 px-2 py-1.5 outline-none font-mono hover:text-white cursor-pointer" onchange="applyFilter()">
+                        </select>
+                </div>
+                <div id="controls-range" class="hidden flex items-center gap-2 px-2">
+                    <input type="date" id="date-start" class="bg-transparent text-xs text-white font-mono outline-none w-24" onchange="applyFilter()">
                     <span class="text-slate-600">-</span>
-                    <input type="date" id="date-end" class="bg-transparent text-white text-xs outline-none font-mono w-24" onchange="applyFilter()">
+                    <input type="date" id="date-end" class="bg-transparent text-xs text-white font-mono outline-none w-24" onchange="applyFilter()">
                 </div>
-
-                <div class="pl-2 border-l border-white/10 flex items-center gap-2">
-                    <span class="text-[10px] text-slate-500 font-bold">TC</span>
+                <button onclick="toggleFilterMode()" class="ml-1 p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors"><i data-lucide="calendar-range" class="w-3.5 h-3.5"></i></button>
+                <div class="px-4 border-l border-white/5 flex flex-col items-end min-w-[80px]">
+                    <span class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">TC REF</span>
                     <span class="text-xs font-mono font-bold text-success" id="tc-display">---</span>
+                </div>
+                <div class="pl-2 border-l border-white/5 flex items-center gap-1">
+                     <button onclick="openGoalsModal()" class="p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-danger transition-colors"><i data-lucide="target" class="w-3.5 h-3.5"></i></button>
+                    <button onclick="reloadData()" class="hidden md:block p-2 rounded-lg hover:bg-white/5 text-slate-400 hover:text-primary transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refresh-icon"></i></button>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="max-w-[1800px] mx-auto p-4 md:p-8 mt-20 space-y-10">
-        
-        <div id="dashboard-content" class="space-y-10 opacity-0 transition-opacity duration-500">
+    <main class="pt-32 md:pt-28 px-4 md:px-6 max-w-[1600px] mx-auto space-y-12 pb-20 hidden" id="dashboard-content">
+
+        <div class="space-y-6">
+            <div class="flex items-center gap-3 px-1">
+                <div class="p-1.5 rounded bg-primary/10 border border-primary/20"><i data-lucide="building-2" class="w-4 h-4 text-primary"></i></div>
+                <h2 class="text-sm font-bold text-white uppercase tracking-[0.2em]">Empresa <span class="text-slate-600 text-[10px] align-middle ml-2 font-mono">CORE BUSINESS</span></h2>
+                <hr class="separator-gradient flex-1 ml-4">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6"> 
+                <div class="col-span-1 md:col-span-3 bento-card rounded-3xl p-8 group cursor-pointer flex flex-col justify-between min-h-[240px]" onclick="openProfitModal()">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">Profit Neto Real</span>
+                            <div class="flex items-center gap-3 bg-black/30 px-3 py-1.5 rounded-full border border-white/5">
+                                <span class="text-[9px] text-slate-500 uppercase font-bold">Meta: <span id="goal-profit-display" class="text-slate-300 font-mono">$0</span></span>
+                                <div class="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden"><div id="goal-profit-bar" class="h-full bg-primary shadow-[0_0_10px_#3b82f6]" style="width: 0%"></div></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-baseline gap-4">
+                            <div class="text-6xl md:text-8xl font-mono font-bold tracking-tighter transition-colors duration-300 break-words" id="biz-profit">$0.00</div>
+                            <div id="delta-profit"></div>
+                        </div>
+
+                        <div class="mt-8 p-1 bg-black/40 rounded-xl border border-white/5">
+                            <div class="flex justify-between text-[10px] text-slate-400 px-2 py-1 uppercase font-bold">
+                                <span>Retenido USD (<span id="txt-ret-usd" class="text-white">--</span>)</span>
+                                <span>Movido a PEN (<span id="txt-mov-pen" class="text-white">--</span>)</span>
+                            </div>
+                            <div class="h-3 w-full flex rounded-lg overflow-hidden relative">
+                                <div id="bar-usd" class="h-full bg-gradient-to-r from-blue-600 to-primary shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10" style="width: 50%"></div>
+                                <div id="bar-pen" class="h-full bg-slate-700/50" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-1 flex flex-col gap-6">
+                    <div class="bento-card rounded-3xl p-6 flex flex-col justify-center h-full relative">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Ingresos Brutos</span>
+                        <div class="text-3xl font-mono font-bold text-gradient-success" id="biz-ingresos">$0.00</div>
+                        <div class="mt-2" id="delta-ingresos"></div>
+                    </div>
+                    <div class="bento-card rounded-3xl p-6 flex flex-col justify-center h-full relative cursor-pointer hover:bg-danger/5 transition-colors group" onclick="openDetails('EMPRESA_GASTOS')">
+                        <div class="flex justify-between items-start mb-2">
+                             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Op.</span>
+                             <i data-lucide="search" class="w-3 h-3 text-slate-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <div class="text-3xl font-mono font-bold text-gradient-danger mb-2" id="biz-gastos">$0.00</div>
+                        <div class="sparkline-container">
+                            <canvas id="sparkline-gastos"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="flex items-center gap-3 px-1">
+                <div class="p-1.5 rounded bg-warning/10 border border-warning/20"><i data-lucide="user" class="w-4 h-4 text-warning"></i></div>
+                <h2 class="text-sm font-bold text-white uppercase tracking-[0.2em]">Personal Finance <span class="text-slate-600 text-[10px] align-middle ml-2 font-mono">LIFESTYLE</span></h2>
+                <hr class="separator-gradient flex-1 ml-4">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 <div class="col-span-1 bento-card rounded-3xl p-6 relative overflow-hidden flex flex-col justify-center min-h-[180px]">
+                    <div class="relative z-10">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 block">Nómina Asignada</span>
+                        <div class="text-4xl font-mono font-bold text-white" id="per-nomina-usd">$0.00</div>
+                        <div class="text-xs text-slate-400 mt-2 font-mono flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                            <span id="per-nomina-pen">aprox S/ 0.00</span>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 rounded-full blur-[50px]"></div>
+                </div>
+
+                <div class="col-span-1 bento-card rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[180px]">
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Balance Disponible</span>
+                        <i data-lucide="piggy-bank" class="w-5 h-5 text-warning opacity-80"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="text-4xl font-mono font-bold text-gradient-white" id="per-saldo">S/ 0.00</div>
+                        <div class="mt-4 flex flex-wrap items-center gap-3">
+                            <div id="health-indicator" class="px-2.5 py-1 rounded-md text-[9px] font-bold uppercase bg-white/5 text-slate-500 border border-white/5">...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1 bento-card rounded-3xl p-6 relative overflow-hidden cursor-pointer hover:bg-white/5 transition-colors group flex flex-col justify-between min-h-[180px]" onclick="openDetails('PERSONAL_GASTOS')">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gastos Vida (Survival)</span>
+                        <i data-lucide="activity" class="w-4 h-4 text-slate-400 group-hover:text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-mono font-bold text-white mb-6" id="per-gastos">S/ 0.00</div>
+                        
+                        <div class="relative w-full h-3 bg-white/5 rounded-full overflow-hidden mb-2 border border-white/5">
+                            <div id="bar-gastos" class="absolute top-0 left-0 h-full bg-warning transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(245,158,11,0.4)]" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-medium text-slate-500 uppercase font-mono">
+                            <span>Límite: <span id="goal-limit-display" class="text-slate-300">S/0</span></span>
+                            <span id="pct-gastos" class="text-white font-bold">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-3 bento-card rounded-3xl p-0 flex flex-col cursor-pointer overflow-hidden group border-slate-800" onclick="openCreditModal()">
+                    <div class="p-6 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-white/5 to-transparent relative">
+                        <div class="absolute right-6 top-1/2 -translate-y-1/2 opacity-20 pointer-events-none">
+                            <svg class="w-16 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M11.64 5.93h-2.9L5.88 20.07h2.95l.6-3.23h3.63l.34-1.72H9.8l1.84-9.19zm8.56 0h-2.28c-.7 0-1.23.2-1.53.94l-4.37 10.42h3.06l.6-1.74h3.73l.35 1.74h2.7L20.2 5.93zm-3.8 7.37l1.09-5.26 1.8 5.26h-2.89zM5.56 5.93H2.5L.4 20.07h2.96L5.56 5.93z"/></svg>
+                        </div>
+                        <div class="flex items-center gap-5 relative z-10">
+                            <div class="w-12 h-9 chip shadow-lg ring-1 ring-white/10"></div>
+                            <div>
+                                <span class="text-[10px] font-mono text-slate-400 tracking-[0.2em] uppercase block">Platinum Credit</span>
+                                <span class="text-sm text-white font-bold tracking-widest font-mono">**** 8821</span>
+                            </div>
+                        </div>
+                        <div class="w-1/3 flex flex-col items-end gap-1 relative z-10">
+                            <span class="text-[8px] text-slate-500 uppercase font-bold">Utilización de Línea</span>
+                            <div class="w-full h-1.5 bg-black/50 rounded-full overflow-hidden border border-white/5">
+                                <div id="cc-utilization-bar" class="h-full bg-primary" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/5 bg-black/40">
+                        <div class="p-6 flex flex-col justify-center hover:bg-white/5 transition-colors">
+                            <span class="text-[9px] text-danger font-bold uppercase mb-2 flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-danger animate-pulse"></div> A Pagar (Cierre)</span>
+                            <div class="text-[10px] text-slate-500 mb-1" id="tc-next-date-label">--</div>
+                            <span class="text-2xl font-mono font-bold text-gradient-danger" id="tc-next-amount">S/ 0</span>
+                        </div>
+                        <div class="p-6 flex flex-col justify-center hover:bg-white/5 transition-colors">
+                            <span class="text-[9px] text-slate-300 font-bold uppercase mb-2">Consumo Ciclo Actual</span>
+                            <div class="text-[10px] text-slate-500 mb-1" id="tc-current-range-label">--</div>
+                            <span class="text-2xl font-mono font-bold text-white" id="tc-current-amount">S/ 0</span>
+                        </div>
+                        <div class="p-6 flex flex-col justify-center bg-primary/5 hover:bg-primary/10 transition-colors">
+                            <span class="text-[9px] text-primary font-bold uppercase mb-2">Gastos este Mes (MTD)</span>
+                            <div class="text-[10px] text-slate-500 mb-1" id="tc-mtd-range-label">--</div>
+                            <span class="text-2xl font-mono font-bold text-gradient-primary" id="tc-mtd-amount">S/ 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bento-card rounded-3xl p-6 h-[320px] flex flex-col relative">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Distribución de Gastos</h3>
+                <div class="flex-1 relative">
+                    <canvas id="chartPersonal"></canvas>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Total</span>
+                        <span class="text-lg font-mono font-bold text-white" id="donut-total">S/ 0</span>
+                    </div>
+                </div>
+            </div>
             
-            <div class="space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-1 h-6 bg-primary rounded-full shadow-neon-blue"></div>
-                    <h2 class="text-sm font-bold text-white tracking-widest uppercase">Finanzas Corporativas</h2>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass glass-hover rounded-2xl p-6 relative overflow-hidden group cursor-pointer border-l-2 border-white/10" id="card-profit" onclick="openProfitModal()">
-                        <div class="absolute top-4 right-4 opacity-30 group-hover:opacity-100 transition-opacity"><i data-lucide="maximize-2" class="w-4 h-4 text-white"></i></div>
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Profit Neto</div>
-                        <div class="text-5xl font-mono font-bold text-white mb-2 transition-all duration-300 tracking-tighter" id="biz-profit">$0.00</div>
-                        <div class="text-[10px] text-slate-500 bg-white/5 inline-block px-2 py-0.5 rounded">Cash Flow Real</div>
-                    </div>
-
-                    <div class="glass rounded-2xl p-6 border-l-2 border-success/30 relative">
-                        <div class="absolute -right-4 -bottom-4 opacity-10"><i data-lucide="trending-up" class="w-24 h-24 text-success"></i></div>
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Ingresos Totales</div>
-                        <div class="text-5xl font-mono font-bold text-success mb-2 tracking-tighter" id="biz-ingresos">$0.00</div>
-                        <div class="w-full bg-surfaceLight h-1 rounded-full overflow-hidden mt-2"><div class="h-full bg-success w-full opacity-50"></div></div>
-                    </div>
-
-                    <div class="glass glass-hover rounded-2xl p-6 border-l-2 border-danger/30 cursor-pointer" onclick="openDetails('EMPRESA_GASTOS')">
-                        <div class="flex justify-between mb-3">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Gastos Operativos</span>
-                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
-                        </div>
-                        <div class="text-5xl font-mono font-bold text-danger mb-2 tracking-tighter" id="biz-gastos">$0.00</div>
-                        <div class="text-xs text-slate-500">No incluye nómina</div>
+            <div class="col-span-1 md:col-span-2 flex flex-col gap-6">
+                 <div class="bento-card rounded-3xl p-6 h-[220px] flex flex-col">
+                     <div class="flex justify-between items-end mb-2">
+                        <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tendencia Diaria</h3>
+                        <span class="text-[9px] text-slate-600 font-mono">Últimos 30 días</span>
+                     </div>
+                    <div class="flex-1 w-full">
+                        <canvas id="chartLine"></canvas>
                     </div>
                 </div>
-            </div>
 
-            <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
-            <div class="space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-1 h-6 bg-warning rounded-full shadow-neon-blue"></div>
-                    <h2 class="text-sm font-bold text-white tracking-widest uppercase">Finanzas Personales</h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="glass p-6 rounded-xl border border-white/5 flex flex-col justify-center items-center text-center">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="wallet" class="w-4 h-4 text-primary"></i>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Mi Nómina</span>
-                        </div>
-                        <div class="text-3xl font-mono font-bold text-white" id="per-nomina">S/ 0.00</div>
-                        <div class="text-[10px] text-slate-500 mt-1">Base USD: $<span id="base-nomina-usd">0</span></div>
+                <div class="bento-card rounded-3xl p-0 flex flex-col overflow-hidden h-[300px]">
+                    <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center backdrop-blur-md sticky top-0 z-10">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2"><i data-lucide="list-minus" class="w-3 h-3"></i> Últimos Movimientos</span>
                     </div>
-
-                    <div class="glass glass-hover p-6 rounded-xl border border-white/5 cursor-pointer flex flex-col justify-center" onclick="openDetails('PERSONAL_GASTOS')">
-                        <div class="flex justify-between items-center mb-2 w-full">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="shopping-cart" class="w-4 h-4 text-warning"></i>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase">Gastos Vida</span>
-                            </div>
-                            <i data-lucide="search" class="w-3 h-3 text-slate-600"></i>
-                        </div>
-                        <div class="text-3xl font-mono font-bold text-warning text-center w-full" id="per-gastos">S/ 0.00</div>
-                        <div class="w-full bg-surfaceLight h-1 mt-3 rounded-full overflow-hidden"><div id="bar-gastos" class="h-full bg-warning transition-all duration-1000" style="width: 0%"></div></div>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border border-white/5 bg-gradient-to-br from-surface to-surfaceLight relative overflow-hidden flex flex-col justify-center items-center text-center">
-                        <div class="relative z-10">
-                            <div class="flex items-center justify-center gap-2 mb-2">
-                                <i data-lucide="piggy-bank" class="w-4 h-4 text-slate-300"></i>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase">Saldo / Ahorro</span>
-                            </div>
-                            <div class="text-3xl font-mono font-bold text-white" id="per-saldo">S/ 0.00</div>
-                            <div id="health-indicator" class="mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-black/30 text-slate-400">---</div>
-                        </div>
-                        <div class="absolute right-0 top-0 w-24 h-24 bg-primary/10 blur-2xl rounded-full"></div>
-                    </div>
-
-                    <div class="glass p-4 rounded-xl border-l-4 border-danger/80 bg-danger/5 flex flex-col justify-between">
-                        <div class="mb-3 border-b border-danger/20 pb-2">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] text-danger font-bold uppercase">Pagar el <span id="tc-next-date">--</span></span>
-                                <i data-lucide="alert-circle" class="w-3 h-3 text-danger"></i>
-                            </div>
-                            <div class="text-2xl font-mono font-bold text-white" id="tc-next-amount">S/ 0.00</div>
-                            <div class="text-[9px] text-slate-400">Cierre: <span id="tc-prev-close">--</span></div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] text-slate-400 font-bold uppercase">Consumo Actual</span>
-                                <i data-lucide="credit-card" class="w-3 h-3 text-slate-500"></i>
-                            </div>
-                            <div class="text-xl font-mono font-bold text-slate-300" id="tc-current-amount">S/ 0.00</div>
-                            <div class="text-[9px] text-slate-500">Cierra: <span id="tc-next-close">--</span></div>
+                    <div class="flex-1 overflow-hidden relative bg-black/20">
+                        <div class="absolute inset-0 overflow-y-auto custom-scrollbar">
+                             <table class="w-full text-left border-collapse">
+                                <tbody id="txn-list-personal" class="text-[11px] font-mono">
+                                    </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
-                <div class="glass p-6 rounded-2xl flex flex-col justify-center items-center relative">
-                    <h3 class="absolute top-6 left-6 text-xs font-bold text-slate-500 uppercase">Distribución de Gastos</h3>
-                    <div class="w-full h-[250px] mt-4">
-                        <canvas id="chartPersonal"></canvas>
-                    </div>
-                </div>
-
-                <div class="glass p-6 rounded-2xl lg:col-span-2 flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                            <i data-lucide="list" class="w-4 h-4 text-primary"></i> Live Feed
-                        </h3>
-                    </div>
-                    <div class="overflow-hidden rounded-lg border border-white/5 bg-surface/50">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-[10px] text-slate-400 uppercase bg-surfaceLight">
-                                <tr>
-                                    <th class="px-4 py-3 font-medium">Fecha</th>
-                                    <th class="px-4 py-3 font-medium">Categoría</th>
-                                    <th class="px-4 py-3 font-medium">Descripción</th>
-                                    <th class="px-4 py-3 text-right font-medium">Monto</th>
-                                </tr>
-                            </thead>
-                            <tbody id="txn-list" class="divide-y divide-white/5 text-slate-300 text-xs"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass p-6 rounded-2xl">
-                <div class="flex items-center gap-2 mb-4">
-                    <i data-lucide="activity" class="w-4 h-4 text-warning"></i>
-                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Ritmo de Gasto Diario</h3>
-                </div>
-                <div class="w-full h-[150px]">
-                    <canvas id="chartLine"></canvas>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="loading" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg">
-            <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            <span class="mt-4 text-primary font-mono text-xs tracking-widest animate-pulse">SISTEMA INICIANDO...</span>
-        </div>
-    </div>
-
-    <div id="profit-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('profit-modal')"></div>
-        <div class="relative w-full max-w-4xl bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50 shrink-0">
-                <div>
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i data-lucide="pie-chart" class="w-5 h-5 text-primary"></i> Desglose Profit
-                    </h2>
-                </div>
-                <button onclick="closeModal('profit-modal')" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-            </div>
-            <div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-                <div class="flex flex-col h-full overflow-hidden">
-                    <div class="p-3 bg-success/10 border-b border-white/5 text-center shrink-0"><span class="text-xs font-bold text-success uppercase">Ingresos</span></div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-pos-list"></div>
-                    <div class="p-4 border-t border-white/5 text-right shrink-0"><span class="font-mono font-bold text-success" id="profit-pos-total">$0.00</span></div>
-                </div>
-                <div class="flex flex-col h-full overflow-hidden">
-                    <div class="p-3 bg-danger/10 border-b border-white/5 text-center shrink-0"><span class="text-xs font-bold text-danger uppercase">Egresos</span></div>
-                    <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="profit-neg-list"></div>
-                    <div class="p-4 border-t border-white/5 text-right shrink-0"><span class="font-mono font-bold text-danger" id="profit-neg-total">$0.00</span></div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="detail-modal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal('detail-modal')"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[480px] bg-surface border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full" id="detail-panel">
-            <div class="h-full flex flex-col">
-                <div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceLight/50">
-                    <h2 class="text-lg font-bold text-white" id="modal-title">Detalles</h2>
-                    <button onclick="closeModal('detail-modal')" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar" id="modal-content"></div>
-                <div class="p-6 border-t border-white/10 bg-surfaceLight/30 text-right">
-                    <span class="text-xs text-slate-500 uppercase mr-2">Total</span>
-                    <span class="text-2xl font-mono font-bold text-white" id="modal-total">0.00</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    </main>
+
+    <div id="goals-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('goals-modal')"></div><div class="relative w-full max-w-sm bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl p-6"><h2 class="text-sm font-bold text-white mb-6 flex items-center gap-2 uppercase tracking-widest"><i data-lucide="target" class="w-4 h-4 text-primary"></i> Configurar Metas</h2><div class="space-y-4"><div class="group"><label class="text-[9px] uppercase font-bold text-slate-500 mb-1 block">Meta Profit (USD)</label><input type="number" id="input-goal-profit" class="w-full bg-black border border-white/10 rounded-lg p-3 text-white font-mono text-sm outline-none focus:border-primary/50"></div><div class="group"><label class="text-[9px] uppercase font-bold text-slate-500 mb-1 block">Límite Gasto (PEN)</label><input type="number" id="input-goal-limit" class="w-full bg-black border border-white/10 rounded-lg p-3 text-white font-mono text-sm outline-none focus:border-warning/50"></div><div class="group"><label class="text-[9px] uppercase font-bold text-slate-500 mb-1 block">Meta Ahorro (PEN)</label><input type="number" id="input-goal-save" class="w-full bg-black border border-white/10 rounded-lg p-3 text-white font-mono text-sm outline-none focus:border-success/50"></div><button onclick="saveGoals()" class="w-full bg-white text-black hover:bg-slate-200 font-bold py-3 rounded-lg text-xs tracking-widest uppercase mt-2">Guardar</button></div></div></div>
+    
+    <div id="credit-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal('credit-modal')"></div><div class="relative w-full max-w-4xl bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"><div class="p-5 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-primary"></i> Detalle Tarjeta</h2><button onclick="closeModal('credit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button></div><div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10"><div class="flex flex-col h-full bg-danger/5"><div class="p-5 border-b border-danger/10 bg-[#150a0a]"><span class="text-[10px] text-danger font-bold uppercase block mb-1">Ciclo Cerrado</span><span class="text-3xl font-mono font-bold text-white" id="modal-cc-pay">S/ 0.00</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2" id="list-cc-pay"></div></div><div class="flex flex-col h-full bg-surface"><div class="p-5 border-b border-white/10 bg-surface"><span class="text-[10px] text-slate-500 font-bold uppercase block mb-1">Ciclo Abierto</span><span class="text-3xl font-mono font-bold text-slate-300" id="modal-cc-curr">S/ 0.00</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2" id="list-cc-curr"></div></div></div></div></div>
+    
+    <div id="profit-modal" class="fixed inset-0 z-[150] hidden flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal('profit-modal')"></div><div class="relative w-full max-w-5xl bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"><div class="p-5 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 text-success"></i> Desglose Profit</h2><button onclick="closeModal('profit-modal')"><i data-lucide="x" class="w-5 h-5 text-slate-500"></i></button></div><div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10"><div class="flex flex-col h-full bg-success/5"><div class="p-3 border-b border-success/10 text-center bg-[#05100a]"><span class="text-[10px] font-bold text-success uppercase">Entradas</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2" id="profit-pos-list"></div><div class="p-5 border-t border-success/10 text-right bg-[#05100a]"><span class="font-mono text-2xl font-bold text-success" id="profit-pos-total">$0.00</span></div></div><div class="flex flex-col h-full bg-danger/5"><div class="p-3 border-b border-danger/10 text-center bg-[#150a0a]"><span class="text-[10px] font-bold text-danger uppercase">Salidas</span></div><div class="flex-1 overflow-y-auto p-4 space-y-2" id="profit-neg-list"></div><div class="p-5 border-t border-danger/10 text-right bg-[#150a0a]"><span class="font-mono text-2xl font-bold text-danger" id="profit-neg-total">$0.00</span></div></div></div></div></div>
+    
+    <div id="detail-modal" class="fixed inset-0 z-[150] hidden pointer-events-none"><div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 pointer-events-auto" id="detail-overlay" onclick="closeModal('detail-modal')"></div><div class="absolute inset-y-0 right-0 w-full md:w-[500px] bg-[#0A0A0A] border-l border-white/10 shadow-2xl transform transition-transform duration-300 translate-x-full flex flex-col pointer-events-auto" id="detail-panel"><div class="p-6 border-b border-white/10 flex justify-between items-center bg-surfaceHighlight"><h2 class="text-xs font-bold text-white uppercase tracking-widest" id="modal-title">Detalles</h2><button onclick="closeModal('detail-modal')" class="hover:bg-white/10 p-1 rounded"><i data-lucide="arrow-right" class="w-5 h-5 text-slate-500"></i></button></div><div class="flex-1 overflow-y-auto p-6 space-y-3" id="modal-content"></div><div class="p-8 border-t border-white/10 bg-surfaceHighlight text-right"><span class="text-[10px] text-slate-500 uppercase tracking-widest mr-3">Total</span><span class="text-4xl font-mono font-bold text-white" id="modal-total">0.00</span></div></div></div>
 
     <script>
+        // --- 6. SECURITY: Logic ---
+        function checkAuth() {
+            const auth = getCookie("auth_alvaro");
+            if (auth === "true") {
+                document.getElementById('login-screen').classList.add('hidden-auth');
+                init();
+            } else {
+                // Show login
+            }
+        }
+        function attemptLogin() {
+            const pass = document.getElementById('auth-pass').value.trim();
+            // Permite "Alvaro 19" o "Alvaro19"
+            if (pass === "Alvaro 19" || pass === "Alvaro19") {
+                setCookie("auth_alvaro", "true", 30); // 30 dias
+                document.getElementById('login-screen').classList.add('hidden-auth');
+                init();
+            } else {
+                document.getElementById('auth-pass').classList.add('border-danger');
+                setTimeout(() => document.getElementById('auth-pass').classList.remove('border-danger'), 500);
+            }
+        }
+        function checkEnter(e) { if(e.key === "Enter") attemptLogin(); }
+        function setCookie(name, value, days) { const d = new Date(); d.setTime(d.getTime() + (days*24*60*60*1000)); document.cookie = name + "=" + value + ";expires="+ d.toUTCString() + ";path=/"; }
+        function getCookie(name) { const n = name + "="; const ca = document.cookie.split(';'); for(let i=0; i<ca.length; i++) { let c = ca[i]; while (c.charAt(0)==' ') c = c.substring(1); if (c.indexOf(n) == 0) return c.substring(n.length,c.length); } return ""; }
+
+        // --- CORE & CONFIG ---
         lucide.createIcons();
         let GLOBAL_DATA = {};
         let CURRENT_FILTER_MODE = 'month'; 
         let PROCESSED_DATA = { empresa: [], personal: [] };
+        let USER_GOALS = JSON.parse(localStorage.getItem('evo_goals')) || { profit: 0, limit: 0, save: 0 };
+        let CREDIT_DATA_CACHE = {}; 
+        const CREDIT_LIMIT = 10000; // 3. PERSONAL: Base limit for progress bar
+
+        // 5. WOW: Dynamic Greeting
+        function setGreeting() {
+            const h = new Date().getHours();
+            let g = "Buenos días";
+            if(h >= 12) g = "Buenas tardes";
+            if(h >= 19) g = "Buenas noches";
+            document.getElementById('dynamic-greeting').innerText = `${g.toUpperCase()}, ÁLVARO`;
+        }
 
         async function init(forceReload = false) {
-            if(forceReload) {
-                document.getElementById('loading').classList.remove('hidden');
-                document.getElementById('dashboard-content').classList.add('opacity-0');
+            setGreeting();
+            const yr = new Date().getFullYear();
+            const sel = document.getElementById('filter-year');
+            if(sel.options.length === 0) sel.innerHTML = `<option value="${yr-1}">${yr-1}</option><option value="${yr}" selected>${yr}</option><option value="${yr+1}">${yr+1}</option>`;
+            
+            if(!GLOBAL_DATA.config) { 
+                const today = new Date();
+                document.getElementById('filter-month').value = today.getMonth(); 
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1); 
+                document.getElementById('date-start').value = firstDay.toISOString().split('T')[0]; 
+                document.getElementById('date-end').value = today.toISOString().split('T')[0]; 
             }
 
-            const today = new Date();
-            if(!GLOBAL_DATA.config) {
-                document.getElementById('filter-month').value = today.getMonth();
-                document.getElementById('filter-year').value = today.getFullYear();
-                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                const formatDateInput = (d) => d.toISOString().split('T')[0];
-                document.getElementById('date-start').value = formatDateInput(firstDay);
-                document.getElementById('date-end').value = formatDateInput(today);
-            }
+            if(forceReload) document.getElementById('refresh-icon').classList.add('animate-spin');
 
             try {
                 const ts = forceReload ? `&t=${new Date().getTime()}` : '';
-                const [conf, emp, per, p2p] = await Promise.all([
-                    fetchCSV(BASE_URL_CONFIG + ts),
-                    fetchCSV(BASE_URL_EMPRESA + ts),
-                    fetchCSV(BASE_URL_PERSONAL + ts),
-                    fetchCSV(BASE_URL_P2P + ts)
+                const [conf, emp, per, p2p] = await Promise.all([ 
+                    fetchCSV(BASE_URL_CONFIG + ts), 
+                    fetchCSV(BASE_URL_EMPRESA + ts), 
+                    fetchCSV(BASE_URL_PERSONAL + ts), 
+                    fetchCSV(BASE_URL_P2P + ts) 
                 ]);
-                
                 GLOBAL_DATA = { config: conf, empresa: emp, personal: per, p2p: p2p };
                 
-                document.getElementById('loading').classList.add('hidden');
-                const dash = document.getElementById('dashboard-content');
-                dash.classList.remove('hidden');
-                setTimeout(() => dash.classList.remove('opacity-0'), 100);
+                document.getElementById('dashboard-content').classList.remove('hidden');
+                if(forceReload) document.getElementById('refresh-icon').classList.remove('animate-spin');
+                
+                loadGoalsUI();
                 applyFilter();
-
-            } catch (e) {
-                console.error(e);
-                alert("Error cargando datos.");
-            }
+            } catch (e) { console.error(e); }
         }
 
-        function reloadData() {
-            const icon = document.getElementById('refresh-icon');
-            icon.classList.add('animate-spin');
-            init(true).then(() => icon.classList.remove('animate-spin'));
-        }
-
-        function applyFilter() {
-            let startDate, endDate;
-            if (CURRENT_FILTER_MODE === 'month') {
-                const m = parseInt(document.getElementById('filter-month').value);
-                const y = parseInt(document.getElementById('filter-year').value);
-                startDate = new Date(y, m, 1);
+        function applyFilter() { 
+            let startDate, endDate, prevStartDate, prevEndDate; 
+            if (CURRENT_FILTER_MODE === 'month') { 
+                const m = parseInt(document.getElementById('filter-month').value); 
+                const y = parseInt(document.getElementById('filter-year').value); 
+                startDate = new Date(y, m, 1); 
                 endDate = new Date(y, m + 1, 0, 23, 59, 59);
-            } else {
-                const sVal = document.getElementById('date-start').value;
-                const eVal = document.getElementById('date-end').value;
-                startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date();
-                endDate = eVal ? new Date(eVal + 'T23:59:59') : new Date();
-            }
-            processData(startDate, endDate);
+                // 2. BUSINESS: Previous Month Logic for Deltas
+                prevStartDate = new Date(y, m - 1, 1);
+                prevEndDate = new Date(y, m, 0, 23, 59, 59);
+            } else { 
+                const sVal = document.getElementById('date-start').value; 
+                const eVal = document.getElementById('date-end').value; 
+                startDate = sVal ? new Date(sVal + 'T00:00:00') : new Date(); 
+                endDate = eVal ? new Date(eVal + 'T23:59:59') : new Date(); 
+                prevStartDate = new Date(startDate); prevStartDate.setMonth(startDate.getMonth() - 1);
+                prevEndDate = new Date(endDate); prevEndDate.setMonth(endDate.getMonth() - 1);
+            } 
+            processData(startDate, endDate, prevStartDate, prevEndDate); 
         }
 
-        function processData(startDate, endDate) {
-            // A. CONFIG
+        function processData(startDate, endDate, prevStart, prevEnd) {
             const mes = String(startDate.getMonth()+1).padStart(2,'0');
             const year = startDate.getFullYear();
             const filterKey = `${mes}/${year}`;
             
             let tcManual = 3.75, nominaUSD = 400;
-
             GLOBAL_DATA.config.forEach(row => {
-                if(!row[0]) return;
-                const rowDate = row[0].includes('/') ? row[0] : '';
-                if(rowDate === filterKey || rowDate === `${startDate.getMonth()+1}/${year}`) {
+                if(row[0] && (row[0] === filterKey || row[0] === `${startDate.getMonth()+1}/${year}`)) {
                     if(row[1]) nominaUSD = parseFloat(row[1].replace(/,/g, ''));
                     if(row[2]) tcManual = parseFloat(row[2].replace(/,/g, ''));
                 }
             });
 
-            // B. P2P & BALANCES EMPRESA PUROS
-            let totalUSDT = 0, totalPEN = 0;
-            GLOBAL_DATA.p2p.forEach((row, i) => {
-                if(i===0) return;
-                const date = parseDate(row[0]);
-                if(date >= startDate && date <= endDate) {
-                    totalUSDT += parseMonto(row[1]);
-                    totalPEN += parseMonto(row[2]);
-                }
-            });
-
-            let tcReal = (totalUSDT > 0) ? (totalPEN / totalUSDT) : tcManual;
+            // P2P & TC Real
+            let totalUSDT_Sold = 0, totalPEN_Bought = 0;
+            GLOBAL_DATA.p2p.forEach((row, i) => { if(i===0) return; const date = parseDate(row[0]); if(date >= startDate && date <= endDate) { totalUSDT_Sold += parseMonto(row[1]); totalPEN_Bought += parseMonto(row[2]); } });
+            let tcReal = (totalUSDT_Sold > 0) ? (totalPEN_Bought / totalUSDT_Sold) : tcManual;
             document.getElementById('tc-display').innerText = `S/ ${tcReal.toFixed(3)}`;
-            document.getElementById('base-nomina-usd').innerText = nominaUSD;
 
-            // C. EMPRESA (CON AUTO CONVERSIÓN PEN -> USD)
-            let bizIng = 0, bizGas = 0, bizNom = 0;
-            PROCESSED_DATA.empresa = [];
-            let cf=0, ct=1, cm=5, cmon=3; 
-            
-            if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { 
-                cf=1; ct=2; cm=4; cmon=5; 
-            }
+            // --- BUSINESS LOGIC (With Deltas) ---
+            const calculateBusiness = (s, e) => {
+                let ing = 0, gas = 0, nom = 0;
+                let cf=0, ct=1, cm=5, cmon=3; 
+                if(JSON.stringify(GLOBAL_DATA.empresa[0]).toLowerCase().includes("marca")) { cf=1; ct=2; cm=4; cmon=5; }
+                const list = [];
+                GLOBAL_DATA.empresa.forEach((row, i) => { 
+                    if(i===0) return; 
+                    const date = parseDate(row[cf]); 
+                    if(date >= s && date <= e) { 
+                        const tipo = (row[ct]||"").toUpperCase(); 
+                        let monto = parseMonto(row[cm]); 
+                        const moneda = (row[cmon]||"USD").toUpperCase(); 
+                        if(moneda.includes("PEN") || moneda.includes("SOL") || moneda.includes("S/")) { monto = monto / tcReal; } 
+                        if(tipo.includes("INGRESO")) ing += monto; 
+                        if(tipo.includes("GASTO")) gas += monto; 
+                        if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) nom += monto; 
+                        list.push({date, tipo, desc: row[ct+1]||"S/D", monto});
+                    } 
+                });
+                return { ing, gas, nom, profit: ing - gas - nom, list };
+            };
 
-            GLOBAL_DATA.empresa.forEach((row, i) => {
-                if(i===0) return;
-                const date = parseDate(row[cf]);
-                if(date >= startDate && date <= endDate) {
-                    const tipo = (row[ct]||"").toUpperCase();
-                    let monto = parseMonto(row[cm]);
-                    const moneda = (row[cmon]||"USD").toUpperCase();
+            const currBiz = calculateBusiness(startDate, endDate);
+            const prevBiz = calculateBusiness(prevStart, prevEnd);
+            PROCESSED_DATA.empresa = currBiz.list;
 
-                    // AUTO CONVERSIÓN SI ES PEN
-                    if(moneda.includes("PEN") || moneda.includes("SOLES")) {
-                        monto = monto / tcReal; 
-                    }
-
-                    if(tipo.includes("INGRESO")) bizIng += monto;
-                    if(tipo.includes("GASTO")) bizGas += monto;
-                    if(tipo.includes("NÓMINA") || tipo.includes("NOMINA")) bizNom += monto;
-                    PROCESSED_DATA.empresa.push({date, tipo, desc: row[ct+1]||"S/D", monto});
-                }
-            });
-
-            // D. PERSONAL & DIARIO PARA CHART
-            let perGas = 0;
-            let cats = {};
-            let dailyExpenses = {}; // Para el chart lineal
+            // --- PERSONAL LOGIC ---
+            let perGas = 0, cats = {}, dailyTxns = {};
             PROCESSED_DATA.personal = [];
+            let expenseTrendData = []; // for sparkline/chart
             let pf=0, pc=1, pd=2, pm=3, pmet=4;
             if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pc=2; pd=3; pm=4; pmet=5; }
 
-            GLOBAL_DATA.personal.forEach((row, i) => {
-                if(i===0) return;
-                const date = parseDate(row[pf]);
-                if(date >= startDate && date <= endDate) {
-                    const cat = row[pc] || "Otros";
-                    const monto = parseMonto(row[pm]);
-                    const metodo = (row[pmet]||"").toUpperCase();
-                    perGas += monto;
-                    cats[cat] = (cats[cat] || 0) + monto;
-                    
-                    const dayKey = date.getDate();
-                    dailyExpenses[dayKey] = (dailyExpenses[dayKey] || 0) + monto;
-
-                    PROCESSED_DATA.personal.push({date, cat, desc: row[pd], monto, metodo});
-                }
+            GLOBAL_DATA.personal.forEach((row, i) => { 
+                if(i===0) return; 
+                const date = parseDate(row[pf]); 
+                if(date >= startDate && date <= endDate) { 
+                    const cat = row[pc] || "Otros"; 
+                    const monto = parseMonto(row[pm]); 
+                    const metodo = (row[pmet]||"").toUpperCase(); 
+                    perGas += monto; 
+                    cats[cat] = (cats[cat] || 0) + monto; 
+                    const dayKey = date.getDate(); 
+                    if(!dailyTxns[dayKey]) dailyTxns[dayKey] = { amount: 0, items: [] }; 
+                    dailyTxns[dayKey].amount += monto; 
+                    dailyTxns[dayKey].items.push(`${row[pd]} (S/ ${monto.toFixed(2)})`); 
+                    PROCESSED_DATA.personal.push({date, cat, desc: row[pd], monto, metodo}); 
+                } 
             });
 
-            // E. RESULTADOS
-            const profit = bizIng - bizGas - bizNom; 
-            const nominaPEN = bizNom * tcReal;
+            // Calculations
+            const nominaPEN = currBiz.nom * tcReal;
             const saldo = nominaPEN - perGas;
+            const retainedUSD = Math.max(0, currBiz.profit - totalUSDT_Sold);
+            const movedToPEN = Math.min(currBiz.profit, totalUSDT_Sold); 
 
-            updateCard('mini-bal-usd', profit, '$'); 
-            updateCard('mini-bal-pen', totalPEN, 'S/ '); 
+            // UI Updates
+            updateCard('biz-profit', currBiz.profit, '$');
+            updateCard('biz-ingresos', currBiz.ing, '$');
+            updateCard('biz-gastos', currBiz.gas, '$');
+            renderDelta('delta-profit', currBiz.profit, prevBiz.profit);
+            renderDelta('delta-ingresos', currBiz.ing, prevBiz.ing);
+            
+            // 2. BUSINESS: Sparkline
+            renderSparkline('sparkline-gastos', currBiz.list.filter(x => x.tipo.includes("GASTO")).map(x => x.monto), true);
 
-            updateCard('biz-profit', profit, '$');
-            updateCard('biz-ingresos', bizIng, '$');
-            updateCard('biz-gastos', bizGas, '$');
-            updateCard('per-nomina', nominaPEN, 'S/ ');
+            // 2. BUSINESS: Enhanced Runway
+            updateCard('txt-ret-usd', retainedUSD, '$');
+            updateCard('txt-mov-pen', movedToPEN * tcReal, 'S/ ');
+            const totalVis = retainedUSD + (movedToPEN > 0 ? movedToPEN : 0);
+            if(totalVis > 0) { 
+                document.getElementById('bar-usd').style.width = `${(retainedUSD/totalVis)*100}%`; 
+                document.getElementById('bar-pen').style.width = `${(movedToPEN/totalVis)*100}%`; 
+            }
+
+            // Personal Cards
             updateCard('per-gastos', perGas, 'S/ ');
             updateCard('per-saldo', saldo, 'S/ ');
+            document.getElementById('per-nomina-usd').innerText = '$' + nominaUSD.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('per-nomina-pen').innerText = 'aprox S/ ' + (nominaUSD * tcReal).toLocaleString('en-US', {minimumFractionDigits: 2});
 
-            // UI Dinámica
-            const profitEl = document.getElementById('biz-profit');
-            const cardProfit = document.getElementById('card-profit');
+            updateGoalBars(currBiz.profit, perGas, saldo);
+
+            // Credit Data
+            CREDIT_DATA_CACHE = calculateSplitCardDebt(endDate);
+            updateCard('tc-next-amount', CREDIT_DATA_CACHE.nextPayment, 'S/ ');
+            document.getElementById('tc-next-date-label').innerText = `Paga el ${CREDIT_DATA_CACHE.nextPayDateStr}`;
+            updateCard('tc-current-amount', CREDIT_DATA_CACHE.currentConsumption, 'S/ ');
+            document.getElementById('tc-current-range-label').innerText = CREDIT_DATA_CACHE.currentRangeLabel;
+            updateCard('tc-mtd-amount', CREDIT_DATA_CACHE.mtdAmount, 'S/ ');
+            document.getElementById('tc-mtd-range-label').innerText = `1 ${CREDIT_DATA_CACHE.currentMonthShort} - Hoy`;
             
-            cardProfit.classList.remove('border-danger', 'border-primary');
-            profitEl.classList.remove('text-success', 'text-danger', 'shadow-neon-green', 'shadow-neon-red');
+            // 3. PERSONAL: Utilization Bar
+            const utilPct = Math.min((CREDIT_DATA_CACHE.currentConsumption / CREDIT_LIMIT) * 100, 100);
+            document.getElementById('cc-utilization-bar').style.width = `${utilPct}%`;
+            document.getElementById('cc-utilization-bar').className = `h-full ${utilPct > 80 ? 'bg-danger' : utilPct > 50 ? 'bg-warning' : 'bg-primary'}`;
 
-            if (profit >= 0) {
-                profitEl.className = "text-5xl font-mono font-bold text-success mb-2 transition-all duration-300 tracking-tighter shadow-neon-green";
-                cardProfit.classList.add('border-primary');
-            } else {
-                profitEl.className = "text-5xl font-mono font-bold text-danger mb-2 transition-all duration-300 tracking-tighter shadow-neon-red";
-                cardProfit.classList.add('border-danger');
-            }
-
-            const health = document.getElementById('health-indicator');
-            const saldoEl = document.getElementById('per-saldo');
-            if(saldo < 0) {
-                saldoEl.className = "text-3xl font-mono font-bold text-danger relative z-10";
-                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-danger/20 text-danger border border-danger/30 relative z-10";
-                health.innerText = "CRÍTICO";
-            } else {
-                saldoEl.className = "text-3xl font-mono font-bold text-success relative z-10";
-                health.className = "mt-2 inline-block px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-success/20 text-success border border-success/30 relative z-10";
-                health.innerText = "SALUDABLE";
-            }
-
-            const pct = Math.min((perGas / (nominaPEN||1))*100, 100);
-            const bar = document.getElementById('bar-gastos');
-            bar.style.width = `${pct}%`;
-            bar.className = `h-full transition-all duration-1000 ${pct>90 ? 'bg-danger shadow-neon-red' : 'bg-warning shadow-neon-warning'}`;
-
-            const cardData = calculateSplitCardDebt(endDate);
-            updateCard('tc-next-amount', cardData.nextPayment, 'S/ ');
-            document.getElementById('tc-next-date').innerText = cardData.nextPayDateStr;
-            document.getElementById('tc-prev-close').innerText = cardData.prevCloseStr;
-            updateCard('tc-current-amount', cardData.currentConsumption, 'S/ ');
-            document.getElementById('tc-next-close').innerText = cardData.currentCloseStr;
-
-            renderTable(PROCESSED_DATA.personal.slice().reverse().slice(0, 5));
+            // Tables & Charts
+            renderTableWithIcons(PROCESSED_DATA.personal.slice().reverse().slice(0, 8), 'txn-list-personal', 'S/ ');
             renderChart(cats);
-            renderLineChart(dailyExpenses, startDate, endDate);
+            document.getElementById('donut-total').innerText = 'S/ ' + perGas.toLocaleString('en-US', {maximumFractionDigits:0});
+            renderLineChart(dailyTxns, startDate, endDate);
         }
 
-        function calculateSplitCardDebt(refDate) {
-            let currentOpenStart, currentOpenEnd, prevClosedStart, prevClosedEnd;
-            const day = refDate.getDate();
-            const month = refDate.getMonth();
-            const year = refDate.getFullYear();
+        // --- 2. BUSINESS: Delta Render ---
+        function renderDelta(elId, curr, prev) {
+            const diff = curr - prev;
+            const pct = prev !== 0 ? ((diff / Math.abs(prev)) * 100) : 0;
+            const isPos = diff >= 0;
+            // Para gastos, positivo es "malo" a veces, pero mantendremos lógica financiera simple: Profit Arriba = Bien.
+            const colorClass = isPos ? 'delta-pos' : 'delta-neg';
+            const icon = isPos ? '▲' : '▼';
+            const html = `<div class="delta-badge ${colorClass}">${icon} ${Math.abs(pct).toFixed(0)}% vs mes ant.</div>`;
+            document.getElementById(elId).innerHTML = prev !== 0 ? html : '<div class="delta-badge delta-neutral">--</div>';
+        }
 
-            if (day <= 10) {
-                currentOpenStart = new Date(year, month - 1, 11);
-                currentOpenEnd = new Date(year, month, 10);
-                prevClosedStart = new Date(year, month - 2, 11);
-                prevClosedEnd = new Date(year, month - 1, 10);
-            } else {
-                currentOpenStart = new Date(year, month, 11);
-                currentOpenEnd = new Date(year, month + 1, 10);
-                prevClosedStart = new Date(year, month - 1, 11);
-                prevClosedEnd = new Date(year, month, 10);
-            }
-            const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5);
-            let nextPayment = 0, currentConsumption = 0;
-            let pf=0, pm=3, pmet=4; 
-            if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pm=4; pmet=5; }
-
-            GLOBAL_DATA.personal.forEach((row, i) => {
-                if(i===0) return;
-                const d = parseDate(row[pf]);
-                const metodo = (row[pmet]||"").toUpperCase();
-                if (d && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) {
-                    d.setHours(12,0,0,0);
-                    const amount = parseMonto(row[pm]);
-                    if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) nextPayment += amount;
-                    if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) currentConsumption += amount;
-                }
+        // --- 2. BUSINESS: Sparkline ---
+        function renderSparkline(canvasId, data, isExpense) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const parent = canvas.parentElement;
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+            
+            if(data.length < 2) return;
+            const max = Math.max(...data);
+            const min = Math.min(...data);
+            const range = max - min || 1;
+            const step = canvas.width / (data.length - 1);
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = isExpense ? '#ef4444' : '#10b981';
+            
+            data.forEach((val, i) => {
+                const x = i * step;
+                const y = canvas.height - ((val - min) / range) * (canvas.height - 4) - 2;
+                if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             });
-            return {
-                nextPayment, currentConsumption,
-                nextPayDateStr: nextPayDate.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
-                prevCloseStr: prevClosedEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}),
-                currentCloseStr: currentOpenEnd.toLocaleDateString('es-PE', {day:'2-digit', month:'short'})
-            };
+            ctx.stroke();
         }
 
-        // --- UI & CHARTS ---
-        function setFilterMode(mode) {
-            CURRENT_FILTER_MODE = mode;
-            const btnMonth = document.getElementById('btn-mode-month');
-            const btnRange = document.getElementById('btn-mode-range');
-            if(mode === 'month') {
-                btnMonth.classList.add('bg-primary', 'text-white', 'shadow-lg');
-                btnMonth.classList.remove('text-slate-400');
-                btnRange.classList.remove('bg-primary', 'text-white', 'shadow-lg');
-                btnRange.classList.add('text-slate-400');
-                document.getElementById('controls-month').classList.remove('hidden');
-                document.getElementById('controls-range').classList.add('hidden');
-            } else {
-                btnRange.classList.add('bg-primary', 'text-white', 'shadow-lg');
-                btnRange.classList.remove('text-slate-400');
-                btnMonth.classList.remove('bg-primary', 'text-white', 'shadow-lg');
-                btnMonth.classList.add('text-slate-400');
-                document.getElementById('controls-month').classList.add('hidden');
-                document.getElementById('controls-range').classList.remove('hidden');
-            }
-            applyFilter();
+        // --- 3. PERSONAL: Icon Logic ---
+        function getCategoryIcon(desc, cat) {
+            const d = (desc + " " + cat).toLowerCase();
+            if(d.includes("rappi") || d.includes("comida") || d.includes("restaurante")) return "utensils";
+            if(d.includes("uber") || d.includes("taxi") || d.includes("gasolina")) return "fuel";
+            if(d.includes("luz") || d.includes("agua") || d.includes("internet")) return "zap";
+            if(d.includes("suscripcion") || d.includes("netflix")) return "repeat";
+            if(d.includes("salud") || d.includes("farmacia")) return "heart-pulse";
+            return "shopping-bag";
         }
 
-        function openProfitModal() {
-            const listPos = document.getElementById('profit-pos-list');
-            const listNeg = document.getElementById('profit-neg-list');
-            listPos.innerHTML = ''; listNeg.innerHTML = '';
-            let totalPos = 0, totalNeg = 0;
-            const sorted = PROCESSED_DATA.empresa.sort((a,b) => b.date - a.date);
-            sorted.forEach(t => {
-                const isPos = t.tipo.includes("INGRESO");
-                const html = `
-                    <div class="flex justify-between items-center p-3 rounded bg-surfaceLight/30 border border-white/5 hover:border-white/20 transition-colors">
-                        <div><div class="text-[10px] text-slate-400 font-mono">${t.date.toLocaleDateString()}</div><div class="text-sm font-bold text-white">${t.desc}</div><div class="text-[10px] text-slate-500 uppercase">${t.tipo}</div></div>
-                        <div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'}">${isPos ? '+' : '-'} $${t.monto.toFixed(2)}</div>
-                    </div>`;
-                if(isPos) { listPos.insertAdjacentHTML('beforeend', html); totalPos += t.monto; }
-                else { listNeg.insertAdjacentHTML('beforeend', html); totalNeg += t.monto; }
-            });
-            document.getElementById('profit-pos-total').innerText = '$' + totalPos.toFixed(2);
-            document.getElementById('profit-neg-total').innerText = '-$' + totalNeg.toFixed(2);
-            document.getElementById('profit-modal').classList.remove('hidden');
+        function renderTableWithIcons(data, elId, symbol) { 
+            document.getElementById(elId).innerHTML = data.map(t => {
+                const icon = getCategoryIcon(t.desc, t.cat);
+                return `
+                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                    <td class="py-3 px-3 w-10 text-center"><i data-lucide="${icon}" class="w-4 h-4 text-slate-500 group-hover:text-primary"></i></td>
+                    <td class="py-3 px-2 text-slate-500 w-16 text-[10px] font-mono">${t.date.toLocaleDateString(undefined, {day:'2-digit', month:'2-digit'})}</td>
+                    <td class="py-3 px-2 text-slate-300 group-hover:text-white truncate max-w-[120px] font-medium">${t.desc}</td>
+                    <td class="py-3 px-2 text-right text-slate-400 font-bold group-hover:text-white font-mono">${symbol} ${t.monto.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                </tr>`
+            }).join(''); 
+            lucide.createIcons();
         }
 
-        function openDetails(type) {
-            const modal = document.getElementById('detail-modal');
-            const panel = document.getElementById('detail-panel');
-            const content = document.getElementById('modal-content');
-            const title = document.getElementById('modal-title');
-            let data = [], symbol = "";
-            if(type === 'PERSONAL_GASTOS') { title.innerHTML = `Gastos Personales`; data = PROCESSED_DATA.personal; symbol = "S/ "; } 
-            else if (type === 'EMPRESA_GASTOS') { title.innerHTML = `Gastos Empresa`; data = PROCESSED_DATA.empresa.filter(t => !t.tipo.includes("INGRESO")); symbol = "$ "; }
-            data.sort((a,b) => b.date - a.date);
-            content.innerHTML = data.map(t => `
-                <div class="p-3 bg-surfaceLight/20 rounded border border-white/5 flex justify-between items-center">
-                    <div><div class="text-[10px] text-slate-400 font-mono">${t.date.toLocaleDateString()}</div><div class="text-sm text-white font-medium">${t.desc || t.tipo}</div><div class="text-[10px] text-primary uppercase">${t.cat || t.tipo}</div></div>
-                    <div class="font-mono font-bold text-slate-200">${symbol}${t.monto.toFixed(2)}</div>
-                </div>`).join('');
-            document.getElementById('modal-total').innerText = symbol + data.reduce((s, t) => s + t.monto, 0).toFixed(2);
-            modal.classList.remove('hidden');
-            setTimeout(() => panel.classList.remove('translate-x-full'), 10);
+        // --- 4. DATA VIS: Charts ---
+        let chart, lineChart;
+        function renderChart(data) { 
+            const ctx = document.getElementById('chartPersonal').getContext('2d'); 
+            if(chart) chart.destroy(); 
+            chart = new Chart(ctx, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: Object.keys(data), 
+                    datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'], borderWidth: 0, hoverOffset: 10 }] 
+                }, 
+                options: { 
+                    responsive: true, maintainAspectRatio: false, cutout: '85%', 
+                    plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: {size:10, family: 'Inter'}, boxWidth: 6, usePointStyle: true } } } 
+                } 
+            }); 
+        }
+        
+        function renderLineChart(dailyTxns, start, end) { 
+            const ctx = document.getElementById('chartLine').getContext('2d'); 
+            if(lineChart) lineChart.destroy(); 
+            const labels = [], dataPoints = []; 
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) { 
+                if(d.getMonth() === start.getMonth() || CURRENT_FILTER_MODE === 'range') { 
+                    const k = d.getDate(); labels.push(k); 
+                    dataPoints.push((dailyTxns[k] || {amount:0}).amount); 
+                } 
+            } 
+            const gradient = ctx.createLinearGradient(0, 0, 0, 250); 
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); 
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)'); 
+            
+            lineChart = new Chart(ctx, { 
+                type: 'line', 
+                data: { labels: labels, datasets: [{ label: 'Gasto', data: dataPoints, borderColor: '#3b82f6', backgroundColor: gradient, borderWidth: 2, tension: 0.4, fill: true, pointRadius: 0, pointHoverRadius: 6 }] }, 
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#111', borderColor: '#333', borderWidth: 1, titleColor: '#aaa' } }, 
+                    scales: { x: { display: false }, y: { display: false } } 
+                } 
+            }); 
         }
 
-        function closeModal(id) {
-            if(id === 'detail-modal') { document.getElementById('detail-panel').classList.add('translate-x-full'); setTimeout(() => document.getElementById(id).classList.add('hidden'), 300); }
-            else { document.getElementById(id).classList.add('hidden'); }
+        // --- UTILS ---
+        function updateGoalBars(profit, expense, savings) { 
+            if(USER_GOALS.profit > 0) { const p = Math.min((profit/USER_GOALS.profit)*100, 100); document.getElementById('goal-profit-bar').style.width = `${p}%`; } 
+            if(USER_GOALS.limit > 0) { 
+                const p = Math.min((expense/USER_GOALS.limit)*100, 100); 
+                document.getElementById('bar-gastos').style.width = `${p}%`; 
+                document.getElementById('bar-gastos').className = `absolute top-0 left-0 h-full transition-all duration-1000 ease-out ${p>90?'bg-danger':p>75?'bg-warning':'bg-success'}`;
+                document.getElementById('pct-gastos').innerText = `${p.toFixed(0)}%`;
+                document.getElementById('pct-gastos').className = `font-bold ${p>90?'text-danger':p>75?'text-warning':'text-success'}`;
+            } 
+            const health = document.getElementById('health-indicator');
+            if(USER_GOALS.save > 0) { health.innerText = savings >= USER_GOALS.save ? "META LOGRADA" : savings > 0 ? "EN CAMINO" : "DÉFICIT"; health.className = `px-2.5 py-1 rounded-md text-[9px] font-bold uppercase border bg-opacity-20 ${savings >= USER_GOALS.save ? 'bg-success text-success border-success' : 'bg-warning text-warning border-warning'}`; }
         }
 
-        function updateCard(id, val, prefix) { document.getElementById(id).innerText = prefix + val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
+        function calculateSplitCardDebt(refDate) { 
+            // Simplified for brevity, matches original logic
+            let currentOpenStart, currentOpenEnd, prevClosedStart, prevClosedEnd; 
+            const day = refDate.getDate(); const month = refDate.getMonth(); const year = refDate.getFullYear(); 
+            if (day <= 10) { 
+                currentOpenStart = new Date(year, month - 1, 11); currentOpenEnd = new Date(year, month, 10); 
+                prevClosedStart = new Date(year, month - 2, 11); prevClosedEnd = new Date(year, month - 1, 10); 
+            } else { 
+                currentOpenStart = new Date(year, month, 11); currentOpenEnd = new Date(year, month + 1, 10); 
+                prevClosedStart = new Date(year, month - 1, 11); prevClosedEnd = new Date(year, month, 10); 
+            } 
+            const nextPayDate = new Date(prevClosedEnd.getFullYear(), prevClosedEnd.getMonth() + 1, 5); 
+            const today = new Date(); const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+            let nextPayment = 0, currentConsumption = 0, mtdAmount = 0; let payList = [], currList = []; 
+            let pf=0, pc=1, pd=2, pm=3, pmet=4; 
+            if(JSON.stringify(GLOBAL_DATA.personal[0]).toLowerCase().includes("marca")) { pf=1; pc=2; pd=3; pm=4; pmet=5; } 
+            GLOBAL_DATA.personal.forEach((row, i) => { if(i===0) return; const d = parseDate(row[pf]); const metodo = (row[pmet]||"").toUpperCase(); if (d && (metodo.includes("CRÉDITO") || metodo.includes("CREDITO"))) { d.setHours(12,0,0,0); const amount = parseMonto(row[pm]); const item = { d, desc: row[pd], cat: row[pc], amount }; if (d >= setTime(prevClosedStart,0) && d <= setTime(prevClosedEnd,23)) { nextPayment += amount; payList.push(item); } if (d >= setTime(currentOpenStart,0) && d <= setTime(currentOpenEnd,23)) { currentConsumption += amount; currList.push(item); } if (d >= setTime(startOfMonth, 0) && d <= setTime(today, 23)) { mtdAmount += amount; } } }); 
+            const fmtDate = (d) => d.toLocaleDateString('es-PE', {day:'2-digit', month:'short'}); 
+            return { nextPayment, currentConsumption, mtdAmount, payList, currList, nextPayDateStr: fmtDate(nextPayDate), currentRangeLabel: `${fmtDate(currentOpenStart)} - ${fmtDate(currentOpenEnd)}`, currentMonthShort: today.toLocaleDateString('es-PE', {month:'short'}) }; 
+        }
+
+        // Shared Helpers
+        function closeModal(id) { 
+            if(id === 'detail-modal') { document.getElementById('detail-panel').classList.add('translate-x-full'); document.getElementById('detail-overlay').classList.add('opacity-0'); setTimeout(() => document.getElementById(id).classList.add('hidden'), 300); } 
+            else { document.getElementById(id).classList.add('hidden'); } 
+        }
+        function openGoalsModal() { document.getElementById('input-goal-profit').value = USER_GOALS.profit||''; document.getElementById('input-goal-limit').value = USER_GOALS.limit||''; document.getElementById('input-goal-save').value = USER_GOALS.save||''; document.getElementById('goals-modal').classList.remove('hidden'); }
+        function saveGoals() { USER_GOALS.profit=parseFloat(document.getElementById('input-goal-profit').value)||0; USER_GOALS.limit=parseFloat(document.getElementById('input-goal-limit').value)||0; USER_GOALS.save=parseFloat(document.getElementById('input-goal-save').value)||0; localStorage.setItem('evo_goals', JSON.stringify(USER_GOALS)); closeModal('goals-modal'); loadGoalsUI(); applyFilter(); }
+        function loadGoalsUI() { updateCard('goal-profit-display', USER_GOALS.profit, '$'); updateCard('goal-limit-display', USER_GOALS.limit, 'S/ '); }
+        function openCreditModal() { 
+            updateCard('modal-cc-pay', CREDIT_DATA_CACHE.nextPayment, 'S/ '); updateCard('modal-cc-curr', CREDIT_DATA_CACHE.currentConsumption, 'S/ '); 
+            const renderList = (list, elId) => { document.getElementById(elId).innerHTML = list.sort((a,b)=>b.d-a.d).map(t => `<div class="flex justify-between p-3 border-b border-white/5 text-[10px] hover:bg-white/5 rounded transition-colors"><div class="text-slate-400 font-mono">${t.d.toLocaleDateString()}</div><div class="text-white ml-2 flex-1 truncate px-2">${t.desc}</div><div class="font-mono text-white font-bold">S/ ${t.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div></div>`).join(''); }; 
+            renderList(CREDIT_DATA_CACHE.payList, 'list-cc-pay'); renderList(CREDIT_DATA_CACHE.currList, 'list-cc-curr'); document.getElementById('credit-modal').classList.remove('hidden'); 
+        }
+        function openProfitModal() { 
+            const listPos = document.getElementById('profit-pos-list'); const listNeg = document.getElementById('profit-neg-list'); listPos.innerHTML = ''; listNeg.innerHTML = ''; let totalPos = 0, totalNeg = 0; const sorted = PROCESSED_DATA.empresa.sort((a,b) => b.date - a.date); 
+            sorted.forEach(t => { const isPos = t.tipo.includes("INGRESO"); const html = `<div class="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/5 hover:border-white/10 transition-colors mb-1 group"><div class="flex flex-col"><span class="text-[9px] text-slate-500 font-mono">${t.date.toLocaleDateString()}</span><span class="text-xs font-bold text-slate-300 group-hover:text-white">${t.desc}</span></div><div class="font-mono font-bold ${isPos ? 'text-success' : 'text-danger'} text-sm">${isPos ? '+' : '-'} $${t.monto.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div></div>`; if(isPos) { listPos.insertAdjacentHTML('beforeend', html); totalPos += t.monto; } else { listNeg.insertAdjacentHTML('beforeend', html); totalNeg += t.monto; } }); 
+            document.getElementById('profit-pos-total').innerText = '$' + totalPos.toFixed(2); document.getElementById('profit-neg-total').innerText = '-$' + totalNeg.toFixed(2); document.getElementById('profit-modal').classList.remove('hidden'); 
+        }
+        function openDetails(type) { 
+            const modal = document.getElementById('detail-modal'); const panel = document.getElementById('detail-panel'); const overlay = document.getElementById('detail-overlay'); const content = document.getElementById('modal-content'); const title = document.getElementById('modal-title'); let data = [], symbol = ""; 
+            if(type === 'PERSONAL_GASTOS') { title.innerHTML = `<i class='w-4 h-4 inline mr-2 text-warning' data-lucide='shopping-bag'></i> Gastos Personales`; data = PROCESSED_DATA.personal; symbol = "S/ "; } else if (type === 'EMPRESA_GASTOS') { title.innerHTML = `<i class='w-4 h-4 inline mr-2 text-danger' data-lucide='building-2'></i> Gastos Empresa`; data = PROCESSED_DATA.empresa.filter(t => !t.tipo.includes("INGRESO")); symbol = "$ "; } 
+            data.sort((a,b) => b.date - a.date); content.innerHTML = data.map(t => `<div class="p-4 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center group hover:bg-white/10 transition-colors shadow-sm"><div><div class="flex items-center gap-2 mb-1.5"><span class="text-[9px] text-slate-400 font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/5">${t.date.toLocaleDateString()}</span><span class="text-[9px] text-primary uppercase font-bold tracking-wider opacity-80">${t.cat || t.tipo}</span></div><div class="text-sm text-slate-200 font-bold leading-tight">${t.desc || t.tipo}</div></div><div class="font-mono font-bold text-white text-base">${symbol}${t.monto.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div></div>`).join(''); 
+            lucide.createIcons(); document.getElementById('modal-total').innerText = symbol + data.reduce((s, t) => s + t.monto, 0).toFixed(2); modal.classList.remove('hidden'); setTimeout(() => { panel.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0'); }, 10); 
+        }
+        function updateCard(id, val, prefix) { document.getElementById(id).innerText = prefix + val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
         function parseDate(str) { if(!str) return null; const p = str.trim().split('/'); if(p.length===3) return new Date(p[2], p[1]-1, p[0]); const d = new Date(str); return isNaN(d) ? null : d; }
         function setTime(date, h) { const d = new Date(date); d.setHours(h, h===23?59:0, h===23?59:0, 0); return d; }
         function parseMonto(val) { return parseFloat(String(val).replace(/[^0-9.-]/g, '')) || 0; }
         function fetchCSV(url) { return new Promise(r => Papa.parse(url, {download:true, complete:res=>r(res.data)})); }
-        
-        function renderTable(data) {
-            document.getElementById('txn-list').innerHTML = data.map(t => `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="px-4 py-2 font-mono text-slate-400">${t.date.toLocaleDateString()}</td>
-                    <td class="px-4 py-2 text-primary uppercase">${t.cat.substring(0,12)}</td>
-                    <td class="px-4 py-2 text-white">${t.desc}</td>
-                    <td class="px-4 py-2 text-right font-mono text-warning">S/ ${t.monto.toFixed(2)}</td>
-                </tr>`).join('');
-        }
+        function setFilterMode(mode) { CURRENT_FILTER_MODE = mode; if(mode === 'month') { document.getElementById('controls-month').classList.remove('hidden'); document.getElementById('controls-range').classList.add('hidden'); } else { document.getElementById('controls-month').classList.add('hidden'); document.getElementById('controls-range').classList.remove('hidden'); } applyFilter(); }
+        function reloadData() { init(true); }
 
-        let chart, lineChart;
-        function renderChart(data) {
-            const ctx = document.getElementById('chartPersonal').getContext('2d');
-            if(chart) chart.destroy();
-            chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(data),
-                    datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'], borderWidth: 0, hoverOffset: 20 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: {size:10}, boxWidth: 8, usePointStyle: true } } } }
-            });
-        }
-
-        function renderLineChart(dailyData, start, end) {
-            const ctx = document.getElementById('chartLine').getContext('2d');
-            if(lineChart) lineChart.destroy();
-            
-            const labels = [], dataPoints = [];
-            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                if(d.getMonth() === start.getMonth()) { 
-                    labels.push(d.getDate());
-                    dataPoints.push(dailyData[d.getDate()] || 0);
-                }
-            }
-
-            lineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Gasto Diario',
-                        data: dataPoints,
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 3,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'S/ ' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2});
-                                },
-                                title: function(context) {
-                                    return 'Día ' + context[0].label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
-                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' }, beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        init();
+        // Start (Check Auth First)
+        checkAuth();
     </script>
 </body>
 </html>
