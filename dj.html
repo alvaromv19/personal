@@ -270,10 +270,21 @@ function updateDeckVisuals() {
             }
         }
 
-        // Lógica de Pausa Manual y Sincronizada
+        // Lógica de Pausa y ARRANQUE INICIAL
         async function togglePause() {
-            isPaused = !isPaused;
             const btn = document.getElementById('btn-pause');
+            
+            // Si el DJ no ha empezado a tocar nada, este clic fuerza el inicio
+            if (!isPlaying && active === 1 && audio1.src === "") {
+                console.log("▶️ Iniciando el motor del DJ por primera vez...");
+                btn.innerText = "CARGANDO...";
+                await checkAndPlayNext(); // Forzamos a que lea la cola
+                btn.innerText = "PAUSA";
+                return;
+            }
+
+            // Lógica normal de pausa
+            isPaused = !isPaused;
             const currentPlayer = active === 1 ? audio1 : audio2;
             
             if (isPaused) {
