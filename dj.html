@@ -259,9 +259,27 @@ function updateDeckVisuals() {
         let audio2 = new Audio();
         let active = 1;
         let isPaused = false;
-        let isPlaying = false; // Para saber si el DJ ya arrancó
+        let isPlaying = false; 
 
-        // Función para añadir canción manual desde el Dashboard
+        // --- ANIMACIONES DEL MEZCLADOR ---
+        function updateDeckVisuals() {
+            const d1 = document.getElementById('deck-1');
+            const d2 = document.getElementById('deck-2');
+            const knob = document.getElementById('fader-knob');
+
+            if (active === 1) {
+                d1.classList.add('playing');
+                d2.classList.remove('playing');
+                knob.style.left = "20%"; 
+                knob.style.background = "var(--turquoise)";
+            } else {
+                d2.classList.add('playing');
+                d1.classList.remove('playing');
+                knob.style.left = "80%"; 
+                knob.style.background = "var(--purple)";
+            }
+        }
+
         async function addManual() {
             const query = document.getElementById('manual-search').value;
             if (query) {
@@ -270,20 +288,19 @@ function updateDeckVisuals() {
             }
         }
 
-        // Lógica de Pausa y ARRANQUE INICIAL
+        // --- EL BOTÓN DE ARRANQUE / PAUSA ---
         async function togglePause() {
             const btn = document.getElementById('btn-pause');
             
-            // Si el DJ no ha empezado a tocar nada, este clic fuerza el inicio
-            if (!isPlaying && active === 1 && audio1.src === "") {
+            // Si es el inicio de la fiesta, este clic desbloquea el navegador y arranca el motor
+            if (!isPlaying && audio1.src === "" && audio2.src === "") {
                 console.log("▶️ Iniciando el motor del DJ por primera vez...");
                 btn.innerText = "CARGANDO...";
-                await checkAndPlayNext(); // Forzamos a que lea la cola
-                btn.innerText = "PAUSA";
+                await checkAndPlayNext(); 
+                btn.innerText = "PAUSA / PLAY";
                 return;
             }
 
-            // Lógica normal de pausa
             isPaused = !isPaused;
             const currentPlayer = active === 1 ? audio1 : audio2;
             
@@ -292,18 +309,17 @@ function updateDeckVisuals() {
                 btn.innerText = "REANUDAR";
             } else {
                 currentPlayer.play();
-                btn.innerText = "PAUSA";
+                btn.innerText = "PAUSA / PLAY";
             }
-            await _supabase.from('settings').update({ is_paused: isPaused }).eq('id', 1);
         }
 
-        // Botón para saltar a la siguiente canción
         function skipTrack() {
             const currentPlayer = active === 1 ? audio1 : audio2;
-            currentPlayer.currentTime = currentPlayer.duration - 5; // Salta al final para forzar el crossfade
+            if(currentPlayer.src) {
+                currentPlayer.currentTime = currentPlayer.duration - 5; // Salto al final para forzar crossfade
+            }
         }
 
-        // Refrescar la cola visualmente
         async function refreshQueue() {
             const { data } = await _supabase
                 .from('playlist')
@@ -315,21 +331,20 @@ function updateDeckVisuals() {
             data.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'queue-item';
+                if(item.status === 'playing') div.classList.add('active');
                 div.innerHTML = `<strong>${item.title || item.query}</strong><br><span class="${item.status === 'playing' ? 'status-playing' : ''}">${item.status.toUpperCase()}</span>`;
                 list.appendChild(div);
             });
         }
 
-        // --- EL MOTOR DEL DJ ---
+        // --- EL CEREBRO DEL DJ ---
         async function checkAndPlayNext() {
-            // Si ya está sonando algo y no está cerca de terminar, no hacemos nada
             const currentPlayer = active === 1 ? audio1 : audio2;
             const timeRemaining = currentPlayer.duration - currentPlayer.currentTime;
             
-            // Si faltan menos de 8 segundos, o si no hay nada sonando, buscamos la siguiente
+            // Buscamos si faltan menos de 8 segundos, o si nadie está tocando
             if (!isPlaying || (currentPlayer.duration && timeRemaining <= 8)) {
                 
-                // Buscamos la canción más antigua en 'pending'
                 const { data, error } = await _supabase
                     .from('playlist')
                     .select('*')
@@ -341,28 +356,26 @@ function updateDeckVisuals() {
                     const track = data[0];
                     isPlaying = true;
                     
-                    // Actualizamos la UI inmediatamente
-                    document.getElementById('current-title').innerText = "Cargando: " + track.query + "...";
+                    // Lógica para saber en qué deck poner el texto (Evita el crash anterior)
+                    let isFirstTime = (audio1.src === "" && audio2.src === "");
+                    let targetDeck = isFirstTime ? 'title-1' : (active === 1 ? 'title-2' : 'title-1');
                     
-                    // Marcamos como 'playing' en Supabase para no repetirla
+                    document.getElementById(targetDeck).innerText = "Cargando: " + track.query + "...";
                     await _supabase.from('playlist').update({ status: 'playing' }).eq('id', track.id);
 
                     try {
-                        // Llama a tu API de Python local
+                        console.log("Consultando a Python para:", track.query);
                         const res = await fetch(`http://localhost:8000/get_audio?q=${encodeURIComponent(track.query)}`);
                         const trackInfo = await res.json();
                         
-                        document.getElementById('current-title').innerText = trackInfo.title || track.query;
-                        
-                        // Guardamos el título real que encontró la IA en Supabase
+                        document.getElementById(targetDeck).innerText = trackInfo.title || track.query;
                         await _supabase.from('playlist').update({ title: trackInfo.title }).eq('id', track.id);
 
-                        startCrossfade(trackInfo.url);
+                        startCrossfade(trackInfo.url, isFirstTime);
                         
                     } catch (err) {
                         console.error("Error al obtener audio de Python:", err);
-                        document.getElementById('current-title').innerText = "ERROR AL CARGAR";
-                        // Si falla, la marcamos como error y el loop intentará con la siguiente
+                        document.getElementById(targetDeck).innerText = "ERROR AL CARGAR";
                         await _supabase.from('playlist').update({ status: 'error' }).eq('id', track.id);
                         isPlaying = false; 
                     }
@@ -370,42 +383,48 @@ function updateDeckVisuals() {
             }
         }
 
-        function startCrossfade(url) {
-            const nextPlayer = active === 1 ? audio2 : audio1;
-            const currentPlayer = active === 1 ? audio1 : audio2;
+        function startCrossfade(url, isFirstTime) {
+            let nextPlayer = isFirstTime ? audio1 : (active === 1 ? audio2 : audio1);
+            let currentPlayer = isFirstTime ? audio2 : (active === 1 ? audio1 : audio2);
 
             nextPlayer.src = url;
             nextPlayer.volume = 0;
             
-            // Cuando la nueva canción esté lista para sonar
             nextPlayer.oncanplay = () => {
-                nextPlayer.play();
-                
-                // Lógica de desvanecimiento (Crossfade)
-                let vol = 0;
-                const interval = setInterval(() => {
-                    if (vol < 1) {
-                        vol += 0.05;
-                        nextPlayer.volume = Math.min(1, vol);
-                        if (!currentPlayer.paused) {
-                            currentPlayer.volume = Math.max(0, 1 - vol);
+                nextPlayer.play().then(() => {
+                    // Si el navegador permite reproducir, activamos los visuales
+                    active = isFirstTime ? 1 : (active === 1 ? 2 : 1);
+                    updateDeckVisuals(); 
+
+                    // Efecto Fader de audio
+                    let vol = 0;
+                    const interval = setInterval(() => {
+                        if (vol < 1) {
+                            vol += 0.05;
+                            nextPlayer.volume = Math.min(1, vol);
+                            if (!isFirstTime && !currentPlayer.paused) {
+                                currentPlayer.volume = Math.max(0, 1 - vol);
+                            }
+                        } else {
+                            if(!isFirstTime) {
+                                currentPlayer.pause();
+                                currentPlayer.src = ""; // Vaciamos RAM
+                            }
+                            clearInterval(interval);
                         }
-                    } else {
-                        currentPlayer.pause();
-                        currentPlayer.src = ""; // Limpiar memoria
-                        active = active === 1 ? 2 : 1;
-                        clearInterval(interval);
-                    }
-                }, 300); // Ajusta la velocidad del crossfade aquí
+                    }, 250); 
+                }).catch(e => {
+                    console.warn("Navegador bloqueó el audio. Dale clic a PLAY.", e);
+                });
             };
 
-            // Evento para saber cuándo la canción termina por completo
             nextPlayer.onended = () => {
                 isPlaying = false;
+                checkAndPlayNext(); // Busca la siguiente apenas termine
             };
         }
 
-        // Bucle principal: Actualiza la UI cada 2 segundos y chequea la música cada 2 segundos
+        // Bucle infinito
         setInterval(refreshQueue, 2000);
         setInterval(checkAndPlayNext, 2000);
     </script>
