@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>IA DJ Master Console</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        :root {
+            --bg: #0b0b0e;
+            --purple: #bc13fe;
+            --turquoise: #00f2ff;
+            --text: #e0e0e0;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        /* Dashboard Izquierdo */
+        .main-panel {
+            padding: 40px;
+            border-right: 2px solid #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .now-playing-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--purple);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 80%;
+        }
+        h1 { color: var(--turquoise); text-shadow: 0 0 10px var(--turquoise); }
+        .controls button {
+            background: transparent;
+            border: 2px solid var(--turquoise);
+            color: var(--turquoise);
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            margin: 10px;
+        }
+        .controls button:hover {
+            background: var(--turquoise);
+            color: var(--bg);
+            box-shadow: 0 0 20px var(--turquoise);
+        }
+        /* Sidebar Derecha (Cola) */
+        .queue-panel {
+            padding: 20px;
+            background: #0f0f12;
+            overflow-y: auto;
+        }
+        .queue-item {
+            background: #16161d;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-left: 4px solid var(--purple);
+            border-radius: 5px;
+        }
+        .status-playing { color: var(--turquoise); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="main-panel">
+        <div class="now-playing-card">
+            <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 12px;">Siguiente en la mezcla</p>
+            <h1 id="current-title">ESPERANDO CANCIÓN...</h1>
+            <div class="controls">
+                <button onclick="togglePause()" id="btn-pause">PAUSA</button>
+                <button onclick="skipTrack()">SIGUIENTE ⏭️</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <input type="text" id="manual-search" placeholder="Añadir canción manual..." 
+                       style="padding: 10px; border-radius: 5px; border: none; width: 60%;">
+                <button onclick="addManual()">AÑADIR</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="queue-panel">
+        <h3>COLA DE REPRODUCCIÓN</h3>
+        <div id="queue-list">
+            </div>
+    </div>
+
+    <script>
+        const _supabase = supabase.createClient('TU_URL', 'TU_ANON_KEY');
+        let audio1 = new Audio();
+        let audio2 = new Audio();
+        let active = 1;
+        let isPaused = false;
+
+        // Función para añadir canción manual desde el Dashboard
+        async function addManual() {
+            const query = document.getElementById('manual-search').value;
+            if (query) {
+                await _supabase.from('playlist').insert([{ query: query, status: 'pending' }]);
+                document.getElementById('manual-search').value = '';
+            }
+        }
+
+        // Lógica de Pausa Manual y Sincronizada
+        async function togglePause() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('btn-pause');
+            const currentPlayer = active === 1 ? audio1 : audio2;
+            
+            if (isPaused) {
+                currentPlayer.pause();
+                btn.innerText = "REANUDAR";
+            } else {
+                currentPlayer.play();
+                btn.innerText = "PAUSA";
+            }
+            // Actualizamos en Supabase para que Telegram sepa que pausamos
+            await _supabase.from('settings').update({ is_paused: isPaused }).eq('id', 1);
+        }
+
+        // Refrescar la cola visualmente cada 3 segundos
+        async function refreshQueue() {
+            const { data } = await _supabase
+                .from('playlist')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            const list = document.getElementById('queue-list');
+            list.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'queue-item';
+                div.innerHTML = `<strong>${item.query}</strong><br><span class="${item.status === 'playing' ? 'status-playing' : ''}">${item.status}</span>`;
+                list.appendChild(div);
+                
+                if (item.status === 'playing') {
+                    document.getElementById('current-title').innerText = item.title || item.query;
+                }
+            });
+        }
+
+        setInterval(refreshQueue, 3000);
+        // ... (Aquí iría la lógica de reproducción y crossfade que discutimos antes)
+    </script>
+</body>
+</html>
