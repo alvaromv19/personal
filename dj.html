@@ -5,98 +5,253 @@
     <title>IA DJ Master Console</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        :root {
-            --bg: #0b0b0e;
-            --purple: #bc13fe;
-            --turquoise: #00f2ff;
-            --text: #e0e0e0;
-        }
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', sans-serif;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        /* Dashboard Izquierdo */
-        .main-panel {
-            padding: 40px;
-            border-right: 2px solid #1a1a1a;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .now-playing-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--purple);
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 80%;
-        }
-        h1 { color: var(--turquoise); text-shadow: 0 0 10px var(--turquoise); }
-        .controls button {
-            background: transparent;
-            border: 2px solid var(--turquoise);
-            color: var(--turquoise);
-            padding: 15px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            margin: 10px;
-        }
-        .controls button:hover {
-            background: var(--turquoise);
-            color: var(--bg);
-            box-shadow: 0 0 20px var(--turquoise);
-        }
-        /* Sidebar Derecha (Cola) */
-        .queue-panel {
-            padding: 20px;
-            background: #0f0f12;
-            overflow-y: auto;
-        }
-        .queue-item {
-            background: #16161d;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-left: 4px solid var(--purple);
-            border-radius: 5px;
-        }
-        .status-playing { color: var(--turquoise); font-weight: bold; }
-    </style>
-</head>
-<body>
+    :root {
+        --bg: #050507;
+        --card-bg: #111116;
+        --purple: #bc13fe;
+        --turquoise: #00f2ff;
+        --text: #ffffff;
+        --gray: #444;
+    }
 
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    /* --- SIDEBAR COLA --- */
+    .queue-panel {
+        background: #0a0a0f;
+        border-left: 2px solid #1a1a25;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .queue-header {
+        color: var(--purple);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #222;
+        padding-bottom: 10px;
+    }
+
+    #queue-list {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .queue-item {
+        background: var(--card-bg);
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 3px solid var(--gray);
+        transition: 0.3s;
+    }
+
+    .queue-item.active {
+        border-left-color: var(--turquoise);
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+    }
+
+    /* --- CONSOLA CENTRAL --- */
+    .main-panel {
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        gap: 30px;
+    }
+
+    .decks-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        flex-grow: 1;
+    }
+
+    .deck {
+        background: var(--card-bg);
+        border: 1px solid #222;
+        border-radius: 20px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .deck.playing {
+        border-color: var(--purple);
+        box-shadow: 0 0 30px rgba(188, 19, 254, 0.15);
+    }
+
+    /* Vinilo Animado */
+    .vinyl {
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(circle, #222 0%, #000 70%);
+        border-radius: 50%;
+        border: 5px solid #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .vinyl::after {
+        content: '';
+        width: 40px;
+        height: 40px;
+        background: var(--purple);
+        border-radius: 50%;
+    }
+
+    .playing .vinyl {
+        animation: rotate 3s linear infinite;
+        border-color: var(--turquoise);
+    }
+
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .track-info { text-align: center; margin-top: 20px; }
+    .track-title { color: var(--turquoise); font-weight: bold; font-size: 1.2rem; min-height: 1.5em; }
+    .track-status { font-size: 0.7rem; text-transform: uppercase; color: var(--purple); letter-spacing: 2px; }
+
+    /* Mezclador Central (Controles) */
+    .mixer-controls {
+        background: #0f0f14;
+        padding: 20px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border: 1px solid #222;
+    }
+
+    .crossfader-container {
+        width: 300px;
+        height: 10px;
+        background: #222;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .crossfader-knob {
+        width: 40px;
+        height: 25px;
+        background: var(--turquoise);
+        position: absolute;
+        top: -7px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 4px;
+        box-shadow: 0 0 10px var(--turquoise);
+    }
+
+    button.pro-btn {
+        background: transparent;
+        border: 2px solid var(--purple);
+        color: var(--purple);
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button.pro-btn:hover { background: var(--purple); color: white; box-shadow: 0 0 20px var(--purple); }
+
+    .search-box {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-box input {
+        flex-grow: 1;
+        background: #1a1a25;
+        border: 1px solid #333;
+        padding: 15px;
+        color: white;
+        border-radius: 8px;
+    }
+</style>
+
+<body>
     <div class="main-panel">
-        <div class="now-playing-card">
-            <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 12px;">Siguiente en la mezcla</p>
-            <h1 id="current-title">ESPERANDO CANCIÓN...</h1>
-            <div class="controls">
-                <button onclick="togglePause()" id="btn-pause">PAUSA</button>
-                <button onclick="skipTrack()">SIGUIENTE ⏭️</button>
+        <div class="decks-container">
+            <div id="deck-1" class="deck">
+                <div class="track-status">Deck A</div>
+                <div class="vinyl"></div>
+                <div class="track-info">
+                    <div id="title-1" class="track-title">Standby</div>
+                </div>
             </div>
-            <div style="margin-top: 20px;">
-                <input type="text" id="manual-search" placeholder="Añadir canción manual..." 
-                       style="padding: 10px; border-radius: 5px; border: none; width: 60%;">
-                <button onclick="addManual()">AÑADIR</button>
+
+            <div id="deck-2" class="deck">
+                <div class="track-status">Deck B</div>
+                <div class="vinyl"></div>
+                <div class="track-info">
+                    <div id="title-2" class="track-title">Standby</div>
+                </div>
             </div>
+        </div>
+
+        <div class="mixer-controls">
+            <button class="pro-btn" onclick="togglePause()" id="btn-pause">PAUSE / PLAY</button>
+            <div class="crossfader-container">
+                <div id="fader-knob" class="crossfader-knob"></div>
+            </div>
+            <button class="pro-btn" style="border-color: var(--turquoise); color: var(--turquoise);" onclick="skipTrack()">NEXT SKIP</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="manual-search" placeholder="Buscar canción manual en la base de datos...">
+            <button class="pro-btn" onclick="addManual()">ADD QUEUE</button>
         </div>
     </div>
 
     <div class="queue-panel">
-        <h3>COLA DE REPRODUCCIÓN</h3>
-        <div id="queue-list">
-            </div>
+        <div class="queue-header">Playlist en vivo</div>
+        <div id="queue-list"></div>
     </div>
+</body>
 
     <script>
+
+        // Función para actualizar la visual de los Decks
+function updateDeckVisuals() {
+    const d1 = document.getElementById('deck-1');
+    const d2 = document.getElementById('deck-2');
+    const knob = document.getElementById('fader-knob');
+
+    if (active === 1) {
+        d1.classList.add('playing');
+        d2.classList.remove('playing');
+        knob.style.left = "20%"; // Mueve el fader a la izquierda
+        knob.style.background = "var(--turquoise)";
+    } else {
+        d2.classList.add('playing');
+        d1.classList.remove('playing');
+        knob.style.left = "80%"; // Mueve el fader a la derecha
+        knob.style.background = "var(--purple)";
+    }
+}
+
+// Llama a updateDeckVisuals() dentro de tu función startCrossfade() 
+// justo cuando cambias el valor de 'active'.
+        
         // ⚠️ REEMPLAZA ESTO con tus datos reales de Supabase
         const _supabase = supabase.createClient('https://krwojvaqdcmgqaposwco.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtyd29qdmFxZGNtZ3FhcG9zd2NvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODI4NTA2OCwiZXhwIjoyMDkzODYxMDY4fQ.IS3kMLP_UzDdTYat4ChTs9j-XJD7c9fB_bdjob4tfPM');
         
