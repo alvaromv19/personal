@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>IA DJ - Arsenal Mode</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        :root { --bg: #050507; --purple: #bc13fe; --turquoise: #00f2ff; --text: #fff; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; margin: 0; }
+        
+        /* Ocultamos los reproductores de YouTube pero los dejamos en el DOM para que suenen */
+        .yt-container { position: absolute; left: -9999px; width: 10px; height: 10px; }
+        
+        .dashboard { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .now-playing { text-align: center; border: 2px solid var(--purple); padding: 40px; border-radius: 20px; box-shadow: 0 0 30px rgba(188,19,254,0.2); width: 80%; }
+        .title { font-size: 2rem; color: var(--turquoise); margin: 20px 0; }
+        .controls button { background: transparent; border: 2px solid var(--turquoise); color: var(--turquoise); padding: 15px 30px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
+        .controls button:hover { background: var(--turquoise); color: var(--bg); }
+        
+        .sidebar { width: 350px; background: #0a0a0f; border-left: 1px solid #222; padding: 20px; overflow-y: auto; }
+        .queue-item { background: #111; padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--purple); border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="yt-container"><div id="playerA"></div></div>
+    <div class="yt-container"><div id="playerB"></div></div>
+
+    <div class="dashboard">
+        <div class="now-playing">
+            <h3 style="color: #666; letter-spacing: 5px;">SONANDO AHORA</h3>
+            <div class="title" id="current-title">Haz clic en PLAY para iniciar</div>
+            <div class="controls">
+                <button onclick="startDJ()" id="btn-play">▶ INICIAR DJ</button>
+                <button onclick="skipTrack()">⏭ SALTAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h3 style="color: var(--purple);">COLA DE PRIORIDAD</h3>
+        <div id="queue-list"></div>
+    </div>
+
+    <script>
+        // TUS CREDENCIALES
+        const _sb = supabase.createClient('TU_URL', 'TU_KEY');
+        
+        let playerA, playerB;
+        let activePlayer = 'A';
+        let isPlaying = false;
+        let isCrossfading = false;
+        let currentTrackId = null;
+
+        // 1. Inicializar la API de YouTube
+        function onYouTubeIframeAPIReady() {
+            playerA = new YT.Player('playerA', { height: '10', width: '10', playerVars: { 'controls': 0 }, events: { 'onStateChange': onPlayerStateChange } });
+            playerB = new YT.Player('playerB', { height: '10', width: '10', playerVars: { 'controls': 0 }, events: { 'onStateChange': onPlayerStateChange } });
+        }
+
+        async function startDJ() {
+            if(isPlaying) return;
+            document.getElementById('btn-play').style.display = 'none';
+            playNextTrack();
+        }
+
+        // 2. El Cerebro de Selección (Prioridad vs Arsenal)
+        async function getNextTrack() {
+            // Primero revisamos si mandaste algo por Telegram a la cola
+            let { data: priorityData } = await _sb.from('cola_prioridad').select('*').eq('status', 'pending').order('id', { ascending: true }).limit(1);
+            
+            if (priorityData && priorityData.length > 0) {
+                // Hay un pedido especial
+                await _sb.from('cola_prioridad').update({ status: 'playing' }).eq('id', priorityData[0].id);
+                return { type: 'priority', data: priorityData[0] };
+            }
+
+            // Si no hay pedidos, sacamos una del Arsenal que no haya sonado
+            let { data: arsenalData } = await _sb.from('arsenal').select('*').eq('reproducida', false).limit(1);
+            
+            if (arsenalData && arsenalData.length > 0) {
+                // Marcamos como reproducida
+                await _sb.from('arsenal').update({ reproducida: true }).eq('id', arsenalData[0].id);
+                return { type: 'arsenal', data: arsenalData[0] };
+            } else {
+                // Si ya sonó todo el arsenal, reseteamos y volvemos a empezar
+                await _sb.from('arsenal').update({ reproducida: false }).neq('id', 0);
+                return getNextTrack();
+            }
+        }
+
+        // 3. Carga y Crossfade
+        async function playNextTrack() {
+            if (isCrossfading) return;
+            
+            const next = await getNextTrack();
+            if(!next) return;
+
+            const nextPlayer = activePlayer === 'A' ? playerA : playerB;
+            const prevPlayer = activePlayer === 'A' ? playerB : playerA;
+
+            document.getElementById('current-title').innerText = next.data.titulo;
+            isPlaying = true;
+
+            // Cargamos el video y lo muteamos por si acaso
+            nextPlayer.loadVideoById(next.data.yt_id);
+            nextPlayer.setVolume(100);
+            
+            // Si es la primera canción, simplemente suena
+            if (!prevPlayer.getPlayerState || prevPlayer.getPlayerState() !== 1) {
+                activePlayer = activePlayer === 'A' ? 'A' : 'B';
+                return;
+            }
+
+            // CROSSFADE LOGIC
+            isCrossfading = true;
+            nextPlayer.setVolume(0);
+            
+            let vol = 0;
+            let fadeInterval = setInterval(() => {
+                vol += 5;
+                if (vol <= 100) {
+                    nextPlayer.setVolume(vol);
+                    prevPlayer.setVolume(100 - vol);
+                } else {
+                    clearInterval(fadeInterval);
+                    prevPlayer.stopVideo();
+                    activePlayer = activePlayer === 'A' ? 'B' : 'A';
+                    isCrossfading = false;
+                }
+            }, 300); // Duración de la transición (300ms * 20 pasos = 6 segundos)
+        }
+
+        // 4. Monitoreo de finalización
+        function onPlayerStateChange(event) {
+            // Si el video actual está reproduciéndose (State 1)
+            if (event.data == 1) {
+                const player = event.target;
+                
+                // Chequeamos cada segundo cuánto falta para que termine
+                const checkInterval = setInterval(() => {
+                    if (player.getPlayerState() !== 1) {
+                        clearInterval(checkInterval);
+                        return;
+                    }
+                    
+                    const duration = player.getDuration();
+                    const currentTime = player.getCurrentTime();
+                    
+                    // Faltan 8 segundos para que termine -> Iniciar transición
+                    if (duration - currentTime <= 8 && !isCrossfading) {
+                        clearInterval(checkInterval);
+                        playNextTrack();
+                    }
+                }, 1000);
+            }
+        }
+
+        function skipTrack() {
+            const currentPlayer = activePlayer === 'A' ? playerA : playerB;
+            if (currentPlayer && currentPlayer.getDuration) {
+                currentPlayer.seekTo(currentPlayer.getDuration() - 9); // Salta al final para detonar el crossfade
+            }
+        }
+
+        // Interfaz visual de la cola
+        setInterval(async () => {
+            let { data } = await _sb.from('cola_prioridad').select('*').eq('status', 'pending').order('id', { ascending: true });
+            const list = document.getElementById('queue-list');
+            list.innerHTML = '';
+            if(data) {
+                data.forEach(item => {
+                    list.innerHTML += `<div class="queue-item"><strong>${item.titulo}</strong></div>`;
+                });
+            }
+        }, 3000);
+
+    </script>
+</body>
+</html>
