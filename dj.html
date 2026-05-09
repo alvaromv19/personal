@@ -97,11 +97,14 @@
     </div>
 
     <script>
-        const _supabase = supabase.createClient('TU_URL', 'TU_ANON_KEY');
+        // ⚠️ REEMPLAZA ESTO con tus datos reales de Supabase
+        const _supabase = supabase.createClient('https://krwojvaqdcmgqaposwco.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtyd29qdmFxZGNtZ3FhcG9zd2NvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODI4NTA2OCwiZXhwIjoyMDkzODYxMDY4fQ.IS3kMLP_UzDdTYat4ChTs9j-XJD7c9fB_bdjob4tfPM');
+        
         let audio1 = new Audio();
         let audio2 = new Audio();
         let active = 1;
         let isPaused = false;
+        let isPlaying = false; // Para saber si el DJ ya arrancó
 
         // Función para añadir canción manual desde el Dashboard
         async function addManual() {
@@ -125,11 +128,16 @@
                 currentPlayer.play();
                 btn.innerText = "PAUSA";
             }
-            // Actualizamos en Supabase para que Telegram sepa que pausamos
             await _supabase.from('settings').update({ is_paused: isPaused }).eq('id', 1);
         }
 
-        // Refrescar la cola visualmente cada 3 segundos
+        // Botón para saltar a la siguiente canción
+        function skipTrack() {
+            const currentPlayer = active === 1 ? audio1 : audio2;
+            currentPlayer.currentTime = currentPlayer.duration - 5; // Salta al final para forzar el crossfade
+        }
+
+        // Refrescar la cola visualmente
         async function refreshQueue() {
             const { data } = await _supabase
                 .from('playlist')
@@ -141,17 +149,99 @@
             data.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'queue-item';
-                div.innerHTML = `<strong>${item.query}</strong><br><span class="${item.status === 'playing' ? 'status-playing' : ''}">${item.status}</span>`;
+                div.innerHTML = `<strong>${item.title || item.query}</strong><br><span class="${item.status === 'playing' ? 'status-playing' : ''}">${item.status.toUpperCase()}</span>`;
                 list.appendChild(div);
-                
-                if (item.status === 'playing') {
-                    document.getElementById('current-title').innerText = item.title || item.query;
-                }
             });
         }
 
-        setInterval(refreshQueue, 3000);
-        // ... (Aquí iría la lógica de reproducción y crossfade que discutimos antes)
+        // --- EL MOTOR DEL DJ ---
+        async function checkAndPlayNext() {
+            // Si ya está sonando algo y no está cerca de terminar, no hacemos nada
+            const currentPlayer = active === 1 ? audio1 : audio2;
+            const timeRemaining = currentPlayer.duration - currentPlayer.currentTime;
+            
+            // Si faltan menos de 8 segundos, o si no hay nada sonando, buscamos la siguiente
+            if (!isPlaying || (currentPlayer.duration && timeRemaining <= 8)) {
+                
+                // Buscamos la canción más antigua en 'pending'
+                const { data, error } = await _supabase
+                    .from('playlist')
+                    .select('*')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: true })
+                    .limit(1);
+
+                if (data && data.length > 0) {
+                    const track = data[0];
+                    isPlaying = true;
+                    
+                    // Actualizamos la UI inmediatamente
+                    document.getElementById('current-title').innerText = "Cargando: " + track.query + "...";
+                    
+                    // Marcamos como 'playing' en Supabase para no repetirla
+                    await _supabase.from('playlist').update({ status: 'playing' }).eq('id', track.id);
+
+                    try {
+                        // Llama a tu API de Python local
+                        const res = await fetch(`http://localhost:8000/get_audio?q=${encodeURIComponent(track.query)}`);
+                        const trackInfo = await res.json();
+                        
+                        document.getElementById('current-title').innerText = trackInfo.title || track.query;
+                        
+                        // Guardamos el título real que encontró la IA en Supabase
+                        await _supabase.from('playlist').update({ title: trackInfo.title }).eq('id', track.id);
+
+                        startCrossfade(trackInfo.url);
+                        
+                    } catch (err) {
+                        console.error("Error al obtener audio de Python:", err);
+                        document.getElementById('current-title').innerText = "ERROR AL CARGAR";
+                        // Si falla, la marcamos como error y el loop intentará con la siguiente
+                        await _supabase.from('playlist').update({ status: 'error' }).eq('id', track.id);
+                        isPlaying = false; 
+                    }
+                }
+            }
+        }
+
+        function startCrossfade(url) {
+            const nextPlayer = active === 1 ? audio2 : audio1;
+            const currentPlayer = active === 1 ? audio1 : audio2;
+
+            nextPlayer.src = url;
+            nextPlayer.volume = 0;
+            
+            // Cuando la nueva canción esté lista para sonar
+            nextPlayer.oncanplay = () => {
+                nextPlayer.play();
+                
+                // Lógica de desvanecimiento (Crossfade)
+                let vol = 0;
+                const interval = setInterval(() => {
+                    if (vol < 1) {
+                        vol += 0.05;
+                        nextPlayer.volume = Math.min(1, vol);
+                        if (!currentPlayer.paused) {
+                            currentPlayer.volume = Math.max(0, 1 - vol);
+                        }
+                    } else {
+                        currentPlayer.pause();
+                        currentPlayer.src = ""; // Limpiar memoria
+                        active = active === 1 ? 2 : 1;
+                        clearInterval(interval);
+                    }
+                }, 300); // Ajusta la velocidad del crossfade aquí
+            };
+
+            // Evento para saber cuándo la canción termina por completo
+            nextPlayer.onended = () => {
+                isPlaying = false;
+            };
+        }
+
+        // Bucle principal: Actualiza la UI cada 2 segundos y chequea la música cada 2 segundos
+        setInterval(refreshQueue, 2000);
+        setInterval(checkAndPlayNext, 2000);
     </script>
 </body>
 </html>
