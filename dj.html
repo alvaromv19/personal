@@ -14,6 +14,8 @@
         --gray: #444;
     }
 
+    .queue-item.played { border-left-color: #444; opacity: 0.6; cursor: pointer; }
+    .queue-item.played:hover { opacity: 1; border-left-color: var(--purple); }
     body {
         background-color: var(--bg);
         color: var(--text);
@@ -249,10 +251,7 @@ function updateDeckVisuals() {
     }
 }
 
-// Llama a updateDeckVisuals() dentro de tu función startCrossfade() 
-// justo cuando cambias el valor de 'active'.
-        
-        // ⚠️ REEMPLAZA ESTO con tus datos reales de Supabase
+
         const _supabase = supabase.createClient('https://krwojvaqdcmgqaposwco.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtyd29qdmFxZGNtZ3FhcG9zd2NvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODI4NTA2OCwiZXhwIjoyMDkzODYxMDY4fQ.IS3kMLP_UzDdTYat4ChTs9j-XJD7c9fB_bdjob4tfPM');
         
         let audio1 = new Audio();
@@ -260,23 +259,20 @@ function updateDeckVisuals() {
         let active = 1;
         let isPaused = false;
         let isPlaying = false; 
+        let isFetchingAudio = false; // <-- ESTO MATA EL BUG DE "MÚLTIPLES PLAYING"
+        let currentTrackId = null;
 
-        // --- ANIMACIONES DEL MEZCLADOR ---
         function updateDeckVisuals() {
             const d1 = document.getElementById('deck-1');
             const d2 = document.getElementById('deck-2');
             const knob = document.getElementById('fader-knob');
 
             if (active === 1) {
-                d1.classList.add('playing');
-                d2.classList.remove('playing');
-                knob.style.left = "20%"; 
-                knob.style.background = "var(--turquoise)";
+                d1.classList.add('playing'); d2.classList.remove('playing');
+                knob.style.left = "20%"; knob.style.background = "var(--turquoise)";
             } else {
-                d2.classList.add('playing');
-                d1.classList.remove('playing');
-                knob.style.left = "80%"; 
-                knob.style.background = "var(--purple)";
+                d2.classList.add('playing'); d1.classList.remove('playing');
+                knob.style.left = "80%"; knob.style.background = "var(--purple)";
             }
         }
 
@@ -288,75 +284,94 @@ function updateDeckVisuals() {
             }
         }
 
-        // --- EL BOTÓN DE ARRANQUE / PAUSA ---
+        // Función para repetir una canción al hacerle clic en la cola
+        async function replayTrack(query) {
+            await _supabase.from('playlist').insert([{ query: query, status: 'pending' }]);
+        }
+
         async function togglePause() {
             const btn = document.getElementById('btn-pause');
-            
-            // Si es el inicio de la fiesta, este clic desbloquea el navegador y arranca el motor
             if (!isPlaying && audio1.src === "" && audio2.src === "") {
-                console.log("▶️ Iniciando el motor del DJ por primera vez...");
                 btn.innerText = "CARGANDO...";
                 await checkAndPlayNext(); 
                 btn.innerText = "PAUSA / PLAY";
                 return;
             }
-
             isPaused = !isPaused;
             const currentPlayer = active === 1 ? audio1 : audio2;
-            
-            if (isPaused) {
-                currentPlayer.pause();
-                btn.innerText = "REANUDAR";
-            } else {
-                currentPlayer.play();
-                btn.innerText = "PAUSA / PLAY";
-            }
+            if (isPaused) { currentPlayer.pause(); btn.innerText = "REANUDAR"; } 
+            else { currentPlayer.play(); btn.innerText = "PAUSA / PLAY"; }
         }
 
-        function skipTrack() {
+        async function skipTrack() {
+            if (currentTrackId) {
+                // Marcamos la actual como PLAYED inmediatamente
+                await _supabase.from('playlist').update({ status: 'played' }).eq('id', currentTrackId);
+            }
             const currentPlayer = active === 1 ? audio1 : audio2;
-            if(currentPlayer.src) {
-                currentPlayer.currentTime = currentPlayer.duration - 5; // Salto al final para forzar crossfade
-            }
+            if(currentPlayer.src) currentPlayer.currentTime = currentPlayer.duration - 5; 
         }
 
+        // --- AUTOPILOT Y REFRESCO VISUAL ---
         async function refreshQueue() {
-            const { data } = await _supabase
-                .from('playlist')
-                .select('*')
-                .order('created_at', { ascending: true });
-
+            const { data } = await _supabase.from('playlist').select('*').order('created_at', { ascending: true });
+            
             const list = document.getElementById('queue-list');
             list.innerHTML = '';
+            
+            let pendingCount = 0;
+            let playedSongs = [];
+
             data.forEach(item => {
+                if(item.status === 'pending') pendingCount++;
+                if(item.status === 'played') playedSongs.push(item.title || item.query);
+
                 const div = document.createElement('div');
-                div.className = 'queue-item';
+                div.className = `queue-item ${item.status}`;
                 if(item.status === 'playing') div.classList.add('active');
-                div.innerHTML = `<strong>${item.title || item.query}</strong><br><span class="${item.status === 'playing' ? 'status-playing' : ''}">${item.status.toUpperCase()}</span>`;
+                
+                // Si ya sonó, le ponemos un onClick para repetir
+                if(item.status === 'played') {
+                    div.setAttribute('onclick', `replayTrack('${item.query}')`);
+                    div.title = "Clic para repetir canción";
+                }
+
+                div.innerHTML = `<strong>${item.title || item.query}</strong><br><span class="status-text" style="color: var(--purple); font-size: 0.7em;">${item.status.toUpperCase()}</span>`;
                 list.appendChild(div);
             });
+
+            // MODO AUTOPILOT: Si hay menos de 2 canciones esperando, pedimos refuerzos
+            if (pendingCount < 2 && data.length > 0 && !isFetchingAudio) {
+                console.log("🚨 Autopilot activado: Buscando arsenal...");
+                // Tomamos las últimas 3 que sonaron como contexto
+                const context = playedSongs.slice(-3).join(', ');
+                fetch(`http://localhost:8000/get_recommendations?historial=${encodeURIComponent(context)}`)
+                    .then(res => res.json())
+                    .then(async data => {
+                        for (let track of data.canciones) {
+                            await _supabase.from('playlist').insert([{ query: track, status: 'pending' }]);
+                        }
+                    }).catch(e => console.log("Error autopilot:", e));
+            }
         }
 
-        // --- EL CEREBRO DEL DJ ---
+        // --- EL MOTOR DEL DJ (CEREBRO) ---
         async function checkAndPlayNext() {
+            if (isFetchingAudio) return; // Evita el bug de procesar múltiples canciones a la vez
+
             const currentPlayer = active === 1 ? audio1 : audio2;
             const timeRemaining = currentPlayer.duration - currentPlayer.currentTime;
             
-            // Buscamos si faltan menos de 8 segundos, o si nadie está tocando
-            if (!isPlaying || (currentPlayer.duration && timeRemaining <= 8)) {
+            if (!isPlaying || (currentPlayer.duration && timeRemaining <= 10)) {
                 
-                const { data, error } = await _supabase
-                    .from('playlist')
-                    .select('*')
-                    .eq('status', 'pending')
-                    .order('created_at', { ascending: true })
-                    .limit(1);
+                const { data } = await _supabase.from('playlist').select('*').eq('status', 'pending').order('created_at', { ascending: true }).limit(1);
 
                 if (data && data.length > 0) {
+                    isFetchingAudio = true; // BLOQUEAMOS LA COLA
                     const track = data[0];
                     isPlaying = true;
+                    currentTrackId = track.id; // Guardamos ID actual
                     
-                    // Lógica para saber en qué deck poner el texto (Evita el crash anterior)
                     let isFirstTime = (audio1.src === "" && audio2.src === "");
                     let targetDeck = isFirstTime ? 'title-1' : (active === 1 ? 'title-2' : 'title-1');
                     
@@ -364,26 +379,24 @@ function updateDeckVisuals() {
                     await _supabase.from('playlist').update({ status: 'playing' }).eq('id', track.id);
 
                     try {
-                        console.log("Consultando a Python para:", track.query);
                         const res = await fetch(`http://localhost:8000/get_audio?q=${encodeURIComponent(track.query)}`);
                         const trackInfo = await res.json();
                         
-                        document.getElementById(targetDeck).innerText = trackInfo.title || track.query;
+                        document.getElementById(targetDeck).innerText = trackInfo.title;
                         await _supabase.from('playlist').update({ title: trackInfo.title }).eq('id', track.id);
 
-                        startCrossfade(trackInfo.url, isFirstTime);
+                        startCrossfade(trackInfo.url, isFirstTime, track.id);
                         
                     } catch (err) {
-                        console.error("Error al obtener audio de Python:", err);
-                        document.getElementById(targetDeck).innerText = "ERROR AL CARGAR";
                         await _supabase.from('playlist').update({ status: 'error' }).eq('id', track.id);
                         isPlaying = false; 
                     }
+                    isFetchingAudio = false; // LIBERAMOS LA COLA
                 }
             }
         }
 
-        function startCrossfade(url, isFirstTime) {
+        function startCrossfade(url, isFirstTime, trackId) {
             let nextPlayer = isFirstTime ? audio1 : (active === 1 ? audio2 : audio1);
             let currentPlayer = isFirstTime ? audio2 : (active === 1 ? audio1 : audio2);
 
@@ -392,13 +405,11 @@ function updateDeckVisuals() {
             
             nextPlayer.oncanplay = () => {
                 nextPlayer.play().then(() => {
-                    // Si el navegador permite reproducir, activamos los visuales
                     active = isFirstTime ? 1 : (active === 1 ? 2 : 1);
                     updateDeckVisuals(); 
 
-                    // Efecto Fader de audio
                     let vol = 0;
-                    const interval = setInterval(() => {
+                    const interval = setInterval(async () => {
                         if (vol < 1) {
                             vol += 0.05;
                             nextPlayer.volume = Math.min(1, vol);
@@ -408,23 +419,23 @@ function updateDeckVisuals() {
                         } else {
                             if(!isFirstTime) {
                                 currentPlayer.pause();
-                                currentPlayer.src = ""; // Vaciamos RAM
+                                currentPlayer.src = ""; 
+                                // MARCAMOS LA ANTERIOR COMO TERMINADA (PLAYED)
+                                await _supabase.from('playlist').update({ status: 'played' }).eq('status', 'playing').neq('id', trackId);
                             }
                             clearInterval(interval);
                         }
                     }, 250); 
-                }).catch(e => {
-                    console.warn("Navegador bloqueó el audio. Dale clic a PLAY.", e);
                 });
             };
 
-            nextPlayer.onended = () => {
+            nextPlayer.onended = async () => {
                 isPlaying = false;
-                checkAndPlayNext(); // Busca la siguiente apenas termine
+                await _supabase.from('playlist').update({ status: 'played' }).eq('id', trackId);
+                checkAndPlayNext(); 
             };
         }
 
-        // Bucle infinito
         setInterval(refreshQueue, 2000);
         setInterval(checkAndPlayNext, 2000);
     </script>
