@@ -5,6 +5,9 @@
     <title>IA DJ Master Console</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
+
+    .queue-item.played { border-left-color: #444; opacity: 0.6; cursor: pointer; }
+    .queue-item.played:hover { opacity: 1; border-left-color: var(--purple); }
     :root {
         --bg: #050507;
         --card-bg: #111116;
@@ -14,8 +17,6 @@
         --gray: #444;
     }
 
-    .queue-item.played { border-left-color: #444; opacity: 0.6; cursor: pointer; }
-    .queue-item.played:hover { opacity: 1; border-left-color: var(--purple); }
     body {
         background-color: var(--bg);
         color: var(--text);
